@@ -1,0 +1,39 @@
+.row
+  = form_for @user, html: {class: 'formee'} do |f|
+    %fieldset
+      %legend Basic
+      .six.columns
+        = f.label :username do
+          User Name
+          %em.formee-req *
+        = f.text_field :username
+        .hint-text
+          Name of User
+        .form-error-text
+          = @user.errors[:username].first if @user.errors[:username].length > 0
+          &nbsp;
+      .six.columns
+        = f.label :team_id do
+          Team
+          %em.formee-req *
+        = f.select :team_id, Team.options_list
+        .hint-text
+          Assign this user to a team
+        .form-error-text
+          = @user.errors[:team_id].first if @user.errors[:team_id].length > 0
+          &nbsp;
+      .six.columns
+        = f.label :admin do
+          Priviliges
+        %label.checkbox.toggle.candy{style:'height: 30px'}
+          = f.check_box :admin
+          %p
+            %span Admin
+            %span User
+          %a.slide-button
+        .hint-text
+          Give user admin rights?
+    .left
+      = f.submit (params[:action] == 'create' ? 'Create' : 'Edit')
+    .right
+      = button_to_function 'Back', "window.location='#{users_path}'"

@@ -1,0 +1,30 @@
+.contain-to-grid
+  .top-bar
+    %ul
+      %li.name
+        %h1
+          = link_to raw('Score&nbsp;Engine'), '/'
+      %li.toggle-topbar
+        = link_to '', '#'
+
+    %section
+      %ul.right
+        %li
+          = link_to 'Messages', '#'
+        %li
+          = link_to 'Services', services_path
+        %li
+          = link_to 'Users', users_path
+        %li
+          = link_to 'Settings', '#'
+        %li.has_button
+        - if user_signed_in?
+          = link_to 'Logout', destroy_user_session_path, method: :delete, class: 'small button'
+        - else
+          = link_to 'Login', new_user_session_path, class: 'small button'
+
+- if not @header_text.nil?
+  %header#titlebar{class: @header_class}
+    .row
+      .twelve.columns
+        %h1= @header_text

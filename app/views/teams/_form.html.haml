@@ -1,0 +1,28 @@
+.row
+  = form_for @team, html: {class: 'formee'} do |f|
+    = f.hidden_field :id
+
+    %fieldset
+      %legend Basic
+      .six.columns
+        = f.label :name do
+          Name
+          %em.formee-req *
+        = f.text_field :name
+        .hint-text
+          Name of Team
+        .form-error-text
+          =# @team.errors[:name].first if @team.errors[:name].length > 0
+          &nbsp;
+      .six.columns
+        = f.label :dns_server do
+          DNS Server
+        = f.text_field :dns_server
+        .hint-text
+          DNS server for resolving domains on services within team
+        .form-error-text
+          = @team.errors[:dns_server].first unless @team.errors[:dns_server].blank?
+
+    = f.submit ((%w{new create}.include? params[:action]) ? 'Create' : 'Edit')
+    .right
+      = button_to 'Back', :back

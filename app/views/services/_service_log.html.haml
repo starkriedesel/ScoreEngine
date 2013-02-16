@@ -1,0 +1,20 @@
+.row.service-log
+  .two.columns
+    %img{src: service_log_img(log)}
+  .ten.columns
+    %p
+      %strong Service Check:
+      = log.message
+    %ul.inline-list
+      %li
+        = link_to_function 'Debug', 'toggleLogDebug(this)'
+      %li
+        = link_to 'Remove', clear_service_log_path(log), method: :post
+      %li.time
+        %time.timeago{datetime:log.created_at.to_time.iso8601}= time_ago_in_words log.created_at
+    .row.debug
+      .ten.columns.panel
+        %p
+          %strong Debug:
+          = simple_format h(log.debug_message)
+  %hr

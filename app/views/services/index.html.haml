@@ -1,0 +1,68 @@
+%dl.tabs
+  - is_first = true
+  - @services.each do |team, service_list|
+    - team = Team.new(name: 'None', id: 0) if team.nil?
+    %dd{class: (is_first ? 'active':'')}= link_to "Team #{team.name}", "#team#{team.id}"
+    - is_first = false
+
+%ul.tabs-content
+  - is_first = true
+  - @services.each do |team, service_list|
+    - team = Team.new(name: 'None', id: 0) if team.nil?
+    %li{id: "team#{team.id}Tab", class: (is_first ? 'active':'')}
+      %table.twelve.services
+        %thead
+          %tr
+            %th
+            %th Name
+            %th Worker
+            %th Host
+            %th Uptime
+            %th
+
+        %tbody
+          - service_list.each do |service|
+
+            - unless service.blank?
+              %tr{class: service_class(service)}
+                %td{style:'padding:0px; text-align:center'}
+                  %img{src: service_img(service)}
+                %td= link_to service.name, service
+                %td= service.worker
+                %td= service.params[service.worker]['rhost']+" : "+service.params[service.worker]['rport']
+                %td= "#{service.up_time}%"
+                %td
+                  %ul.inline-list
+                    %li= link_to 'Edit', edit_service_path(service)
+                    %li= link_to_function 'Duplicate', "duplicate_service('#{service.id}','#{service.team_id}','#{service.name}')"
+                    %li= link_to 'Destroy', service, method: :delete, data: { confirm: 'Are you sure?' }
+      - unless team.id.nil? or team.id == 0
+        = link_to 'Edit Team', edit_team_path(team), class: 'button'
+    - is_first = false
+
+%br
+= link_to 'Add Service', new_service_path, class: 'button'
+= link_to 'Add Team', new_team_path, class: 'button'
+
+#duplicateModal.reveal-modal
+  %a.close-reveal-modal &#215;
+  %h2
+    Duplicate
+    %span#service_name
+  = form_tag service_duplicate_path, method: :post, class: 'formee' do
+    = hidden_field_tag "service_id", ''
+    .row
+      .eight.columns.end
+        = label_tag "Team"
+        = select_tag "team_id", options_for_select(Team.options_list)
+    .row
+      = submit_tag "Duplicate"
+
+
+:javascript
+  function duplicate_service(service_id, team_id, service_name) {
+    $('#duplicateModal #service_name').html("'"+service_name+"'");
+    $('#duplicateModal #service_id').val(service_id);
+    $('#duplicateModal #team_id').val(team_id);
+    $("#duplicateModal").reveal();
+  }

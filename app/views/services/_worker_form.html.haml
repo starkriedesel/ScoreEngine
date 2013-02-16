@@ -1,0 +1,19 @@
+- klass = "Workers::#{Workers::GenericWorker::WORKERS[worker_name]}".constantize
+- unless klass <= Workers::GenericWorker
+  - raise "Invalid Worker Specified"
+%div{id: "params-#{worker_name}"}
+  - klass.service_params.each do |key, param|
+    .six.columns
+      = label_tag do
+        = param[:name]
+        - if param[:required]
+          %em.formee-req *
+      - value = @service.params[worker_name]
+      - if value.nil?
+        - value = param[:default]
+      - else
+        - value = value[key.to_s] || param[:default]
+      = text_field_tag "service[params][#{worker_name}][#{key.to_s}]", value.to_s
+      .hint-text
+        = param[:description]
+        &nbsp;

@@ -1,0 +1,18 @@
+%dl.tabs
+  - is_first = true
+  - @users.each do |team, user_list|
+    - team = Team.new(name: 'None', id: 0) if team.nil?
+    %dd{class: (is_first ? 'active':'')}= link_to "Team #{team.name}", "#team#{team.id}"
+    - is_first = false
+
+%ul.tabs-content
+  - is_first = true
+  - @users.each do |team, user_list|
+    - team = Team.new(name: 'None', id: 0) if team.nil?
+    %li{id: "team#{team.id}Tab", class: (is_first ? 'active':'')}
+      %ul
+        - user_list.each do |user|
+          %li= link_to user.username, edit_user_path(user)
+      - if user_list.blank?
+        %h5 No Users
+    - is_first = false

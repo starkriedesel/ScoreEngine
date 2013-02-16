@@ -1,0 +1,42 @@
+= hidden_field_tag 'service_id', @service.id
+- last_log = @service.service_logs.order('created_at desc').first
+- last_log_id = last_log.nil? ? 0 : last_log.id
+= hidden_field_tag 'last_log_id', last_log_id
+
+.three.columns
+  .panel
+    %h5= link_to "Team #{@service.team_name}", services_path+"#team#{@service.team_id}"
+    %dl.vertical.tabs.services
+      - Service.where(team_id: @service.team_id).all.each do |s|
+        %dd{class: service_class(s)}
+          = link_to s.name, s
+
+.nine.columns
+  .row
+    %table{style:'width:100%; border:none;'}
+      %tr
+        %td{style:'width:15%; vertical-align:middle;'}
+          %h5 Uptime:
+        %td{style:'width:85%;'}
+          .progress.success.text#up_time
+            .meter{style:"width:#{@service.up_time}%"}
+              .text
+                = "#{@service.up_time}%"
+  .row
+    .twelve.columns
+      %ul.button-group.even.three-up.radius
+        %li= link_to 'Edit', edit_service_path(@service), class:'button radius'
+        %li= button_to 'Clear', clear_service_path(@service), class: 'button radius'
+        %li= button_to 'Check', service_check_path(@service) , class:'button radius'
+
+  - if @service.service_logs.count == 0
+    .row
+      .ten.columns.offset-by-two
+        %h3 No Logs
+
+  - @service.service_logs.order('created_at desc').each do |log|
+    #service_logs
+      = render partial: 'service_log', locals: {log: log}
+
+:javascript
+  setInterval(updateService, 5*1000);

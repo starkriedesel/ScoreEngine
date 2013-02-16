@@ -1,0 +1,60 @@
+.row
+  = form_for @service, html: {class: 'formee'} do |f|
+    = f.hidden_field :id
+
+    %fieldset
+      %legend Basic
+      .six.columns
+        = f.label :name do
+          Name
+          %em.formee-req *
+        = f.text_field :name
+        .hint-text
+          Name of Service
+        .form-error-text
+          = @service.errors[:name].first if @service.errors[:name].length > 0
+          &nbsp;
+      .six.columns
+        = f.label :worker do
+          Worker
+          %em.formee-req *
+        - n = 0
+        = f.select :worker, Workers::GenericWorker::WORKERS.collect {|name,_| [name,name] }
+        .hint-text
+          Worker Class
+        .form-error-text
+          = @service.errors[:worker].first if @service.errors[:worker].length > 0
+          &nbsp;
+      .six.columns
+        = f.label :team_id do
+          Team
+          %em.formee-req *
+        = f.select :team_id, Team.options_list
+        .hint-text
+          Assign this service to a team
+        .form-error-text
+          = @service.errors[:team_id].first if @service.errors[:team_id].length > 0
+          &nbsp;
+      .six.columns
+        = f.label :on do
+          &nbsp;
+        %label.checkbox.toggle.candy{style:'height: 30px'}
+          = f.check_box :on
+          %p
+            %span On
+            %span Off
+          %a.slide-button
+        .hint-text
+          Turns service checking on/off
+        .form-error-text
+          = @service.errors[:on].first if @service.errors[:on].length > 0
+          &nbsp;
+    %fieldset
+      %legend= "Parameters"
+      %div#service-params
+        = render partial: 'worker_form', locals: {worker_name: (@service.worker || Workers::GenericWorker::WORKERS.keys.first)}
+
+    .left
+      = f.submit ((%w{new create}.include? params[:action]) ? 'Create' : 'Edit')
+    .right
+      = button_to 'Back', :back
