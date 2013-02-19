@@ -15,8 +15,11 @@
           = link_to 'Services', services_path
         %li
           = link_to 'Users', users_path
-        %li
-          = link_to 'Settings', '#'
+        %li.has-dropdown
+          = link_to 'Tools', '#'
+          %ul.dropdown
+            %li= link_to 'Hash', hash_tool_path
+
         %li.has_button
         - if user_signed_in?
           = link_to 'Logout', destroy_user_session_path, method: :delete, class: 'small button'

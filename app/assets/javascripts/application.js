@@ -16,17 +16,33 @@
 //= require formee
 //= require jquery.timeago
 
+// resize divs dynamically on load
+//  wrap divs in .do_resize(X/Y)
+//  identify div to match as .resize_to(X/Y)
+//  identify div to change as .resize_from(X/Y)
+//  where (X/Y) indicates if it should be width(X) or height(Y)
+$(function() {
+    $('.do_resizeY').each(function() {
+        var resize_height = $(this).find('.resize_toY').first().height();
+        $(this).find('.resize_fromY').height(resize_height);
+    });
+    $('.do_resizeX').each(function() {
+        var resize_width = $(this).find('.resize_toX').first().width();
+        $(this).find('.resize_fromX').width(resize_width);
+    });
+});
+
 $(function() {
     $('.optional').each(function (i,tag) {
-        $(tag).children('.content').toggle($(tag).children('.optional_toggle').val() == '1');
+        $(tag).find('.content').toggle($(tag).find('.optional_toggle').val() == '1');
     })
 });
 
 function toggle_optional(tag)
 {
     var fieldset = $(tag).parents('.optional');
-    var content = fieldset.children('.content');
-    var toggle = fieldset.children('.optional_toggle');
+    var content = fieldset.find('.content');
+    var toggle = fieldset.find('.optional_toggle');
     toggle.val(content.is(':visible') ? 0 : 1);
     content.toggle(400);
 }

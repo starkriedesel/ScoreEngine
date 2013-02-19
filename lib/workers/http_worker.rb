@@ -17,7 +17,7 @@ module Workers
       'http'
     end
 
-    def make_request url, count=1
+    def self.make_request url, log=nil, count=1
       uri = URI.parse(url)
       http = Net::HTTP.new(uri.host, uri.port)
       if url.include?('https')
@@ -27,10 +27,14 @@ module Workers
       response = http.request(Net::HTTP::Get.new(uri.request_uri))
       if response.code == '301' and count < 5
         new_url = response.header['location']
-        @log.debug_message += "Following 301: #{new_url}\n"
-        return make_request(new_url, count + 1)
+        log.debug_message += "Following 301: #{new_url}\n" unless log.nil?
+        return make_request(new_url, log, count + 1)
       end
       response
+    end
+
+    def self.get_request_body url
+      make_request(url).body
     end
 
     def do_check
@@ -39,7 +43,7 @@ module Workers
       @log.debug_message = "Request: #{url}\n"
 
       response = perform_action do
-        make_request url
+        HttpWorker.make_request url, @log
       end
 
       unless response.nil?
