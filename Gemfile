@@ -45,7 +45,7 @@ gem 'net-ssh' # SSH
 gem 'net-sftp' # SFTP
 gem 'ftpfxp' # FTP-TLS
 gem 'mysql2' # MySQL
-gem 'active_directory' # AD
+gem 'net-ldap' # LDAP / AD
 
 
 # To use Jbuilder templates for JSON

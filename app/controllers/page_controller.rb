@@ -1,8 +1,5 @@
 class PageController < ApplicationController
   def home
-  end
-
-  def services
-
+    redirect_to services_path
   end
 end

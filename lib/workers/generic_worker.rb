@@ -23,6 +23,7 @@ module Workers
         Ssh: 'SshWorker',
         Dns: 'DnsWorker',
         Mysql: 'MysqlWorker',
+        Ldap: 'LdapWorker',
     }.with_indifferent_access
 
     # @param [Service] service
