@@ -98,16 +98,12 @@ module Workers
       @log.message += message
     end
 
-    def domain_lookup hostname, dns_server=nil, dns_port=53, record_type = Net::DNS::A
-      # ignore if hostname is alreay an IP
-      return hostname unless hostname.match(/^\d+\.\d+\.\d+\.\d+$/).nil?
-
-      # use default server if un-specified
-      dns_server ||= @dns_server
+    def self.dns_lookup hostname, dns_server, dns_port=53, record_type = Net::DNS::A
       dns = nil
-
       if dns_server.nil?
-        dns = Net::DNS::Resolver.new
+        dns = Net::DNS::Resolver.new(
+            port: dns_port
+        )
       else
         dns_server.sub!(/(:\d+)$/, '') { dns_port = $1 if dns_port == 53 }
         dns = Net::DNS::Resolver.new(
@@ -120,13 +116,30 @@ module Workers
         return nil
       end
 
-      packet = dns.query(hostname, record_type)
+      dns.query(hostname, record_type)
+    end
 
+    def self.domain_lookup hostname, dns_server, dns_port=53, record_type = Net::DNS::A
+      # ignore if hostname is alreay an IP
+      return hostname unless hostname.match(/^\d+\.\d+\.\d+\.\d+$/).nil?
+      packet = dns_lookup hostname, dns_server, dns_port, record_type
       if packet.answer.blank?
         nil
       else
         packet.answer.first.address.to_s
       end
+    end
+
+    def dns_lookup hostname, dns_server=nil, dns_port=53, record_type = Net::DNS::A
+      # use default server if un-specified
+      dns_server ||= @dns_server
+      self.class.dns_lookup hostname, dns_server, dns_port, record_type
+    end
+
+    def domain_lookup hostname, dns_server=nil, dns_port=53, record_type = Net::DNS::A
+      # use default server if un-specified
+      dns_server ||= @dns_server
+      self.class.domain_lookup hostname, dns_server, dns_port, record_type
     end
 
     # Replaced parameters embeded in strings using the #{...} syntax

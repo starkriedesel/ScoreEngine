@@ -1,0 +1,55 @@
+.twelve.columns.panel
+  = form_tag dns_tool_path, class: 'formee' do
+    - unless flash[:dns_packet].nil?
+      .row
+        .twelve.columns
+          %h5
+            - if flash[:first_anser].blank?
+              Domain Not Found
+            - else
+              = "First Result: #{flash[:first_anser]}"
+      .row
+        .twelve.columns.optional
+          %h5
+            Full Results:
+            = link_to_function '[+]', 'toggle_optional(this)'
+          .content
+            %blockquote
+              = simple_format flash[:dns_packet]
+      %hr
+
+    .row.do_resizeY
+      .six.columns.resize_toY
+        = label_tag 'domain', 'Domain'
+        = text_field_tag 'domain'
+      .six.columns.resize_fromY
+        %div{style:'position: absolute; bottom: 5px; left: 5px;'}
+          = submit_tag 'Go'
+    %hr
+
+    .optional
+      .row
+        .six.columns
+          = label_tag 'server', 'DNS Server'
+          = select_tag 'server', options_for_select([['Default DNS','default'],['Custom DNS','ip']] + @team_list)
+        .six.columns
+          = label_tag 'type', 'Record Type'
+          = select_tag 'type', options_for_select([['A','A'],['AAAA','AAAA'],['MX','MX']])
+
+      %hr.hidden
+      .content
+        .row
+          .six.columns
+            = label_tag 'server_ip', 'DNS IP'
+            = text_field_tag 'server_ip'
+
+:javascript
+  $('#server').change(function(){
+    if($(this).val() == 'ip') {
+      show_optional(this);
+      $('hr.hidden').show();
+    } else {
+      hide_optional(this);
+      $('hr.hidden').hide();
+    }
+  })

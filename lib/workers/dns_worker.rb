@@ -11,11 +11,6 @@ module Workers
     end
 
     def do_check
-      dns = Net::DNS::Resolver.new(
-          nameservers: params[:rhost],
-          port: params[:rport].to_i
-      )
-
       record_type = params[:record_type]
       if record_type == 'A'
         record_type = Net::DNS::A
@@ -26,7 +21,7 @@ module Workers
       end
 
       packet = perform_action do
-        dns.query(params[:hostname], record_type)
+        dns_lookup params[:hostanme], params[:rhost], params[:rport].to_i, record_type
       end
 
       if packet.answer.blank?

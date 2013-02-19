@@ -38,13 +38,49 @@ $(function() {
     })
 });
 
-function toggle_optional(tag)
+function perform_optional(tag, action)
 {
     var fieldset = $(tag).parents('.optional');
     var content = fieldset.find('.content');
     var toggle = fieldset.find('.optional_toggle');
-    toggle.val(content.is(':visible') ? 0 : 1);
-    content.toggle(400);
+    if(action == 'toggle')
+    {
+        var state = perform_optional(tag, 'get');
+        perform_optional(tag, state ? 'hide' : 'show');
+        return ! state;
+    }
+    else if(action == 'show' || action == 'hide')
+    {
+        var new_sate = action == 'show';
+        toggle.val(new_sate ? 0 : 1);
+        if(new_sate)
+            content.show(400);
+        else
+            content.hide(400);
+        return new_sate;
+    }
+    else
+        return content.is(':visible') ? true : false;
+}
+
+function toggle_optional(tag)
+{
+    perform_optional(tag, 'toggle');
+}
+
+function get_optional_state(tag)
+{
+    return perform_optional(tag, 'get');
+}
+
+function show_optional(tag)
+{
+    perform_optional(tag, 'show');
+}
+
+function hide_optional(tag)
+{
+    perform_optional(tag, 'hide');
 }
 
 function getServiceParams()
