@@ -1,0 +1,63 @@
+.twelve.columns.panel
+  = form_tag hash_tool_path, multipart: true, class: 'formee' do
+    - unless flash[:hash].blank?
+      .row
+        .twelve.columns
+          %h5
+            = "#{flash[:type].upcase}: #{flash[:hash]}"
+      - unless flash[:source].nil?
+        .row
+          .twelve.columns.optional
+            %h5
+              Source:
+              = link_to_function '[+]', 'toggle_optional(this)'
+            .content
+              %blockquote
+                = simple_format h(flash[:source])
+      %hr
+    .row
+      .six.columns
+        = label_tag 'type', 'Hash Type'
+        = select_tag 'type', options_for_select([['MD5','md5'],['SHA1','sha1'],['SHA2','sha2']])
+    %hr
+    .row.do_resizeY
+      .six.columns.resize_toY
+        = label_tag 'source', 'Source'
+        = select_tag 'source', options_for_select([['Text','text'],['HTTP','http'],['HTTPS','https'],['File','file']])
+      .six.columns.resize_fromY
+        %div{style:'position: absolute; bottom: 5px; left: 5px;'}
+          = submit_tag 'Go'
+    %hr
+    #md5_options
+      .row#http
+        .six.columns
+          = label_tag 'http', 'Http://'
+          = text_field_tag 'http'
+      .row#https
+        .six.columns
+          = label_tag 'https', 'Https://'
+          = text_field_tag 'https'
+      .row#text
+        .twelve.columns
+          = label_tag 'text', 'Text'
+          = text_area_tag 'text'
+      .row#file
+        .six.columns
+          = label_tag 'file', 'File'
+          = file_field_tag 'file'
+
+:javascript
+  $('#source').change(function() {
+    var val = $(this).val();
+    $('#md5_options .row').hide();
+    $('#md5_options #'+val).show();
+  })
+  $(function() {
+    var default_source = $('#source').val();
+    $('#md5_options .row').each(function() {
+      if($(this).attr('id') == default_source)
+        $(this).show();
+      else
+        $(this).hide();
+    });
+  });
