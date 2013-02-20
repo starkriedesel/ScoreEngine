@@ -23,6 +23,7 @@
         .form-error-text
           = @team.errors[:dns_server].first unless @team.errors[:dns_server].blank?
 
-    = f.submit ((%w{new create}.include? params[:action]) ? 'Create' : 'Edit')
+    .left
+      = f.submit ((%w{new create}.include? params[:action]) ? 'Create' : 'Edit')
     .right
-      = button_to 'Back', :back
+      = button_to_function 'Back', "window.location='#{teams_path}'"

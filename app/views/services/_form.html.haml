@@ -57,3 +57,4 @@
     .left
       = f.submit ((%w{new create}.include? params[:action]) ? 'Create' : 'Edit')
     .right
+      = button_to_function 'Back', "window.location='#{services_path}'"
