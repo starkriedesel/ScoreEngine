@@ -1,6 +1,9 @@
 class ServicesController < ApplicationController
   before_filter :authenticate_user!
   before_filter :authenticate_admin!, except: [:index, :show]
+  before_filter do
+    @header_icon = 'cloud'
+  end
 
   # GET /services
   def index
@@ -23,7 +26,8 @@ class ServicesController < ApplicationController
       end
     end
 
-    @header_text = "Team #{@service.team_name} - #{@service.name}"
+    @header_text = @service.name
+    @header_text = "Team #{@service.team_name} - #{@header_text}" if current_user_admin?
     @header_class = service_class @service
   end
 

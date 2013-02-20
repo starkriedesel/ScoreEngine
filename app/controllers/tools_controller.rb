@@ -7,6 +7,7 @@ class ToolsController < ApplicationController
   # GET /tools/hash
   def hash
     @header_text = "Hash Tool"
+    @header_icon = "lock"
   end
 
   # POST /tools/hash
@@ -50,6 +51,7 @@ class ToolsController < ApplicationController
   # GET /tools/dns
   def dns
     @header_text = 'DNS Tool'
+    @header_icon = 'info-sign'
     @team_list = Team.all.collect{|t| ["Team #{t.name}", "team##{t.id}"]}
   end
 

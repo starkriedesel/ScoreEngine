@@ -1,6 +1,9 @@
 class TeamsController < ApplicationController
   before_filter :authenticate_user!
   before_filter :authenticate_admin!, except: [:index, :show]
+  before_filter do
+    @header_icon = 'group'
+  end
 
   def index
     redirect_to services_path

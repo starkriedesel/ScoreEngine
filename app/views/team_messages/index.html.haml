@@ -1,24 +1,11 @@
-%h1 Listing team_messages
+%dl.tabs
+  %dd.active= link_to 'Inbox', '#inbox'
+  %dd= link_to 'Outbox', '#outbox'
 
-%table
-  %tr
-    %th From
-    %th Subject
-    %th Sent
-    %th
-    %th
-    %th
+%ul.tabs-content
+  %li.active#inboxTab
+    = render partial: 'table', locals: {messages: @inbox}
+  %li#outboxTab
+    = render partial: 'table', locals: {messages: @outbox}
 
-  - @team_messages.each do |team_message|
-    %tr
-      %td= "Team #{team_message.team_id}"
-      %td= team_message.subject
-      %td
-        %time.timeago{datetime:team_message.created_at.to_time.iso8601}= time_ago_in_words team_message.created_at
-      %td= link_to 'Show', team_message
-      %td= link_to 'Edit', edit_team_message_path(team_message)
-      %td= link_to 'Destroy', team_message, method: :delete, data: { confirm: 'Are you sure?' }
-
-%br
-
-= link_to 'New Team message', new_team_message_path
+= link_to 'New Message', new_team_message_path, class: 'button'

@@ -8,6 +8,7 @@ class ApplicationController < ActionController::Base
   def defaults
     @header_text = nil
     @header_class = ''
+    @header_icon = ''
   end
 
   def authenticate_admin!

@@ -11,25 +11,28 @@
       %ul.right
         - if user_signed_in?
           %li
-            = link_to 'Messages', team_messages_path
+            = link_to '<i class="icon-envelope-alt"></i> Messages'.html_safe, team_messages_path
           %li
-            = link_to 'Services', services_path
+            = link_to '<i class="icon-cloud"></i> Services'.html_safe, services_path
           %li
-            = link_to 'Users', users_path
+            = link_to '<i class="icon-group"></i> Users'.html_safe, users_path
           %li.has-dropdown
-            = link_to 'Tools', '#'
+            = link_to '<i class="icon-stethoscope"></i> Tools'.html_safe, '#'
             %ul.dropdown
-              %li= link_to 'Hash', hash_tool_path
-              %li= link_to 'DNS', dns_tool_path
+              %li= link_to '<i class="icon-lock"></i> Hash'.html_safe, hash_tool_path
+              %li= link_to '<i class="icon-info-sign"></i> DNS'.html_safe, dns_tool_path
           %li.has-button
-            = link_to 'Logout', destroy_user_session_path, method: :delete, class: 'small button'
+            = link_to '<i class="icon-user" style="color:black;"></i> Logout'.html_safe, destroy_user_session_path, method: :delete, class: 'small button'
         - else
           %li.has-button
-            = link_to 'Login', new_user_session_path, class: 'small button'
+            = link_to '<i class="icon-user"></i> Login'.html_safe, new_user_session_path, class: 'small button'
 
 
 - if not @header_text.nil?
   %header#titlebar{class: @header_class}
     .row
       .twelve.columns
-        %h1= @header_text
+        %h1
+          - unless @header_icon.blank?
+            %i{class:"icon-#{@header_icon}"}
+          = @header_text

@@ -1,0 +1,28 @@
+%table.twelve
+  %thead
+    %tr
+      - if current_user_admin?
+        %th.two Team
+        %th.five Subject
+        %th.two Sent
+        %th.three
+      - else
+        %th.eight Subject
+        %th.two Sent
+        %th.two
+
+  %tbody
+    - messages.each do |team_message|
+      %tr
+        - if current_user_admin?
+          %td= "Team #{team_message.team_id}"
+        %td= link_to team_message.subject, team_message
+        %td
+          %time.timeago{datetime:team_message.created_at.to_time.iso8601}= time_ago_in_words team_message.created_at
+        %td
+          %ul.inline-list
+            %li= link_to 'Reply <i class="icon-reply" style="text-decoration:none;"></i>'.html_safe, new_team_message_path
+            - if current_user_admin?
+              %li= link_to 'Destroy <i class="icon-trash" style="text-decoration:none;"></i>'.html_safe, team_message, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br

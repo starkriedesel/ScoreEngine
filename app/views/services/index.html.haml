@@ -35,17 +35,17 @@
                 - if current_user_admin?
                   %td
                     %ul.inline-list
-                      %li= link_to 'Edit', edit_service_path(service)
-                      %li= link_to_function 'Duplicate', "duplicate_service('#{service.id}','#{service.team_id}','#{service.name}')"
-                      %li= link_to 'Destroy', service, method: :delete, data: { confirm: 'Are you sure?' }
+                      %li= link_to '<i class="icon-pencil"> </i>Edit'.html_safe, edit_service_path(service)
+                      %li= link_to_function '<i class="icon-bolt"> </i>Duplicate'.html_safe, "duplicate_service('#{service.id}','#{service.team_id}','#{service.name}')"
+                      %li= link_to '<i class="icon-trash"> </i>Destroy'.html_safe, service, method: :delete, data: { confirm: 'Are you sure?' }
       - if current_user_admin? and not (team.id.nil? or team.id == 0)
-        = link_to 'Edit Team', edit_team_path(team), class: 'button'
+        = link_to '<i class="icon-pencil"></i> Edit Team'.html_safe, edit_team_path(team), class: 'button'
     - is_first = false
 
 - if current_user_admin?
   %br
-  = link_to 'Add Service', new_service_path, class: 'button'
-  = link_to 'Add Team', new_team_path, class: 'button'
+  = link_to '<i class="icon-cloud"></i> Add Service'.html_safe, new_service_path, class: 'button'
+  = link_to '<i class="icon-group"></i> Add Team'.html_safe, new_team_path, class: 'button'
 
   #duplicateModal.reveal-modal
     %a.close-reveal-modal &#215;
