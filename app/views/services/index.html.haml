@@ -18,7 +18,8 @@
             %th Worker
             %th Host
             %th Uptime
-            %th
+            - if current_user_admin?
+              %th
 
         %tbody
           - service_list.each do |service|
@@ -31,32 +32,34 @@
                 %td= service.worker
                 %td= service.params[service.worker]['rhost']+" : "+service.params[service.worker]['rport']
                 %td= "#{service.up_time}%"
-                %td
-                  %ul.inline-list
-                    %li= link_to 'Edit', edit_service_path(service)
-                    %li= link_to_function 'Duplicate', "duplicate_service('#{service.id}','#{service.team_id}','#{service.name}')"
-                    %li= link_to 'Destroy', service, method: :delete, data: { confirm: 'Are you sure?' }
-      - unless team.id.nil? or team.id == 0
+                - if current_user_admin?
+                  %td
+                    %ul.inline-list
+                      %li= link_to 'Edit', edit_service_path(service)
+                      %li= link_to_function 'Duplicate', "duplicate_service('#{service.id}','#{service.team_id}','#{service.name}')"
+                      %li= link_to 'Destroy', service, method: :delete, data: { confirm: 'Are you sure?' }
+      - if current_user_admin? and not (team.id.nil? or team.id == 0)
         = link_to 'Edit Team', edit_team_path(team), class: 'button'
     - is_first = false
 
-%br
-= link_to 'Add Service', new_service_path, class: 'button'
-= link_to 'Add Team', new_team_path, class: 'button'
+- if current_user_admin?
+  %br
+  = link_to 'Add Service', new_service_path, class: 'button'
+  = link_to 'Add Team', new_team_path, class: 'button'
 
-#duplicateModal.reveal-modal
-  %a.close-reveal-modal &#215;
-  %h2
-    Duplicate
-    %span#service_name
-  = form_tag service_duplicate_path, method: :post, class: 'formee' do
-    = hidden_field_tag "service_id", ''
-    .row
-      .eight.columns.end
-        = label_tag "Team"
-        = select_tag "team_id", options_for_select(Team.options_list)
-    .row
-      = submit_tag "Duplicate"
+  #duplicateModal.reveal-modal
+    %a.close-reveal-modal &#215;
+    %h2
+      Duplicate
+      %span#service_name
+    = form_tag service_duplicate_path, method: :post, class: 'formee' do
+      = hidden_field_tag "service_id", ''
+      .row
+        .eight.columns.end
+          = label_tag "Team"
+          = select_tag "team_id", options_for_select(Team.options_list)
+      .row
+        = submit_tag "Duplicate"
 
 
 :javascript

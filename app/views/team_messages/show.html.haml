@@ -1,0 +1,15 @@
+%p#notice= notice
+
+%p
+  %b Team:
+  = @team_message.team_id
+%p
+  %b Subject:
+  = @team_message.subject
+%p
+  %b Content:
+  = @team_message.content
+
+= link_to 'Edit', edit_team_message_path(@team_message)
+\|
+= link_to 'Back', team_messages_path

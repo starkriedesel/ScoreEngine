@@ -1,16 +1,28 @@
 class ServicesController < ApplicationController
+  before_filter :authenticate_user!
+  before_filter :authenticate_admin!, except: [:index, :show]
+
   # GET /services
   def index
     @services = Hash.new([])
-    #Service.includes(:team).order(:team_id).all.each {|s| @services[s.team] += [s]}
-    @services[nil] = Service.where(team_id: nil).all
-    Team.includes(:services).order(:id).all.each {|t| @services[t] += t.services}
+    @services[nil] = Service.where(team_id: nil).all if current_user_admin?
+    teams = Team.includes(:services).order(:id)
+    teams = teams.where(id: current_user.team_id) unless current_user_admin?
+    teams.all.each {|t| @services[t] += t.services}
     @header_text = "Services"
   end
 
   # GET /services/1
   def show
     @service = Service.find(params[:id])
+
+    # Redirect if user should not be accessing this service
+    unless current_user_admin?
+      if @service.team_id.blank? or @service.team_id != current_user.team_id
+        redirect_to services_path, flash: {error: 'You do not have sufficient privleges for that'}
+      end
+    end
+
     @header_text = "Team #{@service.team_name} - #{@service.name}"
     @header_class = service_class @service
   end

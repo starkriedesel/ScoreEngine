@@ -12,7 +12,12 @@
     %li{id: "team#{team.id}Tab", class: (is_first ? 'active':'')}
       %ul
         - user_list.each do |user|
-          %li= link_to user.username, edit_user_path(user)
-      - if user_list.blank?
+          %li{style:(user.admin? ? 'font-weight:bold; ' : '')+'font-size:23px;'}
+            = link_to user.username.capitalize, edit_user_path(user)
+      - unless user_list.blank?
+        %div
+          %b Bold
+          users are admins
+      - else
         %h5 No Users
     - is_first = false

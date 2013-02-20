@@ -42,4 +42,8 @@ module ApplicationHelper
     return '' unless service.is_a? Service
     status_class service.status
   end
+
+  def current_user_admin?
+    current_user.try(:admin?) ? true : false
+  end
 end

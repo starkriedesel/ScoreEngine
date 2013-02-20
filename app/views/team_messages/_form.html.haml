@@ -1,0 +1,35 @@
+= form_for @team_message, html: {class: 'formee'} do |f|
+  %fieldset
+    .six.columns
+      = f.label :team_id do
+        Team
+        %em.formee-req *
+      = f.select :team_id, Team.options_list.select{|t| not t[1].blank?}
+      .hint-text
+        Team to send message to
+      .form-error-text
+        = @team_message.errors[:team_id].first if @team_message.errors[:team_id].length > 0
+        &nbsp;
+    .twelve.columns
+      = f.label :subject do
+        Subject
+        %em.formee-req *
+      = f.text_field :subject
+      .hint-text
+        Subject of message
+      .form-error-text
+        = @team_message.errors[:subject].first if @team_message.errors[:subject].length > 0
+        &nbsp;
+    .twelve.columns
+      = f.label :content do
+        Content
+        %em.formee-req *
+      = f.text_area :content
+      .hint-text
+        Content of message
+      .form-error-text
+        = @team_message.errors[:content].first if @team_message.errors[:content].length > 0
+        &nbsp;
+  .left
+    = f.submit ((%w{new create}.include? params[:action]) ? 'Send' : 'Edit')
+  .right

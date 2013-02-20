@@ -19,7 +19,10 @@ ScoreEngine::Application.routes.draw do
   # Users
   get '/users' => 'users#index', as: :users
   get '/users/:id/edit' => 'users#edit', as: :edit_user
-  put '/users/:id' => 'users#update'
+  put '/users/:id' => 'users#update', as: :user
+
+  # Team Messages
+  resources :team_messages
 
   # Tools
   get "tools/hash" => 'tools#hash', as: :hash_tool
