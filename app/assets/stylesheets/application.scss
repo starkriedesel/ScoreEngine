@@ -98,11 +98,14 @@ input:focus ~ .hint-text {
   }
 }
 
+table a {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
 table.services tr td {
   a {
-    font-weight: bold;
     color: inherit;
-    text-decoration: underline;
   }
 }
 
@@ -149,6 +152,15 @@ table.services tr.error td {
   //text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.4);
   text-align: center;
   //overflow: hidden;
+}
+
+.message_content * {
+  font-size: 1.7em;
+  color: black;
+}
+
+a [class^="icon-"] {
+  text-decoration: none;
 }
 
 .hidden {
