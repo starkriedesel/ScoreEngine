@@ -25,9 +25,9 @@ module Workers
         http.verify_mode = OpenSSL::SSL::VERIFY_NONE
       end
       response = http.request(Net::HTTP::Get.new(uri.request_uri))
-      if response.code == '301' and count < 5
+      if (response.code == '301' or response.code == '302') and count < 5
         new_url = response.header['location']
-        log.debug_message += "Following 301: #{new_url}\n" unless log.nil?
+        log.debug_message += "Following #{response.code}: #{new_url}\n" unless log.nil?
         return make_request(new_url, log, count + 1)
       end
       response
@@ -47,13 +47,21 @@ module Workers
       end
 
       unless response.nil?
+        @log.debug_message += "Http Responce Code #{response.code}\n"
+
         if response.code == '200'
-          @log.status = ServiceLog::STATUS_RUNNING
+          @log.debug_message += "Checking page against MD5/Regex: #{params[:home_check]}" unless params[:home_check].blank?
+          if params[:home_check].blank? or perform_check response.body, params[:home_check]
+            @log.message = "Http Responce Code #{response.code}"
+            @log.status = ServiceLog::STATUS_RUNNING
+          else
+            log_server_error "Incorrect Response (Defacement?)"
+          end
         else
+          @log.message = "Http Responce Code #{response.code}"
           @log.status = ServiceLog::STATUS_ERROR
         end
 
-        @log.message = "Http Responce Code #{response.code}"
         @log.debug_message += "\nResponse:\n#{response.body}"
       end
     end

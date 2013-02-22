@@ -121,6 +121,10 @@ table.services tr.error td {
   color: $service-error-color;
 }
 
+table.messages .inline-list {
+  margin-bottom: 0px;
+}
+
 .tabs.vertical dd:hover {
   a {
     background-color: #d8d8d8;

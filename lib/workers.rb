@@ -53,7 +53,7 @@ module Workers
         return {} if new_params.nil?
         new_params.each do |k,v|
           v[:default] = '' unless v.key? :default
-          v[:name] = ActiveSupport::Inflector.humanize(k) unless v.key? :name
+          v[:name] = ActiveSupport::Inflector.titleize(k) unless v.key? :name
           v[:description] = '' unless v.key? :description
           v[:required] = false unless v.key? :required or v[:required] != true
           v[:param_replace] = false unless v.key? :param_replace

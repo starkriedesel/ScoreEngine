@@ -5,10 +5,10 @@ module Workers
     set_default_params rport: 21
     set_service_params({
       username: {description: 'User to login as', default: 'anonymous', required: true},
-      password: {description: 'Password to login with', default: ''},
+      password: {description: 'Password to login with'},
       static_file: {description: 'File whose contents must stay static'},
       static_file_check: {description: 'MD5/Regex of file static file'},
-      upload_dir: {description: 'Directory w/ write priveleges (blank for no upload)', default: ''},
+      upload_dir: {description: 'Directory w/ write priveleges (blank for no upload)'},
     })
 
     def worker_name
@@ -18,12 +18,8 @@ module Workers
     def do_check
       params[:upload_dir].chomp! '/'
 
-      @log.debug_message = "Opening Connection to: #{params[:rhost]}:#{params[:rport]}\n"
-      if params[:password].blank?
-        @log.debug_message += "Credentials: #{params[:username]} (NO PASSWORD)\n"
-      else
-        @log.debug_message += "Credentials: #{params[:username]} : #{params[:password]}\n"
-      end
+      log_server_connect
+      log_server_login
 
       upload_file_contents = Time.now.to_i.to_s
       upload_file_name = "#{params[:upload_dir]}/flag-#{Time.now.to_i.to_s}.txt"
@@ -50,9 +46,9 @@ module Workers
       end
 
       if @log.status.blank?
-        unless params[:static_contents].blank?
-          @log.debug_message += "Checking file contents, should be: #{params[:static_contents]}\n"
-          if  static_contents != params[:static_contents]
+        unless params[:static_file_check].blank?
+          @log.debug_message += "Checking file contents, should be MD5/Regex: #{params[:static_file_check]}\n"
+          if perform_check static_contents, params[:static_file_check]
             @log.status = ServiceLog::STATUS_ERROR
             @log.message = "Invalid file contents"
             return

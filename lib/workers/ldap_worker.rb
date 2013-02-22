@@ -16,7 +16,8 @@ module Workers
     def do_check
       email = "#{params[:username]}@#{params[:domain]}"
 
-      @log.debug_message = "Host: #{params[:rhost]} : #{params[:rport]}\nAuth: #{email} : #{params[:password]}\n\n"
+      log_server_connect
+      log_server_login email
 
       ldap = Net::LDAP.new host: params[:rhost], port: params[:rport], auth: {method: :simple, username: email, password: params[:password]}
 

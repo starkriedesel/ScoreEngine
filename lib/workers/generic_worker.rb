@@ -2,6 +2,7 @@ require 'uri'
 require 'tempfile'
 require 'net/ssh'
 require 'net/dns'
+require 'rack/auth/digest/md5'
 
 module Workers
   class GenericWorker
@@ -24,6 +25,8 @@ module Workers
         Dns: 'DnsWorker',
         Mysql: 'MysqlWorker',
         Ldap: 'LdapWorker',
+        Smtp: 'SmtpWorker',
+        Imap: 'ImapWorker',
     }.with_indifferent_access
 
     # @param [Service] service
@@ -78,6 +81,7 @@ module Workers
       params.each{|k,v| params[k.to_s] = v.to_s} # make sure each key/value is a string
       @log = ServiceLog.new(service_id: @service.id, message:'', debug_message:'')
       params[:rhost] = domain_lookup params[:rhost]
+      choose_username_password # Randomly choose username/password combo from comma separated list
       self.do_check
       unless @log.message.blank?
         return @log.status if @log.save
@@ -97,6 +101,20 @@ module Workers
       message ||= "There was an error"
       @log.debug_message += message
       @log.message += message
+    end
+
+    def log_server_connect
+      @log.debug_message = "Opening Connection to: #{params[:rhost]}:#{params[:rport]}\n"
+    end
+
+    def log_server_login username=nil, password=nil
+      username = params[:username] if username.nil?
+      password = params[:password] if password.nil?
+      if password.blank?
+        @log.debug_message += "Credentials: #{username} (NO PASSWORD)\n"
+      else
+        @log.debug_message += "Credentials: #{username} : #{password}\n"
+      end
     end
 
     def self.dns_lookup hostname, dns_server, dns_port=53, record_type = Net::DNS::A
@@ -161,13 +179,43 @@ module Workers
         log_server_error "Authentication failed"
       rescue => e
         if @exceptions.key? e.class.to_s
-          @exceptions[e.class.to_s].call e
+          p = @exceptions[e.class.to_s]
+          p.call e unless p.nil?
+          log_server_error e.message if p.nil?
         else
           #log_server_error "Exception: #{e.class.name}"
           raise e
         end
       end
       nil
+    end
+
+    def choose_username_password
+      params[:username].split! ',' if not params[:username].nil? and params[:username].include? ","
+      params[:password].split! ',' if not params[:password].nil? and params[:password].include? ","
+
+      if params[:username].kind_of? Array
+        if params[:password].kind_of? Array
+          n = rand([params[:username].length, params[:password].length].min)
+          params[:username] = params[:username][n]
+          params[:password] = params[:password][n]
+        else
+          params[:username] = params[:username][rand(params[:username].length)]
+        end
+      else
+        params[:password] = params[:password].first if params[:password].kind_of? Array
+      end
+
+      params[:password].strip! unless params[:password].nil?
+      params[:username].strip! unless params[:password].nil?
+    end
+
+    def perform_check content, check_value
+      if (check_value =~ /^[a-f0-9]{32}$/i).nil?
+        not (content =~ Regexp.new(check_value)).nil?
+      else
+        Digest::MD5.hexdigest(content) == check_value.downcase
+      end
     end
   end
 end

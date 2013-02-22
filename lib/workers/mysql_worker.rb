@@ -24,7 +24,9 @@ module Workers
       perform_action do
         select_response = nil
 
-        @log.debug_message = "Host: #{params[:rhost]} : #{params[:rport]}\nUsername: #{params[:username]}\nPassword: #{params[:password]}\nDatabase: #{params[:database]}\n\n"
+        log_server_connect
+        log_server_login
+        @log.debug_message += "Database: #{params[:database]}\n\n"
 
         client = Mysql2::Client.new host: params[:rhost], port: params[:rport].to_i, username: params[:username], password: params[:password], database: params[:database]
         [:select_table, :select_columns, :insert_table, :insert_column].each {|k| params[k] = client.escape params[k] unless params[k].nil?}
@@ -40,7 +42,7 @@ module Workers
           else
             unless params[:select_check].blank?
               @log.debug_message += "Checking select response for: #{params[:select_check]}\n"
-              if (select_response.first[params[:select_column]] =~ %r{#{params[:select_check]}}).nil?
+              unless perform_check select_response.first[params[:select_column]], params[:select_check]
                 log_server_error "Incorrect response for select statement"
                 return
               end

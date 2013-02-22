@@ -15,7 +15,9 @@ module Workers
     end
 
     def do_check
-      @log.debug_message = "Host: #{params[:rhost]} : #{params[:rport]}\nUsername: #{params[:username]}\nPassword: #{params[:password]}\n\n"
+      log_server_connect
+      log_server_login
+      @log.debug_message += "\n"
 
       response = perform_action do
         Net::SSH.start(params[:rhost], params[:username], password: params[:password]) do |ssh|
@@ -26,12 +28,12 @@ module Workers
       unless response.nil?
         @log.debug_message += "Response:\n#{response}\n\nRegex Expected: /#{params[:command_check]}/"
 
-        if (response =~ %r{#{params[:command_check]}}).nil?
-          @log.status = ServiceLog::STATUS_ERROR
-          @log.message = "Incorrect response"
-        else
+        if perform_check response, params[:command_check]
           @log.status = ServiceLog::STATUS_RUNNING
           @log.message = "Correct response recieved"
+        else
+          @log.status = ServiceLog::STATUS_ERROR
+          @log.message = "Incorrect response"
         end
       end
     end
