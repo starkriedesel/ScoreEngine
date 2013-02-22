@@ -12,6 +12,7 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery-ui
 //= require_tree ./foundation/
 //= require formee
 //= require jquery.timeago
@@ -143,31 +144,74 @@ $(document).ready(function() {
     $("time.timeago").timeago();
 });
 
+function changeStatusClass(selector, classname) {
+    var header_classes = ['off', 'error', 'running', 'down'];
+    var highlight_colors = ['#d8d8d8','#E8C48F','#CFE9AF','#CC473E']
+    var n = $.inArray(classname, header_classes);
+    if(n<0)
+    alert("BAD CLASS");
+    if(n < 0 || selector.hasClass(classname))
+        return;
+    header_classes.splice(n,1);
+    for(i=0; i<header_classes.length; ++i)
+        selector.removeClass(header_classes[i]);
+    selector.addClass(classname);
+    selector.children('a').effect("highlight",{color: highlight_colors[n]},1000);
+}
+
+function updateProgressBar(id, value) {
+    $('#'+id+' .meter').animate({width:''+value+'%'}, 500);
+    $('#'+id+' .text').html(''+value+'%');
+}
+
 function updateService() {
     var service_id = $('#service_id').val();
     var last_log_id = $('#last_log_id').val();
-    var header_classes = ['off', 'error', 'running', 'down'];
-    if(! service_id || ! last_log_id)
-        return;
+    var url = '';
+
+    if(service_id) {
+        if(! last_log_id)
+            return;
+        url = '/services/'+service_id+'/status/'+last_log_id+'.json';
+    }
+    else {
+        url = '/services/status.json';
+    }
+
     $.ajax({
-        url: '/services/'+service_id+'/newlogs/'+last_log_id+'.json'
+        url: url
     }).done(function(data) {
-        // Change header colors
-        for(i=0; i<header_classes.length; ++i)
-            $('header#titlebar').removeClass(header_classes[i]);
-        if($.inArray(data.header_class, header_classes) >= 0)
-            $('header#titlebar').addClass(data.header_class);
 
-        // Prepend HTML for logs to #service_log
-        $('#service_logs').prepend(data.log_html);
+        // Only for Services#show page
+        if(service_id) {
+            // Change header colors
+            changeStatusClass($('header#titlebar'), data.header_class);
 
-        // Update the last log id
-        if(data.last_log_id > 0)
-            $('#last_log_id').val(data.last_log_id);
+            // Prepend HTML for logs to #service_log
+            $('#service_logs').prepend(data.log_html);
 
-        // Update uptime
-        //$('#up_time .meter').width(''+data.up_time+'%');
-        $('#up_time .meter').animate({width:''+data.up_time+'%'}, 500)
-        $('#up_time .text').html(''+data.up_time+'%')
+            // Update the last log id
+            if(data.last_log_id > 0)
+                $('#last_log_id').val(data.last_log_id);
+
+            // Update uptime
+            updateProgressBar('up_time', data.uptime)
+
+        // Only for Services#index page
+        } else {
+            // Update Team Uptimes
+            for(var i=0; i<data.team_uptime.length; i++) {
+                if(data.team_uptime[i].id == null)
+                    team_id = '';
+                else
+                    team_id = data.team_uptime[i].id;
+                updateProgressBar('uptime'+team_id, data.team_uptime[i].uptime);
+            }
+        }
+
+        // Update Service List
+        for(var i=0; i<data.service_list.length; i++) {
+            changeStatusClass($('#service'+data.service_list[i].id), data.service_list[i].status_class);
+        }
     });
 }

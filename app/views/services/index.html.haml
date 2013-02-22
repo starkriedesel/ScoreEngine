@@ -10,6 +10,11 @@
   - @services.each do |team, service_list|
     - team = Team.new(name: 'None', id: 0) if team.nil?
     %li{id: "team#{team.id}Tab", class: (is_first ? 'active':'')}
+      .progress.success.text{id: "uptime#{team.id}"}
+        .meter{style:"width:#{team.uptime}%"}
+          .text
+            = "#{team.uptime}%"
+
       %table.twelve.services
         %thead
           %tr
@@ -25,9 +30,8 @@
           - service_list.each do |service|
 
             - unless service.blank?
-              %tr{class: service_class(service)}
-                %td{style:'padding:0px; text-align:center'}
-                  %img{src: service_img(service)}
+              %tr{class: service_class(service), id:"service#{service.id}"}
+                %td.service_img{style:'padding:0px;'}
                 %td= link_to service.name, service
                 %td= service.worker
                 %td= service.params[service.worker]['rhost']+" : "+service.params[service.worker]['rport']
@@ -63,6 +67,8 @@
 
 
 :javascript
+  setInterval(updateService, 5*1000);
+
   function duplicate_service(service_id, team_id, service_name) {
     $('#duplicateModal #service_name').html("'"+service_name+"'");
     $('#duplicateModal #service_id').val(service_id);

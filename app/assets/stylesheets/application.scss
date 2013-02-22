@@ -66,34 +66,27 @@ input:focus ~ .hint-text {
     color: #000;
 }
 
-.tabs.vertical.services dd a{
-  font-weight: bold;
-}
-
-.tabs.vertical.services dd.off {
-  border-left-color: $service-off-color;
-  a {
+.tabs.vertical.services {
+  dd a{
+    font-weight: bold;
+    color: inherit;
+  }
+  dd.off {
+    border-left-color: $service-off-color;
     color: #555;
   }
-}
-
-.tabs.vertical.services dd.down {
-  border-left-color: $service-down-color;
-  a {
+  dd.down {
+    border-left-color: $service-down-color;
     color: $service-down-color;
   }
-}
 
-.tabs.vertical.services dd.running {
-  border-left-color: $service-running-color;
-  a {
+  dd.running {
+    border-left-color: $service-running-color;
     color: $service-running-color;
   }
-}
 
-.tabs.vertical.services dd.error {
-  border-left-color: $service-error-color;
-  a {
+  dd.error {
+    border-left-color: $service-error-color;
     color: $service-error-color;
   }
 }
@@ -103,22 +96,51 @@ table a {
   text-decoration: underline;
 }
 
-table.services tr td {
-  a {
-    color: inherit;
+table.services {
+  tr {
+    min-height: 32px;
+    td a {
+      color: inherit;
+    }
   }
-}
 
-table.services tr.running td {
-  color: $service-running-color;
-}
+  td.service_img {
+    width: 32px;
+    background-repeat: no-repeat;
+  }
 
-table.services tr.down td {
-  color: $service-down-color;
-}
-
-table.services tr.error td {
-  color: $service-error-color;
+  tr.running {
+    td.service_img {
+      background-image: url("/assets/blueberry/check.png");
+    }
+    td {
+      color: $service-running-color;
+    }
+  }
+  tr.down {
+    td.service_img {
+      background-image: url("/assets/blueberry/close_delete.png");
+    }
+    td {
+      color: $service-down-color;
+    }
+  }
+  tr.error {
+    td.service_img {
+      background-image: url("/assets/blueberry/attention.png");
+    }
+    td {
+      color: $service-error-color;
+    }
+  }
+  tr.off {
+    td.service_img {
+      background-image: url("/assets/blueberry/off.png");
+    }
+    td {
+      color: #555;
+    }
+  }
 }
 
 table.messages .inline-list {

@@ -9,12 +9,13 @@ ScoreEngine::Application.routes.draw do
   resources :teams
 
   # Services
-  resources :services
   post '/services/:id/check' => 'services#check', as: :service_check
   post '/services/duplicate' => 'services#duplicate', as: :service_duplicate
   post '/services/:id/clear' => 'services#clear', as: :clear_service
   post '/logs/:id/clear' => 'services#clear_log', as: :clear_service_log
-  get '/services/:id/newlogs/:last_log_id' => 'services#newlogs'
+  get '/services/:id/status/:last_log_id' => 'services#status'
+  get '/services/status' => 'services#status'
+  resources :services
 
   # Users
   get '/users' => 'users#index', as: :users

@@ -8,7 +8,7 @@
     %h5= link_to "Team #{@service.team_name}", services_path+"#team#{@service.team_id}"
     %dl.vertical.tabs.services
       - Service.where(team_id: @service.team_id).all.each do |s|
-        %dd{class: service_class(s)}
+        %dd{class: service_class(s), id:"service#{s.id}"}
           = link_to s.name, s
 
 .nine.columns
@@ -22,12 +22,13 @@
             .meter{style:"width:#{@service.up_time}%"}
               .text
                 = "#{@service.up_time}%"
-  .row
-    .twelve.columns
-      %ul.button-group.even.three-up.radius
-        %li= link_to 'Edit', edit_service_path(@service), class:'button radius'
-        %li= button_to 'Clear', clear_service_path(@service), class: 'button radius'
-        %li= button_to 'Check', service_check_path(@service) , class:'button radius'
+  - if current_user_admin?
+    .row
+      .twelve.columns
+        %ul.button-group.even.three-up.radius
+          %li= link_to 'Edit', edit_service_path(@service), class:'button radius'
+          %li= button_to 'Clear', clear_service_path(@service), class: 'button radius'
+          %li= button_to 'Check', service_check_path(@service) , class:'button radius'
 
   - if @service.service_logs.count == 0
     .row

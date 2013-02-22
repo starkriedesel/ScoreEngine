@@ -1,6 +1,6 @@
 class ServicesController < ApplicationController
   before_filter :authenticate_user!
-  before_filter :authenticate_admin!, except: [:index, :show]
+  before_filter :authenticate_admin!, except: [:index, :show, :status]
   before_filter do
     @header_icon = 'cloud'
   end
@@ -125,21 +125,46 @@ class ServicesController < ApplicationController
     redirect_to service
   end
 
-  # GET /:id/newlogs/:last_log_id.json
-  def newlogs
+  # GET /status.json
+  # GET /:id/status/:last_log_id.json
+  def status
     respond_to do |format|
       format.html { raise "Invalid request" }
       format.json {
-        @service = Service.find(params[:id])
-        @logs = ServiceLog.where('service_id = ? AND id > ?', params[:id], params[:last_log_id]).order('created_at desc').all
-        log_html = ''
-        @logs.each {|log| log_html += render_to_string(partial: 'service_log', formats: [:html], locals: {log: log})}
-        render :json => {
-            header_class: status_class(@service.status),
-            last_log_id: @logs.first.nil? ? 0 : @logs.first.id,
-            up_time: @service.up_time,
-            log_html: log_html,
-        }
+        output = {}
+
+        # If a service is specified, then check for updates on that service
+        unless params[:id].nil?
+          service = Service.find(params[:id])
+          if current_user_admin? or current_user.team_id == service.team_id # user must be an admin or a member of the service team
+            logs = ServiceLog.where('service_id = ? AND id > ?', params[:id], params[:last_log_id]).order('created_at desc').all
+            log_html = ''
+            logs.each {|log| log_html += render_to_string(partial: 'service_log', formats: [:html], locals: {log: log})}
+
+            output[:header_class] = status_class(service.status)
+            output[:last_log_id] = logs.first.nil? ? 0 : logs.first.id
+            output[:uptime] = service.up_time
+            output[:log_html] = log_html
+          end
+        end
+
+        service_list = Service.select('"id", (CASE WHEN services."on" = "t" THEN (SELECT status FROM service_logs WHERE service_logs.service_id=services.id ORDER BY created_at DESC LIMIT 1) ELSE "off" END) as current_status')
+        service_list = service_list.where(team_id: current_user.team_id) unless current_user_admin?
+        service_list = service_list.all.collect do |s|
+          status_class = s.current_status == 'off' ? 'off' : status_class(s.current_status)
+          {id: s.id, status_class: status_class, status: s.current_status}
+        end
+        output[:service_list] = service_list
+
+        if params[:id].nil?
+          teams = Team
+          teams = teams.where(team_id: current_user.team_id) unless current_user_admin?
+          teams = teams.all
+          teams<< Team.new(id:0) if current_user_admin?
+          output[:team_uptime] = teams.collect {|t| {id: t.id, uptime: t.uptime}}
+        end
+
+        render :json => output
       }
     end
   end
