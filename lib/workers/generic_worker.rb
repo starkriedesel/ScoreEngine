@@ -61,7 +61,7 @@ module Workers
       nil
     end
 
-    def register_execption name, &block
+    def register_exception name, &block
       @exceptions[name.to_s] = block
     end
 
@@ -81,6 +81,11 @@ module Workers
       params.each{|k,v| params[k.to_s] = v.to_s} # make sure each key/value is a string
       @log = ServiceLog.new(service_id: @service.id, message:'', debug_message:'')
       params[:rhost] = domain_lookup params[:rhost]
+      if params[:rhost].nil?
+        log_server_error "Domain Lookup Failed: #{params[:rhost]}"
+        return @log.status if @log.save
+        return nil
+      end
       choose_username_password # Randomly choose username/password combo from comma separated list
       self.do_check
       unless @log.message.blank?

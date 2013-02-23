@@ -49,12 +49,12 @@ module Workers
       smtp = nil
       success = false
 
-      register_execption Net::SMTPFatalError
-      register_execption Net::SMTPAuthenticationError
-      register_execption Net::SMTPSyntaxError
-      register_execption Net::SMTPUnknownError
-      register_execption Net::SMTPUnsupportedCommand
-      register_execption Net::SMTPServerBusy do |e|
+      register_exception Net::SMTPFatalError
+      register_exception Net::SMTPAuthenticationError
+      register_exception Net::SMTPSyntaxError
+      register_exception Net::SMTPUnknownError
+      register_exception Net::SMTPUnsupportedCommand
+      register_exception Net::SMTPServerBusy do |e|
         log_server_error "Server Busy"
       end
 
@@ -94,11 +94,13 @@ module Workers
       # Disconnect
       smtp.finish unless smtp.nil?
 
-      if success
-        @log.status = ServiceLog::STATUS_RUNNING
-        @log.message = "Send Mail Success"
-      else
-        log_server_error "Unknown Error"
+      if @log.status.nil?
+        if success
+          @log.status = ServiceLog::STATUS_RUNNING
+          @log.message = "Send Mail Success"
+        else
+          log_server_error "Unknown Error"
+        end
       end
     end
   end

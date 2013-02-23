@@ -17,8 +17,8 @@
 
   %title= content_for?(:title) ? yield(:title) : "Score Engine"
 
-  = stylesheet_link_tag "application"
   = javascript_include_tag "application"
+  = stylesheet_link_tag "application"
   = csrf_meta_tags
 
 %body

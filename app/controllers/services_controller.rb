@@ -158,7 +158,7 @@ class ServicesController < ApplicationController
 
         if params[:id].nil?
           teams = Team
-          teams = teams.where(team_id: current_user.team_id) unless current_user_admin?
+          teams = teams.where(id: current_user.team_id) unless current_user_admin?
           teams = teams.all
           teams<< Team.new(id:0) if current_user_admin?
           output[:team_uptime] = teams.collect {|t| {id: t.id, uptime: t.uptime}}
@@ -166,6 +166,28 @@ class ServicesController < ApplicationController
 
         render :json => output
       }
+    end
+  end
+
+  def check_all
+    @check_log = ""
+    Service.includes(:team).where(on: true).all.each do |service|
+      time_start = Time.now
+      service.team = Team.new(id: 0, name:'None', dns_server: nil) if service.team.nil?
+      @check_log += "Checking service: #{service.name}\nTeam: #{service.team.name}\n"
+      begin
+        worker = service.worker_class.new service, dns_server: service.team.dns_server
+        status = worker.check
+        if status.nil?
+          @check_log += "Error while saving log\n"
+        else
+          @check_log += "Status recieved: #{ServiceLog::STATUS[status]}\n"
+        end
+      rescue => e
+        @check_log += "Caught Exception: #{e.to_s}\n"
+      end
+      time_end = Time.now
+      @check_log += "Time: #{((time_end - time_start)*1000).to_i}ms\n\n"
     end
   end
 end

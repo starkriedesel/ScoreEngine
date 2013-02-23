@@ -17,7 +17,7 @@ module Workers
     end
 
     def do_check
-      register_execption Mysql2::Error do |e|
+      register_exception Mysql2::Error do |e|
         log_server_error e.to_s
       end
 

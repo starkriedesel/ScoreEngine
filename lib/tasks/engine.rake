@@ -1,23 +1,38 @@
 namespace :engine do
   desc "Check all services"
   task :check_all => :environment do
-    Service.includes(:team).where(on: true).all.each do |service|
-      time_start = Time.now
-      service.team = Team.new(id: 0, name:'None', dns_server: nil) if service.team.nil?
-      puts "Checking service: #{service.name}\nTeam: #{service.team.name}"
-      begin
-        worker = service.worker_class.new service, dns_server: service.team.dns_server
-        status = worker.check
-        if status.nil?
-          puts "Error while saving log"
-        else
-          puts "Status recieved: #{ServiceLog::STATUS[status]}"
+    interval = 60
+    while true do
+      start_time = Time.now.to_i
+      threads = []
+
+      Service.includes(:team).where(on: true).all.each do |service|
+        threads << Thread.new do
+          output = ''
+          time_start = Time.now
+          service.team = Team.new(id: 0, name:'None', dns_server: nil) if service.team.nil?
+          output += "Checking service: #{service.name}\nTeam: #{service.team.name}\n"
+          begin
+            worker = service.worker_class.new service, dns_server: service.team.dns_server
+            status = worker.check
+            if status.nil?
+              output += "Error while saving log\n"
+            else
+              output += "Status recieved: #{ServiceLog::STATUS[status]}\n"
+            end
+          rescue => e
+            output += "Caught Exception: #{e.to_s}\n"
+          end
+          time_end = Time.now
+          output += "Time: #{((time_end - time_start)*1000).to_i}ms\n"
+          output
         end
-      rescue => e
-        puts "Caught Exception: #{e.to_s}"
       end
-      time_end = Time.now
-      puts "Time: #{((time_end - time_start)*1000).to_i}ms\n\n"
+
+      puts threads.collect{|t| t.value}.join "\n"
+
+      end_time = Time.now.to_i
+      sleep interval - (end_time - start_time)
     end
   end
 

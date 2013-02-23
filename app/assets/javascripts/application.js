@@ -13,7 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery-ui
-//= require_tree ./foundation/
+//= require foundation
 //= require formee
 //= require jquery.timeago
 
@@ -22,7 +22,7 @@
 //  identify div to match as .resize_to(X/Y)
 //  identify div to change as .resize_from(X/Y)
 //  where (X/Y) indicates if it should be width(X) or height(Y)
-$(function() {
+$(document).ready(function() {
     $('.do_resizeY').each(function() {
         var resize_height = $(this).find('.resize_toY').first().height();
         $(this).find('.resize_fromY').height(resize_height);
@@ -33,7 +33,7 @@ $(function() {
     });
 });
 
-$(function() {
+$(document).ready(function() {
     $('.optional').each(function (i,tag) {
         $(tag).find('.content').toggle($(tag).find('.optional_toggle').val() == '1');
     })
@@ -131,7 +131,7 @@ function getServiceParams()
     return 1;
 }
 
-$(function() {
+$(document).ready(function() {
     getServiceParams();
     $('#service_worker').change(getServiceParams);
 });
