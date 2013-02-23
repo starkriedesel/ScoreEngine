@@ -21,7 +21,7 @@ module Workers
       end
 
       packet = perform_action do
-        dns_lookup params[:hostanme], params[:rhost], params[:rport].to_i, record_type
+        dns_lookup params[:hostname], params[:rhost], params[:rport].to_i, record_type
       end
 
       if packet.answer.blank?

@@ -13,6 +13,7 @@ class Team < ActiveRecord::Base
   def uptime
     num_logs = ServiceLog.joins(:service).where(services:{team_id: id}).count
     num_running_logs = ServiceLog.joins(:service).where(status: ServiceLog::STATUS_RUNNING).where(services:{team_id: id}).count
+    return 0 if num_logs == 0
     ((num_running_logs.to_f / num_logs.to_f) * 100.0).to_i
   end
 end

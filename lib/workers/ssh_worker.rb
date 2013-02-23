@@ -15,6 +15,10 @@ module Workers
     end
 
     def do_check
+      #register_execption Net::SSH::Authentication::AgentError do
+      #  log_server_error "Login Failure"
+      #end
+
       log_server_connect
       log_server_login
       @log.debug_message += "\n"
