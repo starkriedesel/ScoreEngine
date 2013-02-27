@@ -41,8 +41,10 @@ module Workers
             return
           else
             unless params[:select_check].blank?
+              r = select_response.first[params[:select_column]]
+              @log.debug_message += "Received response: #{r}\n"
               @log.debug_message += "Checking select response for: #{params[:select_check]}\n"
-              unless perform_check select_response.first[params[:select_column]], params[:select_check]
+              unless r =~ %r{#{params[:select_check]}}
                 log_server_error "Incorrect response for select statement"
                 return
               end

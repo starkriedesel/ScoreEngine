@@ -17,3 +17,5 @@
 /.idea/*
 
 /Gemfile.lock
+
+/public/assets/*

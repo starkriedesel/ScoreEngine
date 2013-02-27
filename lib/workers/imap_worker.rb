@@ -16,6 +16,9 @@ module Workers
       register_exception Net::IMAP::ResponseError do |e|
         log_server_error "IMAP Error: #{e}"
       end
+      register_exception Net::IMAP::NoResponseError do |e|
+        log_server_error "Authentication failed"
+      end
 
       perform_action do
         log_server_connect

@@ -34,6 +34,7 @@ module Workers
       raise "Invalid Service Object sent to ServiceWorker" unless service.is_a? Service
 
       @service = service
+      @log = ServiceLog.new(service_id: @service.id, message:'', debug_message:'')
 
       self.params = self.class.default_params.with_indifferent_access
       if service.params? and service.params.kind_of? Hash
@@ -79,13 +80,13 @@ module Workers
     def check
       self.class.required_params.each { |name| raise "Missing param: '#{name}'" unless params.key? name }
       params.each{|k,v| params[k.to_s] = v.to_s} # make sure each key/value is a string
-      @log = ServiceLog.new(service_id: @service.id, message:'', debug_message:'')
-      params[:rhost] = domain_lookup params[:rhost]
-      if params[:rhost].nil?
+      domain_ip = domain_lookup params[:rhost]
+      if domain_ip.nil?
         log_server_error "Domain Lookup Failed: #{params[:rhost]}"
         return @log.status if @log.save
         return nil
       end
+      params[:rhost] = domain_ip
       choose_username_password # Randomly choose username/password combo from comma separated list
       self.do_check
       unless @log.message.blank?
@@ -126,13 +127,14 @@ module Workers
       dns = nil
       if dns_server.nil?
         dns = Net::DNS::Resolver.new(
-            port: dns_port
+            port: dns_port,
         )
       else
         dns_server.sub!(/(:\d+)$/, '') { dns_port = $1 if dns_port == 53 }
         dns = Net::DNS::Resolver.new(
             nameservers: dns_server,
             port: dns_port,
+            domain: 'ccdc-practice',
         )
       end
 
@@ -141,13 +143,17 @@ module Workers
       end
 
       dns.query(hostname, record_type)
+
+    rescue Net::DNS::Resolver::NoResponseError
+      puts "************NoResponseError: #{dns_server}, #{dns_port}, #{hostname}\n"
+      nil
     end
 
     def self.domain_lookup hostname, dns_server, dns_port=53, record_type = Net::DNS::A
-      # ignore if hostname is alreay an IP
+      # ignore if hostname is already an IP
       return hostname unless hostname.match(/^\d+\.\d+\.\d+\.\d+$/).nil?
       packet = dns_lookup hostname, dns_server, dns_port, record_type
-      if packet.answer.blank?
+      if packet.nil? or packet.answer.blank?
         nil
       else
         packet.answer.first.address.to_s
@@ -186,7 +192,7 @@ module Workers
         if @exceptions.key? e.class.to_s
           p = @exceptions[e.class.to_s]
           p.call e unless p.nil?
-          log_server_error e.message if p.nil?
+          log_server_error "#{e.class.name.to_s}: #{e.message}" if p.nil?
         else
           #log_server_error "Exception: #{e.class.name}"
           raise e

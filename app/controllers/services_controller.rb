@@ -102,7 +102,7 @@ class ServicesController < ApplicationController
     if new_service.save
       flash[:notice] = "Service '#{@service.name}' duplicated to Team '#{@service.team_name}'"
     end
-    redirect_to new_service
+    redirect_to @service.team
   end
 
   # POST /services/:id/clear

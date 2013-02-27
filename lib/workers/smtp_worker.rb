@@ -67,6 +67,7 @@ module Workers
 
         # Connect
         if params[:username].blank?
+          @log.debug_message += "No LOGIN\n"
           smtp = Net::SMTP.start(params[:rhost], params[:rport], params[:helo_domain])
         else
           if params[:authtype].blank?
@@ -86,6 +87,7 @@ module Workers
 
         msg_str = "From: #{params[:from_email]}\nTo: #{params[:to_email]}\nSubject: #{Time.now.to_i}\nDate: #{Time.now.iso8601}\n\n#{random_string}\n"
 
+        @log.debug_message += "Sending mail from #{params[:from_email]} to #{params[:to_email]}\nContents: #{random_string}\n"
         smtp.send_message msg_str, params[:from_email], params[:to_email]
 
         success = true
