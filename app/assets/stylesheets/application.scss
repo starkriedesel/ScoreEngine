@@ -15,6 +15,8 @@
  *= require font-awesome
  */
 
+@import "compass/css3";
+
 $service-down-color: #B24A48;
 $service-running-color: #3C8A41;
 $service-error-color: #E57746;
@@ -63,7 +65,8 @@ header h1 {
 }
 
 input:focus ~ .hint-text {
-    color: #000;
+  color: #000;
+  @include transition(all 0.15s linear);
 }
 
 .tabs.vertical.services {

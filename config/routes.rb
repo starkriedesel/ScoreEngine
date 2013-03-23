@@ -24,11 +24,12 @@ ScoreEngine::Application.routes.draw do
   put '/users/:id' => 'users#update', as: :user
 
   # Team Messages
-  resources :team_messages
+  resources :team_messages, path: 'messages'
+  get '/messages/last/:id' => 'teamMessages#index', as: :last_messages
 
   # Tools
-  get "tools/hash" => 'tools#hash', as: :hash_tool
-  post "tools/hash" => 'tools#hash_post'
+  get 'tools/hash' => 'tools#hash', as: :hash_tool
+  post 'tools/hash' => 'tools#hash_post'
   get 'tools/dns' => 'tools#dns', as: :dns_tool
   post 'tools/dns' => 'tools#dns_post'
 end
