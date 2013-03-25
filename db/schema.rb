@@ -11,7 +11,27 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130220010315) do
+ActiveRecord::Schema.define(:version => 20130325211805) do
+
+  create_table "challenge_groups", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "challenges", :force => true do |t|
+    t.integer  "group_id"
+    t.string   "name"
+    t.text     "description"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.string   "link"
+  end
+
+  create_table "challenges_teams", :id => false, :force => true do |t|
+    t.integer "challenge_id"
+    t.integer "team_id"
+  end
 
   create_table "service_logs", :force => true do |t|
     t.integer  "service_id"

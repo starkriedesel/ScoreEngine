@@ -27,6 +27,10 @@ ScoreEngine::Application.routes.draw do
   resources :team_messages, path: 'messages'
   get '/messages/last/:id' => 'teamMessages#index', as: :last_messages
 
+  # Challenges
+  resources :challenges
+  resources :challenge_groups, except: [:index, :show]
+
   # Tools
   get 'tools/hash' => 'tools#hash', as: :hash_tool
   post 'tools/hash' => 'tools#hash_post'

@@ -99,7 +99,7 @@ table a {
   text-decoration: underline;
 }
 
-table.services {
+table.services, table.challenges {
   tr {
     min-height: 32px;
     td a {
@@ -112,7 +112,7 @@ table.services {
     background-repeat: no-repeat;
   }
 
-  tr.running {
+  tr.running, tr.complete {
     td.service_img {
       background-image: url("/assets/blueberry/check.png");
     }
@@ -136,7 +136,7 @@ table.services {
       color: $service-error-color;
     }
   }
-  tr.off {
+  tr.off, tr.incomplete {
     td.service_img {
       background-image: url("/assets/blueberry/off.png");
     }
@@ -146,8 +146,12 @@ table.services {
   }
 }
 
-table.messages .inline-list {
+td ul.inline-list, td ol.inline-list {
   margin-bottom: 0px;
+}
+
+ul.inline-list .label, ol.inline-list .label {
+  margin-top: 1px;
 }
 
 .tabs.vertical dd:hover {

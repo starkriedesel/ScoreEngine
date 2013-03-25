@@ -12,7 +12,7 @@ class ServicesController < ApplicationController
     teams = Team.includes(:services).order(:id)
     teams = teams.where(id: current_user.team_id) unless current_user_admin?
     teams.all.each {|t| @services[t] += t.services}
-    @header_text = "Services"
+    @header_text = 'Services'
   end
 
   # GET /services/1
@@ -33,7 +33,7 @@ class ServicesController < ApplicationController
 
   # GET /services/new
   def new
-    @header_text = "New Service"
+    @header_text = 'New Service'
     @service = Service.new
 
     if params.include? :worker_name
@@ -45,7 +45,7 @@ class ServicesController < ApplicationController
   # GET /services/1/edit
   def edit
     @service = Service.find(params[:id])
-    @header_text = "Edit Service"
+    @header_text = 'Edit Service'
 
     if params.include? :worker_name
       render partial: 'worker_form', locals: {worker_name: params[:worker_name]}
@@ -56,24 +56,24 @@ class ServicesController < ApplicationController
   # POST /services
   def create
     @service = Service.new(params[:service])
-    @header_text = "New Service"
+    @header_text = 'New Service'
 
     if @service.save
       redirect_to @service, notice: 'Service was successfully created.'
     else
-      render action: "new"
+      render action: 'new'
     end
   end
 
   # PUT /services/1
   def update
     @service = Service.find(params[:id])
-    @header_text = "Edit Service"
+    @header_text =' "Edit Service"'
 
     if @service.update_attributes(params[:service])
       redirect_to @service, notice: 'Service was successfully updated.'
     else
-      render action: "edit"
+      render action: 'edit'
     end
   end
 
@@ -129,7 +129,7 @@ class ServicesController < ApplicationController
   # GET /:id/status/:last_log_id.json
   def status
     respond_to do |format|
-      format.html { raise "Invalid request" }
+      format.html { raise 'Invalid request' }
       format.json {
         output = {}
 

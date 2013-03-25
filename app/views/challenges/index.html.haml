@@ -1,0 +1,46 @@
+- @challenges_by_group.each do |group, challenges|
+  - if challenges.empty? and not current_user_admin?
+    - next
+  .challenge_group_name
+    %h3{style:'display:inline'}= group.name
+    - if current_user_admin?
+      = "[#{link_to 'edit', edit_challenge_group_path(group)} | #{link_to 'destroy', group, method: :delete, data: {confirm: 'Are you sure?'}}]".html_safe
+  - if challenges.empty?
+    %h5 No challenges
+    - next
+  %table.challenges.twelve
+    %thead
+      %tr
+        %th
+        %th.three Group
+        %th Name
+        - if current_user_admin?
+          %th.two
+
+    %tbody
+      - challenges.each do |challenge|
+        %tr{class: current_user_admin? ? '' : ((challenge.teams.include? current_user.team) ? 'complete' : 'incomplete')}
+          %td.service_img{style:'padding:0px;'}
+          %td= challenge.group.name
+          %td= link_to_function challenge.name, "$('#challenge#{challenge.id}Modal').reveal();"
+          - if current_user_admin?
+            %td
+              %ul.inline-list
+                %li= link_to 'Edit', edit_challenge_path(challenge)
+                %li= link_to 'Destroy', challenge, method: :delete, data: { confirm: 'Are you sure?' }
+
+  - challenges.each do |challenge|
+    .reveal-modal{id:"challenge#{challenge.id}Modal"}
+      %h2= challenge.name
+      %p.lead= link_to 'Go To Challenge', challenge.link
+      %p= simple_format challenge.description
+      - if current_user_admin?
+        %ul.inline-list
+          - Team.all.each do |team|
+            %li.label.round{class: (challenge.teams.include? team) ? '' : 'secondary'}= "Team #{team.name}"
+      %a.close-reveal-modal &#215;
+
+  %br
+
+= link_to 'New Challenge', new_challenge_path, class: 'button'
+= link_to 'New Challenge Group', new_challenge_group_path, class: 'button'

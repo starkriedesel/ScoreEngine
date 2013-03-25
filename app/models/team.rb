@@ -5,6 +5,8 @@ class Team < ActiveRecord::Base
 
   has_many :services
   has_many :users
+  has_many :team_messages
+  has_and_belongs_to_many :challenges
 
   def self.options_list
     [['None',nil]] + Team.all.collect{|t| ["#{t.name}", t.id]}

@@ -57,13 +57,13 @@
       Duplicate
       %span#service_name
     = form_tag service_duplicate_path, method: :post, class: 'formee' do
-      = hidden_field_tag "service_id", ''
+      = hidden_field_tag 'service_id', ''
       .row
         .eight.columns.end
-          = label_tag "Team"
-          = select_tag "team_id", options_for_select(Team.options_list)
+          = label_tag 'Team'
+          = select_tag 'team_id', options_for_select(Team.options_list)
       .row
-        = submit_tag "Duplicate"
+        = submit_tag 'Duplicate'
 
 
 :javascript
