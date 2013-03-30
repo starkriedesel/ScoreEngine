@@ -1,12 +1,15 @@
 ScoreEngine::Application.routes.draw do
-  # Users
-  devise_for :users
-
   # Root
   root :to => 'page#home'
 
+  # Users
+  devise_for :users
+
   # Teams
   resources :teams
+
+  # Client Updates
+  get '/client_update/poll' => 'clientUpdate#poll'
 
   # Services
   post '/services/:id/check' => 'services#check', as: :service_check

@@ -129,8 +129,11 @@ class ServicesController < ApplicationController
   # GET /:id/status/:last_log_id.json
   def status
     respond_to do |format|
-      format.html { raise 'Invalid request' }
-      format.json {
+      format.html do
+        raise 'Invalid request'
+      end
+
+      format.json do
         output = {}
 
         # If a service is specified, then check for updates on that service
@@ -164,8 +167,8 @@ class ServicesController < ApplicationController
           output[:team_uptime] = teams.collect {|t| {id: t.id, uptime: t.uptime}}
         end
 
-        render :json => output
-      }
+        render json: output
+      end
     end
   end
 

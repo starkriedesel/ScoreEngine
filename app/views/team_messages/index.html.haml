@@ -2,6 +2,21 @@
   %dd.active= link_to 'Inbox', '#inbox'
   %dd= link_to 'Outbox', '#outbox'
 
+.row
+  .six.columns.offset-by-six
+    .row.collapse
+      = form_tag team_messages_path, method: :get, class: 'foundation' do
+        .two.columns
+          - if params[:search].blank?
+            &nbsp;
+          - else
+            = link_to 'Clear', team_messages_path, class: 'button prefix expand'
+        .eight.columns
+          = text_field_tag 'search', params[:search]
+        .two.columns
+          = submit_tag 'Search', class: 'button expand postfix'
+          = #link_to 'Search', '#', class: 'button postfix expand'
+
 %ul.tabs-content
   %li.active#inboxTab
     = render partial: 'table', locals: {messages: @inbox}

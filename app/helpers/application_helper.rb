@@ -1,4 +1,12 @@
 module ApplicationHelper
+  def param_bool(name, default=false)
+    if params[name].nil?
+      default
+    else
+      params[name] ? true : false
+    end
+  end
+
   def status_img status
     if status == ServiceLog::STATUS_OFF or status.nil?
       '/assets/blueberry/off.png'

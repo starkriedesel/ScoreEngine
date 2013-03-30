@@ -9,36 +9,29 @@ class TeamMessagesController < ApplicationController
   def index
     @header_text = 'Messages'
 
-    messages = TeamMessage
-    messages = messages.where(team_id: current_user.team_id) unless current_user_admin?
-    messages = messages.where('id > ?', params[:id]) unless params[:id].nil?
-    messages = messages.order(:id).all
-
-    @inbox = []
-    @outbox = []
-    messages.each do |m|
-      if m.from_admin? ^ current_user_admin?
-        @inbox << m
-      else
-        @outbox << m
-      end
+    messages = TeamMessage.inbox_outbox team_id: current_user.team_id, is_admin: current_user_admin?, last_message_id: params[:id] do |query|
+      query = query.where('subject LIKE ?', "%#{params[:search]}%") unless params[:search].blank?
+      query
     end
 
     respond_to do |format|
-      format.html { }
+      format.html do
+        @inbox = messages[:inbox]
+        @outbox = messages[:outbox]
+      end
 
       format.json do
         inbox_html = ''
         outbox_html = ''
-        @inbox.each {|team_message| inbox_html += render_to_string(partial: 'message', formats: [:html], locals: {team_message: team_message})}
-        @outbox.each {|team_message| outbox_html += render_to_string(partial: 'message', formats: [:html], locals: {team_message: team_message})}
+        messages[:inbox].each {|team_message| inbox_html += render_to_string(partial: 'message', formats: [:html], locals: {team_message: team_message})}
+        messages[:outbox].each {|team_message| outbox_html += render_to_string(partial: 'message', formats: [:html], locals: {team_message: team_message})}
 
         render json: {
             inbox: inbox_html,
             outbox: outbox_html,
-            new_inbox: @inbox.length,
-            last_inbox_subject: @inbox.last.subject,
-            last_inbox_time: @inbox.last.created_at
+            new_inbox: messages[:inbox].length,
+            last_inbox_subject: messages[:inbox].last.subject,
+            last_inbox_time: messages[:inbox].last.created_at
         }
       end
     end
