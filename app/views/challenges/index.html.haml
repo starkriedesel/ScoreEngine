@@ -30,14 +30,20 @@
                 %li= link_to 'Destroy', challenge, method: :delete, data: { confirm: 'Are you sure?' }
 
   - challenges.each do |challenge|
+    - is_completed = challenge.teams.include? current_user.team
     .reveal-modal{id:"challenge#{challenge.id}Modal"}
-      %h2= challenge.name
-      %p.lead= link_to 'Go To Challenge', challenge.link
+      %h2
+        = challenge.name
+        - if ! current_user_admin?
+          .label.round{class: is_completed ? '' : 'secondary'}= is_completed ? 'Complete' : 'Not Complete'
+      - if current_user_admin? or not is_completed
+        %p.lead= link_to 'Go To Challenge', challenge.link
       %p= simple_format challenge.description
       - if current_user_admin?
         %ul.inline-list
           - Team.all.each do |team|
             %li.label.round{class: (challenge.teams.include? team) ? '' : 'secondary'}= "Team #{team.name}"
+
       %a.close-reveal-modal &#215;
 
   %br

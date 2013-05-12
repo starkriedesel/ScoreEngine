@@ -17,6 +17,10 @@
 //= require formee
 //= require jquery.timeago
 
+$(document).ready(function() {
+    $('#global_alert').delay(5000).animate({opacity: 0}, 1500, 'swing')
+});
+
 // resize divs dynamically on load
 //  wrap divs in .do_resize(X/Y)
 //  identify div to match as .resize_to(X/Y)

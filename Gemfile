@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.11'
+gem 'rails', '~> 3.2.11'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -47,6 +47,19 @@ gem 'ftpfxp' # FTP-TLS
 gem 'mysql2' # MySQL
 gem 'net-ldap' # LDAP / AD
 
+# Testing
+gem 'rspec-rails', :group => [:development, :test]
+gem 'factory_girl_rails', :group => [:development, :test]
+group :test do
+  gem 'capybara'
+  gem 'launchy'
+  gem 'database_cleaner'
+end
+
+group :development do
+  gem 'better_errors' # better html error messages
+  gem 'quiet_assets' # do not display asset retrieval in log file
+end
 
 # To use Jbuilder templates for JSON
 # gem 'jbuilder'

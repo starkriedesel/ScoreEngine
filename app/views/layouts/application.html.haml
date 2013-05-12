@@ -7,33 +7,28 @@
   <!--[if (gte IE 9)|!(IE)]><!--> <html lang="en"> <!--<![endif]-->
 
 %head
-  %meta{charset: "utf-8"}
+  %meta{charset: 'utf-8'}
 
   / Uncomment to make IE8 render like IE7
   / <meta http-equiv="X-UA-Compatible" content="IE=7" />
 
   / Set the viewport width to device width for mobile
-  %meta{name: "viewport", content: "width=device-width, initial-scale=1.0"}
+  %meta{name: 'viewport', content: 'width=device-width, initial-scale=1.0'}
 
-  %title= content_for?(:title) ? yield(:title) : "Score Engine"
+  %title= content_for?(:title) ? yield(:title) : 'Score Engine'
 
-  = javascript_include_tag "application"
-  = stylesheet_link_tag "application"
+  = javascript_include_tag 'application'
+  = stylesheet_link_tag 'application'
   = csrf_meta_tags
 
 %body
   = render 'layouts/header'
 
   .row{style:'padding-top: 10px;'}
-    - if flash[:error] || flash[:alert]
-      .alert-box.alert
-        = flash[:error]
-        = flash[:alert]
-        %a.close &times;
-    - if flash[:notice]
-      .alert-box
-        = flash[:notice]
-        %a.close &times;
+    #global_alert.alert-box{style:'visibility:'+(flash[:error] || flash[:alert] || flash[:notice] ? 'visible' : 'hidden'), class:(flash[:error] || flash[:alert] ? 'alert' : '')}
+      = flash[:error]
+      = flash[:alert]
+      = flash[:notice] unless flash[:error] or flash[:alert]
 
   .row.content
     .twelve.columns
