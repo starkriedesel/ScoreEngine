@@ -52,8 +52,10 @@ gem 'rspec-rails', :group => [:development, :test]
 gem 'factory_girl_rails', :group => [:development, :test]
 group :test do
   gem 'capybara'
+  gem 'poltergeist'
   gem 'launchy'
   gem 'database_cleaner'
+  gem 'forgery'
 end
 
 group :development do

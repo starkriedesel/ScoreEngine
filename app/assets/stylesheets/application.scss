@@ -199,3 +199,8 @@ a [class^="icon-"] {
 .hidden {
   display: none;
 }
+
+.alert-box ul {
+  list-style-position: inside;
+  margin-bottom: 0px;
+}

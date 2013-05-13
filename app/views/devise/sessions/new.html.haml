@@ -20,6 +20,7 @@
       .row
         .ten.columns.offset-by-one.end
           .left
-            = f.submit "Sign in"
+            = f.submit 'Sign In'
           .right
-            = button_to_function 'Sign Up', "window.location='#{new_user_registration_path}'"
+            =# button_to_function 'Sign Up', "window.location='#{new_user_registration_path}'"
+            = link_to 'Sign Up', new_user_registration_path, class: 'button'
