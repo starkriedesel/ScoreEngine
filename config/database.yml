@@ -4,10 +4,14 @@
 #   Ensure the SQLite 3 gem is defined in your Gemfile
 #   gem 'sqlite3'
 development:
-  adapter: sqlite3
-  database: db/development.sqlite3
+  adapter: mysql2
+  encoding: utf8
+  username: ScoreEngine
+  password: ScoreEngine
+  database: ScoreEngine
   pool: 5
   timeout: 5000
+  socket: /run/mysqld/mysqld.sock
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -19,7 +23,11 @@ test:
   timeout: 5000
 
 production:
-  adapter: sqlite3
-  database: db/production.sqlite3
+  adapter: mysql2
+  encoding: utf8
+  username: ScoreEngineProd
+  password: ScoreEngineProd
+  database: ScoreEngineProd
   pool: 5
   timeout: 5000
+  socket: /run/mysqld/mysqld.sock
