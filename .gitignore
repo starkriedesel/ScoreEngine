@@ -19,3 +19,5 @@
 /Gemfile.lock
 
 /public/assets/*
+
+/bin/*
