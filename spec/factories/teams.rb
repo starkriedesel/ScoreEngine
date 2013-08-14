@@ -1,11 +1,14 @@
 FactoryGirl.define do
-  factory :team1, class: Team do
-    name 'T1'
+  factory :team do
+    name 'T'
     dns_server ''
-  end
 
-  factory :team2, class: Team do
-    name 'T1'
-    dns_server ''
+    factory :team1 do
+      name 'T1'
+    end
+
+    factory :team2 do
+      name 'T2'
+    end
   end
 end

@@ -7,12 +7,20 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :rememberable, :trackable
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :username, :email, :password, :password_confirmation, :remember_me
+  attr_accessible :username, :password, :password_confirmation, :remember_me
   # attr_accessible :title, :body
 
-  validates_presence_of :username, :password
+  validates_presence_of :username
   validates_confirmation_of :password
-  validates_length_of :password, minimum: User::PASS_MIN_LENGTH, allow_blank: false
   validates_uniqueness_of :username, case_sensitive: false
+
+  validates_length_of :password, minimum: PASS_MIN_LENGTH, allow_blank: true
+  validates_presence_of :password, if: :password_required?
+
   belongs_to :team
+
+  # Borrowed from device validatable
+  def password_required?
+    !persisted? || !password.nil? || !password_confirmation.nil?
+  end
 end

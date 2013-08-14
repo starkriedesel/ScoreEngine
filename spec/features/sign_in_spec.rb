@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-feature 'the signin process' do
+feature 'the sign in process' do
   background do
     @user = create(:user) # use to test sign in
     @new_user = build(:user1) # use to test sign up (gets added to DB)
@@ -27,7 +27,6 @@ feature 'the signin process' do
     sign_in_form @user.username, @user.password
     page.should have_content 'Signed in successfully'
     current_path.should == services_path
-    page.save_screenshot 'it signs me in.png'
   end
 
   scenario 'it rejects sign in with wrong password' do
