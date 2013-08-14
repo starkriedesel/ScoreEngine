@@ -38,6 +38,9 @@ gem 'thin'
 # User Authentication / Authorization
 gem 'devise'
 
+# For ScoreEngine daemon
+gem 'daemons'
+
 # Protocols
 gem 'net-dns' # DNS
 gem 'net-ssh' # SSH
