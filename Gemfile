@@ -54,7 +54,7 @@ group :test do
   gem 'capybara'
   gem 'poltergeist'
   gem 'launchy'
-  gem 'database_cleaner'
+  gem 'database_cleaner', '<= 1.0.1'
   gem 'forgery'
 end
 
