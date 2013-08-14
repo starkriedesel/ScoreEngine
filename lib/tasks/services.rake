@@ -1,4 +1,4 @@
-namespace :engine do
+namespace :services do
   desc "Turn off all services"
   task :off, [:team_id] => [:environment] do |t,args|
     if args[:team_id].nil?
