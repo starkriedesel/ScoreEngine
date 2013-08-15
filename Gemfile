@@ -41,6 +41,9 @@ gem 'devise'
 # For ScoreEngine daemon
 gem 'daemons'
 
+# Configuration files
+gem 'rails_config'
+
 # Protocols
 gem 'net-dns' # DNS
 gem 'net-ssh' # SSH
