@@ -1,8 +1,5 @@
 require_relative 'daemon/log'
 
-# Reload the settings file
-Settings.reload!
-
 # Initialize daemon log file
 init_daemon_log_file Settings.daemon.log_file
 
@@ -11,7 +8,7 @@ init_daemon_log_file Settings.daemon.log_file
 log_daemon_info "daemon.log_file = #{Settings.daemon.log_file}"
 tick_time = Settings.daemon.tick_time
 log_daemon_info "daemon.tick_time = #{tick_time}"
-log_daemon_info "daemon.nofork = #{Settings.daemon.nofork}"
+log_daemon_info "daemon.nofork = #{!!Settings.daemon.nofork}"
 
 # Initial tick values
 tick_num = 0
