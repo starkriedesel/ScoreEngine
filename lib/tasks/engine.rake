@@ -11,14 +11,17 @@ namespace :engine do
             ARGV: [cmd],
             multiple: false,
             backtrace: true,
+            log_output: true,
             dir_mode: :normal,
             dir: pid_dir,
+            ontop: Settings.daemon.nofork
         }
     )
   end
 
   desc 'Start the ScoreEngine daemon'
   task :start => :environment do
+    puts 'Starting daemon in nofork mode' if Settings.daemon.nofork
     daemon_command 'start'
   end
 

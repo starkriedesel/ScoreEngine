@@ -1,0 +1,4 @@
+daemon:
+  tick_time: 10 # seconds
+  log_file: /home/stark/Projects/ScoreEngine/tmp/ScoreEngineDaemon.log
+  nofork: true
