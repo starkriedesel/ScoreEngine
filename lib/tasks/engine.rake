@@ -4,10 +4,10 @@ namespace :engine do
     # TODO: Can this be done automatically when configs change?
     Settings.reload!
 
-    rails_root = Rails.root
-    daemon_dir = File.join(rails_root, 'lib/daemon.rb')
-    pid_dir = File.join(rails_root, 'tmp/pids/')
-    nofork = !!Settings.daemon.nofork # TODO: Do real default setting
+    rails_root = Settings.daemon.rails_root || Rails.root
+    daemon_dir = Settings.daemon.daemon_script || File.join(rails_root, 'lib/daemon.rb')
+    pid_dir = Settings.daemon.pid_dir || File.join(rails_root, 'tmp/pids/')
+    nofork = !!Settings.daemon.nofork
 
     options = {
         app_name: 'ScoreEngine_Daemon',

@@ -1,12 +1,12 @@
 require_relative 'daemon/log'
 
 # Initialize daemon log file
-init_daemon_log_file Settings.daemon.log_file
+log_filepath = Settings.daemon.log_file || nil
+init_daemon_log_file log_filepath
 
 # Gather settings
-# TODO: Default values for settings
-log_daemon_info "daemon.log_file = #{Settings.daemon.log_file}"
-tick_time = Settings.daemon.tick_time
+log_daemon_info "daemon.log_file = #{log_filepath}"
+tick_time = Settings.daemon.tick_time || 60
 log_daemon_info "daemon.tick_time = #{tick_time}"
 log_daemon_info "daemon.nofork = #{!!Settings.daemon.nofork}"
 
