@@ -39,6 +39,10 @@ class Service < ActiveRecord::Base
     @up_time
   end
 
+  def make_worker
+    worker_class.new(self, dns_server: (team.nil? ? nil :team.dns_server))
+  end
+
   def self.check_all
     threads = []
     workers = []
