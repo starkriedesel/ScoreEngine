@@ -1,8 +1,11 @@
 require 'uri'
 require 'tempfile'
+require 'timeout'
 require 'net/ssh'
 require 'net/dns'
 require 'rack/auth/digest/md5'
+
+# TODO: Add total time to the ServiceLog message, should be on every worker so it can be handled generically
 
 module Workers
   class GenericWorker
@@ -33,8 +36,9 @@ module Workers
     def initialize service, options={}
       raise "Invalid Service Object sent to ServiceWorker" unless service.is_a? Service
 
+      @timeout = options[:timeout] || 30
       @service = service
-      @log = ServiceLog.new(service_id: @service.id, message:'', debug_message:'')
+      @log = nil
 
       self.params = self.class.default_params.with_indifferent_access
       if service.params? and service.params.kind_of? Hash
@@ -78,6 +82,7 @@ module Workers
     end
 
     def check
+      @log = ServiceLog.new(service_id: @service.id, message:'', debug_message:'')
       self.class.required_params.each { |name| raise "Missing param: '#{name}'" unless params.key? name }
       params.each{|k,v| params[k.to_s] = v.to_s} # make sure each key/value is a string
       domain_ip = domain_lookup params[:rhost]
@@ -88,7 +93,11 @@ module Workers
       end
       params[:rhost] = domain_ip
       choose_username_password # Randomly choose username/password combo from comma separated list
-      self.do_check
+      begin
+        Timeout::timeout(@timeout) { self.do_check }
+      rescue Timeout::Error
+        log_server_error 'Timeout'
+      end
       unless @log.message.blank?
         return @log.status if @log.save
       end
@@ -188,6 +197,8 @@ module Workers
         log_server_down "Connection was reset"
       rescue Net::SSH::AuthenticationFailed
         log_server_error "Authentication failed"
+      rescue Timeout::Error
+        throw Timeout:Error # This error is handled by GenericWorker#check
       rescue => e
         if @exceptions.key? e.class.to_s
           p = @exceptions[e.class.to_s]
