@@ -30,6 +30,7 @@ module ApplicationHelper
   end
 
   def status_class status
+    status = status.to_i unless status.nil?
     if status == ServiceLog::STATUS_OFF or status.nil?
       'off'
     elsif status == ServiceLog::STATUS_RUNNING
