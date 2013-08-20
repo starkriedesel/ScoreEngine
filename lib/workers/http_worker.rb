@@ -17,7 +17,7 @@ module Workers
       'http'
     end
 
-    def self.make_request url, log=nil, count=1
+    def self.make_request(url, log=nil, count=1)
       uri = URI.parse(url)
       http = Net::HTTP.new(uri.host, uri.port)
       if url.include?('https')
@@ -33,7 +33,7 @@ module Workers
       response
     end
 
-    def self.get_request_body url
+    def self.get_request_body(url)
       make_request(url).body
     end
 
@@ -55,14 +55,14 @@ module Workers
             @log.message = "Http Responce Code #{response.code}"
             @log.status = ServiceLog::STATUS_RUNNING
           else
-            log_server_error "Incorrect Response (Defacement?)"
+            log_server_error 'Incorrect Response (Defacement?)'
           end
         else
           @log.message = "Http Responce Code #{response.code}"
           @log.status = ServiceLog::STATUS_ERROR
         end
 
-        @log.debug_message += "\nResponse:\n#{response.body}"
+        #@log.debug_message += "\nResponse:\n#{response.body}"
       end
     end
   end
