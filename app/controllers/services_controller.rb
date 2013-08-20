@@ -38,7 +38,6 @@ class ServicesController < ApplicationController
 
     if params.include? :worker_name
       render partial: 'worker_form', locals: {worker_name: params[:worker_name]}
-      return
     end
   end
 
@@ -49,7 +48,6 @@ class ServicesController < ApplicationController
 
     if params.include? :worker_name
       render partial: 'worker_form', locals: {worker_name: params[:worker_name]}
-      return
     end
   end
 
@@ -153,9 +151,11 @@ class ServicesController < ApplicationController
 
         # The way each db engine handles booleans is different, so this complex query must be custom written for each
         sql_select_status = ''
-        if ActiveRecord::Base.connection.instance_of? ActiveRecord::ConnectionAdapters::MysqlAdapter
+        adapter = ActiveRecord::Base.connection.instance_values['config'][:adapter]
+        if adapter == 'mysql2' or adapter == 'mysql'
           sql_select_status = '"id", (CASE WHEN `on` THEN (SELECT status FROM service_logs WHERE service_logs.service_id=services.id ORDER BY created_at DESC LIMIT 1) ELSE "off" END) as current_status'
-        elsif ActiveRecord::Base.connection.instance_of? ActiveRecord::ConnectionAdapters::SQLiteAdapter
+        elsif adapter == 'sqlite3' or adapter == 'sqlite'
+          # TODO: Test with sqlite3 adapter
           sql_select_status = '"id", (CASE WHEN services."on" = "t" THEN (SELECT status FROM service_logs WHERE service_logs.service_id=services.id ORDER BY created_at DESC LIMIT 1) ELSE "off" END) as current_status'
         else
           # TODO: Handle non-mysql and non-sqlite database query
@@ -184,7 +184,7 @@ class ServicesController < ApplicationController
   end
 
   def check_all
-    @check_log = ""
+    @check_log = ''
     Service.includes(:team).where(on: true).all.each do |service|
       time_start = Time.now
       service.team = Team.new(id: 0, name:'None', dns_server: nil) if service.team.nil?
