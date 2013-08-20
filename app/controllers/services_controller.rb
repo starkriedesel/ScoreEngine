@@ -153,7 +153,7 @@ class ServicesController < ApplicationController
         sql_select_status = ''
         adapter = ActiveRecord::Base.connection.instance_values['config'][:adapter]
         if adapter == 'mysql2' or adapter == 'mysql'
-          sql_select_status = '"id", (CASE WHEN `on` THEN (SELECT status FROM service_logs WHERE service_logs.service_id=services.id ORDER BY created_at DESC LIMIT 1) ELSE "off" END) as current_status'
+          sql_select_status = 'services.id, (CASE WHEN `on` THEN (SELECT service_logs.status FROM service_logs WHERE service_logs.service_id=services.id ORDER BY service_logs.created_at DESC LIMIT 1) ELSE "off" END) as current_status'
         elsif adapter == 'sqlite3' or adapter == 'sqlite'
           # TODO: Test with sqlite3 adapter
           sql_select_status = '"id", (CASE WHEN services."on" = "t" THEN (SELECT status FROM service_logs WHERE service_logs.service_id=services.id ORDER BY created_at DESC LIMIT 1) ELSE "off" END) as current_status'
