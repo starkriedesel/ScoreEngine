@@ -4,6 +4,7 @@ require 'timeout'
 require 'net/ssh'
 require 'net/dns'
 require 'rack/auth/digest/md5'
+require 'daemon/log'
 
 # TODO: Add total time to the ServiceLog message, should be on every worker so it can be handled generically
 
@@ -96,6 +97,8 @@ module Workers
       end
       params[:rhost] = domain_ip
       choose_username_password # Randomly choose username/password combo from comma separated list
+
+      log_daemon_info 'Checking service', @service
 
       begin
         Timeout::timeout(@timeout) { self.do_check }
