@@ -7,6 +7,7 @@ end
 
 # TODO: Create daemon message log in DB
 def log_daemon(msg, lvl, service)
+  return true if $daemon_logfile.nil?
   case lvl
     when :error
       msg = "Error: #{msg}"
