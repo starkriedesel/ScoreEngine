@@ -151,7 +151,18 @@ class ServicesController < ApplicationController
           end
         end
 
-        service_list = Service.select('"id", (CASE WHEN services."on" = "t" THEN (SELECT status FROM service_logs WHERE service_logs.service_id=services.id ORDER BY created_at DESC LIMIT 1) ELSE "off" END) as current_status')
+        # The way each db engine handles booleans is different, so this complex query must be custom written for each
+        sql_select_status = ''
+        if ActiveRecord::Base.connection.instance_of? ActiveRecord::ConnectionAdapters::MysqlAdapter
+          sql_select_status = '"id", (CASE WHEN `on` THEN (SELECT status FROM service_logs WHERE service_logs.service_id=services.id ORDER BY created_at DESC LIMIT 1) ELSE "off" END) as current_status'
+        elsif ActiveRecord::Base.connection.instance_of? ActiveRecord::ConnectionAdapters::SQLiteAdapter
+          sql_select_status = '"id", (CASE WHEN services."on" = "t" THEN (SELECT status FROM service_logs WHERE service_logs.service_id=services.id ORDER BY created_at DESC LIMIT 1) ELSE "off" END) as current_status'
+        else
+          # TODO: Handle non-mysql and non-sqlite database query
+          # One option is to just not use a boolean
+        end
+
+        service_list = Service.select(sql_select_status)
         service_list = service_list.where(team_id: current_user.team_id) unless current_user_admin?
         service_list = service_list.all.collect do |s|
           status_class = s.current_status == 'off' ? 'off' : status_class(s.current_status)
