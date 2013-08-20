@@ -29,9 +29,16 @@ loop do
   # Start check on each service
   service_list.each do |service|
     threads << Thread.new do
-      w = service.make_worker
-      workers << w
-      w.check
+      w = nil
+      begin
+        w = service.make_worker
+        workers << w
+        w.check
+      rescue => e
+        w.log_server_error "Exception (#{e.class.to_s})" unless w.nil? # Log error to users if possible
+        log_daemon_error "Exception #{e.class.to_s}: #{e.message}", service # Always log error to daemon log
+        log_daemon_error e.backtrace
+      end
     end
   end
 
@@ -54,8 +61,12 @@ loop do
   # Post results to DB
   workers.each do |worker|
     log = worker.log
-    log_daemon_warn('Service has nil log', worker.service) and return if log.nil?
-    worker.log_server_error('Timeout') and log_daemon_info('Worker timeout', worker.service) unless worker.complete?
+    log_daemon_error('Service has nil log', worker.service) and return if log.nil?
+    log_daemon_info "Worker.complete? = #{worker.complete?}"
+    unless worker.complete? or not log.status.nil?
+      worker.log_server_error('Timeout')
+      log_daemon_info('Worker timeout', worker.service)
+    end
     log_daemon_info('Saving log', worker.service)
     log.save or log_daemon_error('Failed to save log', worker.service) unless log.status.nil?
   end
