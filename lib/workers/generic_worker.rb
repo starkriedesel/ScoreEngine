@@ -33,12 +33,12 @@ module Workers
     }.with_indifferent_access
 
     # @param [Service] service
-    def initialize service, options={}
-      raise "Invalid Service Object sent to ServiceWorker" unless service.is_a? Service
+    def initialize(service, options={})
+      raise 'Invalid Service Object sent to ServiceWorker' unless service.is_a? Service
 
       @timeout = options[:timeout].to_i || 30
       @service = service
-      @log = nil
+      @log = ServiceLog.new(service_id: @service.id, message:'', debug_message:'')
       @complete = false
 
       self.params = self.class.default_params.with_indifferent_access
@@ -67,7 +67,7 @@ module Workers
       nil
     end
 
-    def register_exception name, &block
+    def register_exception(name, &block)
       @exceptions[name.to_s] = block
     end
 
@@ -79,7 +79,7 @@ module Workers
     end
 
     def do_check
-      throw "Invalid Worker, Override GenericWorker#check"
+      throw 'Invalid Worker, Override GenericWorker#check'
     end
 
     def check
@@ -111,17 +111,17 @@ module Workers
       !!@complete
     end
 
-    def log_server_down message
+    def log_server_down(message)
       @log.status = ServiceLog::STATUS_DOWN
-      message ||= "Server is down"
+      message ||= 'Server is down'
       @log.debug_message += message
       @log.message += message
       true
     end
 
-    def log_server_error message
+    def log_server_error(message)
       @log.status = ServiceLog::STATUS_ERROR
-      message ||= "There was an error"
+      message ||= 'There was an error'
       @log.debug_message += message
       @log.message += message
       true
@@ -132,7 +132,7 @@ module Workers
       true
     end
 
-    def log_server_login username=nil, password=nil
+    def log_server_login(username=nil, password=nil)
       username = params[:username] if username.nil?
       password = params[:password] if password.nil?
       if password.blank?
@@ -143,7 +143,7 @@ module Workers
       true
     end
 
-    def self.dns_lookup hostname, dns_server, dns_port=53, record_type = Net::DNS::A
+    def self.dns_lookup(hostname, dns_server, dns_port=53, record_type = Net::DNS::A)
       dns = nil
       if dns_server.nil?
         dns = Net::DNS::Resolver.new(
@@ -169,7 +169,7 @@ module Workers
       nil
     end
 
-    def self.domain_lookup hostname, dns_server, dns_port=53, record_type = Net::DNS::A
+    def self.domain_lookup(hostname, dns_server, dns_port=53, record_type = Net::DNS::A)
       # ignore if hostname is already an IP
       return hostname unless hostname.match(/^\d+\.\d+\.\d+\.\d+$/).nil?
       packet = dns_lookup hostname, dns_server, dns_port, record_type
@@ -180,20 +180,20 @@ module Workers
       end
     end
 
-    def dns_lookup hostname, dns_server=nil, dns_port=53, record_type = Net::DNS::A
+    def dns_lookup(hostname, dns_server=nil, dns_port=53, record_type = Net::DNS::A)
       # use default server if un-specified
       dns_server ||= @dns_server
       self.class.dns_lookup hostname, dns_server, dns_port, record_type
     end
 
-    def domain_lookup hostname, dns_server=nil, dns_port=53, record_type = Net::DNS::A
+    def domain_lookup(hostname, dns_server=nil, dns_port=53, record_type = Net::DNS::A)
       # use default server if un-specified
       dns_server ||= @dns_server
       self.class.domain_lookup hostname, dns_server, dns_port, record_type
     end
 
     # Replaced parameters embeded in strings using the #{...} syntax
-    def param_replace string
+    def param_replace(string)
       string.gsub(/#\{(.+?)\}/) { params.has_key?($1) ? params[$1]: $1 }
     end
 
@@ -201,13 +201,13 @@ module Workers
       begin
         return yield
       rescue Errno::ECONNREFUSED
-        log_server_down "Connection refused"
+        log_server_down 'Connection refused'
       rescue Errno::ETIMEDOUT
-        log_server_down "Connection timed out"
+        log_server_down 'Connection timed out'
       rescue Errno::ECONNRESET
-        log_server_down "Connection was reset"
+        log_server_down 'Connection was reset'
       rescue Net::SSH::AuthenticationFailed
-        log_server_error "Authentication failed"
+        log_server_error 'Authentication failed'
       rescue Timeout::Error
         throw Timeout:Error # This error is handled by GenericWorker#check
       rescue => e
@@ -243,7 +243,7 @@ module Workers
       params[:username].strip! unless params[:password].nil?
     end
 
-    def perform_check content, check_value
+    def perform_check(content, check_value)
       if (check_value =~ /^[a-f0-9]{32}$/i).nil?
         not (content =~ Regexp.new(check_value)).nil?
       else
