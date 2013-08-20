@@ -9,7 +9,7 @@ require 'rack/auth/digest/md5'
 
 module Workers
   class GenericWorker
-    attr_accessor :params
+    attr_accessor :params, :log, :service
 
     include WorkerMixin
 
@@ -36,9 +36,10 @@ module Workers
     def initialize service, options={}
       raise "Invalid Service Object sent to ServiceWorker" unless service.is_a? Service
 
-      @timeout = options[:timeout] || 30
+      @timeout = options[:timeout].to_i || 30
       @service = service
       @log = nil
+      @complete = false
 
       self.params = self.class.default_params.with_indifferent_access
       if service.params? and service.params.kind_of? Hash
@@ -82,9 +83,11 @@ module Workers
     end
 
     def check
+      @complete = false
       @log = ServiceLog.new(service_id: @service.id, message:'', debug_message:'')
       self.class.required_params.each { |name| raise "Missing param: '#{name}'" unless params.key? name }
       params.each{|k,v| params[k.to_s] = v.to_s} # make sure each key/value is a string
+
       domain_ip = domain_lookup params[:rhost]
       if domain_ip.nil?
         log_server_error "Domain Lookup Failed: #{params[:rhost]}"
@@ -93,15 +96,19 @@ module Workers
       end
       params[:rhost] = domain_ip
       choose_username_password # Randomly choose username/password combo from comma separated list
+
       begin
         Timeout::timeout(@timeout) { self.do_check }
       rescue Timeout::Error
         log_server_error 'Timeout'
       end
-      unless @log.message.blank?
-        return @log.status if @log.save
-      end
-      nil
+
+      @complete = true
+      @log
+    end
+
+    def complete?
+      !!@complete
     end
 
     def log_server_down message
@@ -109,6 +116,7 @@ module Workers
       message ||= "Server is down"
       @log.debug_message += message
       @log.message += message
+      true
     end
 
     def log_server_error message
@@ -116,10 +124,12 @@ module Workers
       message ||= "There was an error"
       @log.debug_message += message
       @log.message += message
+      true
     end
 
     def log_server_connect
       @log.debug_message = "Opening Connection to: #{params[:rhost]}:#{params[:rport]}\n"
+      true
     end
 
     def log_server_login username=nil, password=nil
@@ -130,6 +140,7 @@ module Workers
       else
         @log.debug_message += "Credentials: #{username} : #{password}\n"
       end
+      true
     end
 
     def self.dns_lookup hostname, dns_server, dns_port=53, record_type = Net::DNS::A

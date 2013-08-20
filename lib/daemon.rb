@@ -22,19 +22,17 @@ loop do
   # Retrieve work from DB
   total_service_count = Service.count
   service_list = Service.includes(:team).where(on: true).all
-  service_logs = []
+  workers = []
+  threads = []
   log_daemon_info "Found #{service_list.size} services (#{total_service_count - service_list.size} off)"
 
-  # Check each service
+  # Start check on each service
   service_list.each do |service|
-    service.team = Team.new(id: 0, name:'None', dns_server: nil) if service.team.nil?
-    log = ServiceLog.new
-    log.service = service
-
-    # Check
-    log_daemon_info 'Checking service', service
-
-    service_logs << log
+    threads << Thread.new do
+      w = service.make_worker
+      workers << w
+      w.check
+    end
   end
 
   # Calculate time used and sleep for appropriate time
@@ -48,8 +46,17 @@ loop do
   end
   last_time = Time.now.to_i
 
+  # Stop check on each service
+  threads.each do |thread|
+    thread.kill
+  end
+
   # Post results to DB
-  service_logs.each do |log|
-    log.save unless log.status.nil?
+  workers.each do |worker|
+    log = worker.log
+    log_daemon_warn('Service has nil log', worker.service) and return if log.nil?
+    worker.log_server_error('Timeout') and log_daemon_info('Worker timeout', worker.service) unless worker.complete?
+    log_daemon_info('Saving log', worker.service)
+    log.save or log_daemon_error('Failed to save log', worker.service) unless log.status.nil?
   end
 end
