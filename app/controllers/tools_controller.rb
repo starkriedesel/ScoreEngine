@@ -91,4 +91,12 @@ class ToolsController < ApplicationController
 
     redirect_to dns_tool_path
   end
+
+  def daemon_log
+    @log_lines = File.open(Settings.daemon.log_file,'r').readlines.collect do |line|
+      partsA = line.split ':'
+      partsB = partsA[4].split ';'
+      {time: partsA[0..2].join(':'), type: partsA[3], message: partsA[4], service: partsB[1], team: partsB[2]}
+    end
+  end
 end

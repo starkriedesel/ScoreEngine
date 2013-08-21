@@ -204,3 +204,15 @@ a [class^="icon-"] {
   list-style-position: inside;
   margin-bottom: 0px;
 }
+
+.daemon-log {
+  .info {
+    background-color: #2ba6cb;
+  }
+  .error {
+    background-color: $service-down-color;
+  }
+  .warn {
+    background-color: $service-error-color;
+  }
+}

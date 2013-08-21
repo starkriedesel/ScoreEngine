@@ -39,4 +39,5 @@ ScoreEngine::Application.routes.draw do
   post 'tools/hash' => 'tools#hash_post'
   get 'tools/dns' => 'tools#dns', as: :dns_tool
   post 'tools/dns' => 'tools#dns_post'
+  get 'tools/daemon_log' => 'tools#daemon_log', as: :daemon_log
 end
