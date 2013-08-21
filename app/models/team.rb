@@ -9,7 +9,8 @@ class Team < ActiveRecord::Base
   has_and_belongs_to_many :challenges
 
   def self.options_list
-    [['None',nil]] + Team.all.collect{|t| ["#{t.name}", t.id]}
+    #[['None',nil]] + Team.all.collect{|t| ["#{t.name}", t.id]}
+    [['Pick One', nil]] + Team.all.collect{|t| [t.name, t.id]}
   end
 
   def uptime

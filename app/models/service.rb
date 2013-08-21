@@ -1,7 +1,7 @@
 class Service < ActiveRecord::Base
   attr_accessible :name, :params, :worker, :team_id, :on
 
-  validates_presence_of :name, :worker
+  validates_presence_of :name, :worker, :team_id
   validates_inclusion_of :worker, in: Workers::GenericWorker::WORKERS.keys.collect{|k| k.to_s}
 
   serialize :params, Hash

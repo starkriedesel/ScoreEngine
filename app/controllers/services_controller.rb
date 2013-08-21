@@ -8,7 +8,7 @@ class ServicesController < ApplicationController
   # GET /services
   def index
     @services = Hash.new([])
-    @services[nil] = Service.where(team_id: nil).all if current_user_admin?
+    #@services[nil] = Service.where(team_id: nil).all if current_user_admin?
     teams = Team.includes(:services).order(:id)
     teams = teams.where(id: current_user.team_id) unless current_user_admin?
     teams.all.each {|t| @services[t] += t.services}
