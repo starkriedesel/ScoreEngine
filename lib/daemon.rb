@@ -28,6 +28,11 @@ loop do
 
   # Start check on each service
   service_list.each do |service|
+    if service.team.nil?
+      log_daemon_error 'No team specified for service', service
+      next
+    end
+
     threads << Thread.new do
       w = nil
       begin
