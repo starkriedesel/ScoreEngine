@@ -6,7 +6,23 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-User.where(username: ['admin','user']).destroy_all
+Team.destroy_all
+User.destroy_all
+TeamMessage.destroy_all
+Service.destroy_all
+ServiceLog.destroy_all
+ChallengeGroup.destroy_all
+Challenge.destroy_all
 
-User.create! [{username: 'admin', password: 'password', password_confirmation: 'password', admin: true},
-             {username: 'user', password: 'password', password_confirmation: 'password'}], without_protection: true
+team_alpha = Team.create(name: 'Alpha', dns_server: '')
+team_beta = Team.create(name: 'Beta', dns_server: '')
+
+user_admin = User.create({username: 'admin', password: 'password', password_confirmation: 'password', admin: true}, without_protection: true)
+user_alpha = User.create({username: 'alpha', password: 'password', password_confirmation: 'password', admin: true, team: team_alpha}, without_protection: true)
+user_beta = User.create({username: 'beta', password: 'password', password_confirmation: 'password', admin: true, team: team_beta}, without_protection: true)
+User.create([{username: 'user1', password: 'password', password_confirmation: 'password', team: team_alpha},
+             {username: 'user2', password: 'password', password_confirmation: 'password', team: team_alpha},
+             {username: 'user3', password: 'password', password_confirmation: 'password', team: team_beta},
+             {username: 'user4', password: 'password', password_confirmation: 'password', team: team_beta}
+            ], without_protection: true)
+
