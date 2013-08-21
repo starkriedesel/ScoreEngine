@@ -1,7 +1,3 @@
-%dl.tabs
-  %dd.active= link_to 'Inbox', '#inbox'
-  %dd= link_to 'Outbox', '#outbox'
-
 .row
   .six.columns.offset-by-six
     .row.collapse
@@ -17,10 +13,17 @@
           = submit_tag 'Search', class: 'button expand postfix'
           = #link_to 'Search', '#', class: 'button postfix expand'
 
-%ul.tabs-content
-  %li.active#inboxTab
-    = render partial: 'table', locals: {messages: @inbox}
-  %li#outboxTab
-    = render partial: 'table', locals: {messages: @outbox}
+.row
+  .three.columns
+    %dl.vertical.tabs
+      %dd.active= link_to 'Inbox', '#inbox'
+      %dd= link_to 'Outbox', '#outbox'
+    = link_to 'New Message', new_team_message_path, class: 'button'
+  .nine.columns
+    %ul.tabs-content
+      %li.active#inboxTab
+        = render partial: 'table', locals: {messages: @inbox}
+      %li#outboxTab
+        = render partial: 'table', locals: {messages: @outbox}
 
-= link_to 'New Message', new_team_message_path, class: 'button'
+

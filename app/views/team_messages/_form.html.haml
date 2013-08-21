@@ -2,6 +2,7 @@
   %fieldset
     - if current_user_admin?
       .six.columns
+        -# TODO: Allow multiple select and send to all
         = f.label :team_id do
           Team
           %em.formee-req *
