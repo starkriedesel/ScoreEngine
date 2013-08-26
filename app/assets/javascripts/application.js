@@ -13,9 +13,9 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery-ui
-//= require foundation
 //= require formee
 //= require jquery.timeago
+//= require foundation
 
 $(document).ready(function() {
     $('#global_alert').delay(5000).animate({opacity: 0}, 1500, 'swing')

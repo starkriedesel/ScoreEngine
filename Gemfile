@@ -20,7 +20,7 @@ group :assets do
 
   # Foundation CSS Framework
   gem 'compass-rails'
-  #gem 'zurb-foundation'
+  gem 'zurb-foundation', '~> 3.2.0'
   gem 'modular-scale'
 end
 

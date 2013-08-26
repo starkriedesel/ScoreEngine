@@ -22,6 +22,24 @@ $service-running-color: #3C8A41;
 $service-error-color: #E57746;
 $service-off-color: #CCC;
 
+// Override foundation settings with formee conformant settings
+form.formee {
+  input[type="text"], input[type="password"], input[type="date"], input[type="datetime"], input[type="email"], input[type="number"], input[type="search"], input[type="tel"], input[type="time"], input[type="url"], textarea {
+    height: auto;
+    margin: 0px;
+  }
+}
+
+form.formee {
+  fieldset {
+    background-color: #DDD;
+    legend {
+      background-color: transparent;
+      color: #2ba6cb;
+    }
+  }
+}
+
 .content {
     margin-top: 10px;
 }
@@ -64,7 +82,7 @@ header h1 {
     float: left;
 }
 
-input:focus ~ .hint-text {
+input:focus ~ .hint-text, input:hover ~ .hint-text, select:hover ~ .hint-text {
   color: #000;
   @include transition(all 0.15s linear);
 }
