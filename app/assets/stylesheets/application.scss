@@ -16,11 +16,7 @@
  */
 
 @import "compass/css3";
-
-$service-down-color: #B24A48;
-$service-running-color: #3C8A41;
-$service-error-color: #E57746;
-$service-off-color: #CCC;
+@import "colors";
 
 // Override foundation settings with formee conformant settings
 form.formee {
@@ -32,10 +28,10 @@ form.formee {
 
 form.formee {
   fieldset {
-    background-color: #DDD;
+    background-color: $secondaryColor;
     legend {
       background-color: transparent;
-      color: #2ba6cb;
+      color: $mainColor;
     }
   }
 }
@@ -45,7 +41,7 @@ form.formee {
 }
 
 header {
-    background-color: #2ba6cb;
+    background-color: $mainColor;
     padding: 10px 0px;
 }
 
@@ -61,24 +57,24 @@ header.error {
 header.off {
   background-color: $service-off-color;
   h1 {
-    color: #555;
+    color: $service-off-dark-color;
   }
 }
 
 header h1 {
-    color: #FFF;
+    color: $white;
     font-weight: 500;
 }
 
 .hint-text {
     padding-top: 5px;
-    color: #888;
+    color: $form-hint-text-color;
     float: right;
 }
 
 .form-error-text {
     padding-top: 5px;
-    color: #d10000;
+    color: $form-error-text-color;
     float: left;
 }
 
@@ -94,7 +90,7 @@ input:focus ~ .hint-text, input:hover ~ .hint-text, select:hover ~ .hint-text {
   }
   dd.off {
     border-left-color: $service-off-color;
-    color: #555;
+    color: $service-off-dark-color;
   }
   dd.down {
     border-left-color: $service-down-color;
@@ -159,7 +155,7 @@ table.services, table.challenges {
       background-image: url("/assets/blueberry/off.png");
     }
     td {
-      color: #555;
+      color: $service-off-dark-color;
     }
   }
 }
@@ -174,7 +170,7 @@ ul.inline-list .label, ol.inline-list .label {
 
 .tabs.vertical dd:hover {
   a {
-    background-color: #d8d8d8;
+    background-color: $tab-background-color;
     padding-left: 10px;
     -webkit-transition: all 1s ease;
     -moz-transition: all 1s ease;
@@ -225,12 +221,12 @@ a [class^="icon-"] {
 
 .daemon-log {
   .info {
-    background-color: #2ba6cb;
+    background-color: $daemon-info-color;
   }
   .error {
-    background-color: $service-down-color;
+    background-color: $daemon-error-color;
   }
   .warn {
-    background-color: $service-error-color;
+    background-color: $daemon-warn-color;
   }
 }
