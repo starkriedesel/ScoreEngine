@@ -3,7 +3,8 @@
     - is_first = true
     - @services.each do |team, service_list|
       - team = Team.new(name: 'None', id: 0) if team.nil?
-      %dd{class: (is_first ? 'active':'')}= link_to "Team #{team.name}", "#team#{team.id}"
+      %dd{class: (is_first ? 'active':''), id: team.id}
+        = link_to "Team #{team.name}", "#team#{team.id}"
       - is_first = false
 - if @services.length > 0
   %ul.tabs-content
@@ -44,14 +45,16 @@
                         %li= link_to_function '<i class="icon-bolt"> </i>Duplicate'.html_safe, "duplicate_service('#{service.id}','#{service.team_id}','#{service.name}')"
                         %li= link_to '<i class="icon-trash"> </i>Destroy'.html_safe, service, method: :delete, data: { confirm: 'Are you sure?' }
         - if current_user_admin? and not (team.id.nil? or team.id == 0)
-          = link_to '<i class="icon-pencil"></i> Edit Team'.html_safe, edit_team_path(team), class: 'button'
+          = #link_to '<i class="icon-pencil"></i> Edit Team'.html_safe, edit_team_path(team), class: 'button'
       - is_first = false
 
 - if current_user_admin?
   - if @services.length > 0
     %br
-    = link_to '<i class="icon-cloud"></i> Add Service'.html_safe, new_service_path, class: 'button'
+  = link_to '<i class="icon-cloud"></i> Add Service'.html_safe, new_service_path, class: 'button'
   = link_to '<i class="icon-group"></i> Add Team'.html_safe, new_team_path, class: 'button'
+
+  = link_to_function '<i class="icon-pencil"></i> Edit Team'.html_safe, 'editTeamLink()', class: 'button'
 
   #duplicateModal.reveal-modal
     %a.close-reveal-modal &#215;

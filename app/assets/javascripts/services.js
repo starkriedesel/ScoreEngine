@@ -11,6 +11,16 @@ $(document).ready(function() {
 });
 
 // Used by Services#index
+function editTeamLink()
+{
+    var teamId = $('.tabs .active').attr('id');
+    if(teamId == 0)
+        return;
+    var url = '/teams/'+teamId+'/edit';
+    window.location = url;
+}
+
+// Used by Services#index
 function duplicate_service(service_id, team_id, service_name) {
     $('#duplicateModal #service_name').html("'"+service_name+"'");
     $('#duplicateModal #service_id').val(service_id);
