@@ -26,3 +26,9 @@ User.create([{username: 'user1', password: 'password', password_confirmation: 'p
              {username: 'user4', password: 'password', password_confirmation: 'password', team: team_beta}
             ], without_protection: true)
 
+alpha_http_service = Service.create({name: 'Google', on: false, team: team_alpha, worker: 'Http', params: {
+    'Http'=>{'rhost'=>'google.com', 'rport'=>'80', 'home_path'=>'/', 'home_check'=>''}
+}}, without_protection: true)
+beta_http_service = alpha_http_service.dup
+beta_http_service.team_id = team_beta.id
+beta_http_service.save
