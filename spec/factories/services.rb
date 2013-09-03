@@ -10,7 +10,7 @@ FactoryGirl.define do
   factory :http_service do
     name 'HTTP'
     on false
-    params({http: {rhost: 'google.com', rport: '80', home_path: '/', home_check: ''}})
+    params({'Http'=>{'rhost'=>'google.com', 'rport'=>'80', 'home_path'=>'/', 'home_check'=>''}})
     team_id nil
     worker 'Http'
   end
