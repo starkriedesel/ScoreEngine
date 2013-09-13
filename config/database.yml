@@ -11,7 +11,7 @@ development:
   database: ScoreEngine
   pool: 5
   timeout: 5000
-  socket: /run/mysqld/mysqld.sock
+  host: 127.0.0.1
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -30,4 +30,4 @@ production:
   database: ScoreEngineProd
   pool: 5
   timeout: 5000
-  socket: /run/mysqld/mysqld.sock
+  host: 127.0.0.1
