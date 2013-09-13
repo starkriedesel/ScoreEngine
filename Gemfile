@@ -35,6 +35,9 @@ gem 'bcrypt-ruby', '~> 3.0.0'
 # Use the Thin webserver
 gem 'thin'
 
+# MySQL back-engine
+gem 'mysql2', '<= 0.3.11'
+
 # User Authentication / Authorization
 gem 'devise'
 
@@ -50,7 +53,6 @@ gem 'net-ssh' # SSH
 #gem 'net-ssh-multi' # SSH
 gem 'net-sftp' # SFTP
 gem 'ftpfxp' # FTP-TLS
-gem 'mysql2' # MySQL
 gem 'net-ldap' # LDAP / AD
 
 # Testing
