@@ -1,51 +1,40 @@
 source 'https://rubygems.org'
 
+# Rails
 gem 'rails', '~> 3.2.11'
 
-# Bundle edge Rails instead:
-# gem 'rails', :git => 'git://github.com/rails/rails.git'
-
+# Databases
 gem 'sqlite3'
-
-# Gems used only for assets and not required
-# in production environments by default.
-group :assets do
-  gem 'sass-rails',   '~> 3.2.3'
-  gem 'coffee-rails', '~> 3.2.1'
-
-  # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-  # gem 'therubyracer', :platforms => :ruby
-
-  gem 'uglifier', '>= 1.0.3'
-
-  # Foundation CSS Framework
-  gem 'compass-rails'
-  gem 'zurb-foundation', '~> 3.2.0'
-  gem 'modular-scale'
-end
-
-# Use HAML
-gem 'haml-rails'
-
-gem 'jquery-rails'
-
-# To use ActiveModel has_secure_password
-gem 'bcrypt-ruby', '~> 3.0.0'
-
-# Use the Thin webserver
-gem 'thin'
-
-# MySQL back-engine
 gem 'mysql2', '<= 0.3.11'
 
-# User Authentication / Authorization
-gem 'devise'
+# Engines
+gem 'thin' # web
+gem 'daemons' # daemon
 
-# For ScoreEngine daemon
-gem 'daemons'
+# Assets
+gem 'haml-rails' # HAML
+gem 'jquery-rails' # JQuery
+group :assets do
+  # CSS
+  gem 'sass-rails',   '~> 3.2.3'
+  gem 'uglifier', '>= 1.0.3'
+  gem 'compass-rails'
+  gem 'modular-scale'
 
-# Configuration files
-gem 'rails_config'
+  # Zurb CSS Framework
+  gem 'zurb-foundation', '~> 3.2.0'
+end
+
+# Helper Libs
+gem 'devise' # User Authentication
+gem 'rails_config' # Config files
+gem 'bcrypt-ruby', '~> 3.0.0' # To use ActiveModel has_secure_password
+
+# Development helpers
+group :development do
+  gem 'better_errors' # better html error messages
+  gem 'quiet_assets' # do not display asset retrieval in log file
+end
 
 # Protocols
 gem 'net-dns' # DNS
@@ -64,18 +53,10 @@ group :test do
   gem 'launchy'
   gem 'database_cleaner', '<= 1.0.1'
   gem 'forgery'
+
+  # Guard
+  gem 'win32console', platforms: [:mswin, :mingw] # terminal colors (windows)
+  gem 'wdm', platforms: [:mswin, :mingw], require: false # Windows Directory Monitor
+  gem 'guard-rspec'
 end
 
-group :development do
-  gem 'better_errors' # better html error messages
-  gem 'quiet_assets' # do not display asset retrieval in log file
-end
-
-# To use Jbuilder templates for JSON
-# gem 'jbuilder'
-
-# Deploy with Capistrano
-# gem 'capistrano'
-
-# To use debugger
-# gem 'debugger'
