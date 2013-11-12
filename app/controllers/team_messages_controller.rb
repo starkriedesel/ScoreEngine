@@ -49,18 +49,21 @@ class TeamMessagesController < ApplicationController
 
   # POST /team_messages
   def create
-    @team_message = TeamMessage.new(params[:team_message])
+    @team_message = nil
+    message_params = params[:team_message]
 
-    unless current_user.admin
-      @team_message.team_id = current_user.team_id
-      @team_message.from_admin = false
-    else
-      @team_message.from_admin = true
-    end
-
-    if @team_message.save
-      redirect_to @team_message, notice: 'Team message was successfully created.'
-    else
+    begin
+      if message_params[:team_id] == 'all'
+        Team.select(:id).all.each do |team|
+          message_params[:team_id] = team.id
+          _send message_params
+        end
+        redirect_to team_messages_path, notice: 'Message was successfully sent to all teams'
+      else
+        _send message_params
+        redirect_to @team_message, notice: 'Message was successfully sent'
+      end
+    rescue
       render action: 'new'
     end
   end
@@ -69,5 +72,20 @@ class TeamMessagesController < ApplicationController
   def destroy
     @team_message = TeamMessage.find(params[:id])
     @team_message.destroy
+    redirect_to team_messages_path, notice: 'Message was successfully deleted'
+  end
+
+  private
+  def _send message_params
+    @team_message = TeamMessage.new(message_params)
+
+    unless current_user.admin
+      @team_message.team_id = current_user.team_id
+      @team_message.from_admin = false
+    else
+      @team_message.from_admin = true
+    end
+
+    raise unless @team_message.save
   end
 end

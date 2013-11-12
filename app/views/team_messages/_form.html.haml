@@ -6,7 +6,9 @@
         = f.label :team_id do
           Team
           %em.formee-req *
-        = f.select :team_id, Team.options_list.select{|t| not t[1].blank?}
+        - team_list = [['All','all']]
+        - team_list.concat(Team.options_list.select{|t| not t[1].blank?})
+        = f.select :team_id, team_list
         .hint-text
           Team to send message to
         .form-error-text
