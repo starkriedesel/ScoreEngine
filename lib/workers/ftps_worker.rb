@@ -5,7 +5,7 @@ module Workers
     set_default_params rport: 990
 
     def worker_name
-      :Ftps
+      'Ftps'
     end
 
     def ftp_connect host, port, username, password

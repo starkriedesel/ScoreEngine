@@ -13,7 +13,7 @@ module Workers
     })
 
     def worker_name
-      :Mysql
+      'Mysql'
     end
 
     def do_check

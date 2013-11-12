@@ -3,7 +3,7 @@ module Workers
     set_default_params rport: 443
 
     def worker_name
-      :Https
+      'Https'
     end
 
     def prefix

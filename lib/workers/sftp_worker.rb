@@ -5,7 +5,7 @@ module Workers
     set_default_params rport: 22
 
     def worker_name
-      :Sftp
+      'Sftp'
     end
 
     def ftp_get_error

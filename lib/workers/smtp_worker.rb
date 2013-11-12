@@ -13,7 +13,7 @@ module Workers
      })
 
     def worker_name
-      :Smtp
+      'Smtp'
     end
 
     def self.auathtype_order

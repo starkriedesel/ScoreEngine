@@ -11,7 +11,7 @@ module Workers
     })
 
     def worker_name
-      :Ssh
+      'Ssh'
     end
 
     def do_check

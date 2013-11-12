@@ -9,7 +9,7 @@ module Workers
     })
 
     def worker_name
-      :Imap
+      'Imap'
     end
 
     def do_check

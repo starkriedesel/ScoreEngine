@@ -10,7 +10,7 @@ module Workers
      })
 
     def worker_name
-      :Ldap
+      'Ldap'
     end
 
     def do_check

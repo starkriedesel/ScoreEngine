@@ -7,7 +7,7 @@ module Workers
     })
 
     def worker_name
-      "Dns"
+      'Dns'
     end
 
     def do_check
@@ -24,7 +24,7 @@ module Workers
         dns_lookup params[:hostname], params[:rhost], params[:rport].to_i, record_type
       end
 
-      if packet.answer.blank?
+      if packet.blank? or packet.answer.blank?
         @log.status = ServiceLog::STATUS_ERROR
         @log.message = "Empty response for '#{params[:hostname]}' (type #{params[:record_type]})"
       else

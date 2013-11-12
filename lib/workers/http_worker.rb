@@ -10,7 +10,7 @@ module Workers
     })
 
     def worker_name
-      :Http
+      'Http'
     end
 
     def prefix

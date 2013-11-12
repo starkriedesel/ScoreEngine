@@ -12,7 +12,7 @@ module Workers
     })
 
     def worker_name
-      :Ftp
+      'Ftp'
     end
 
     def do_check
