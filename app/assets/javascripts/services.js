@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    if(actionName == 'edit' || actionName=='update')
+    if(actionName == 'edit' || actionName=='update' || actionName == 'new')
     {
         getServiceParams();
         $('#service_worker').change(getServiceParams);
