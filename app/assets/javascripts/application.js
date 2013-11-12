@@ -4,6 +4,7 @@
 //= require formee
 //= require jquery.timeago
 //= require foundation
+//= require jquery.cookie
 
 // Load the timeago plugin
 $(document).ready(function() {

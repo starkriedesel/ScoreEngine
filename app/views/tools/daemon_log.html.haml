@@ -1,18 +1,81 @@
+.twelve#filters
+  %ul.inline-list
+    %li{style:'background-color:#ccc; width:40px; padding-left:8px;'}
+      = label_tag 'info', 'Info'
+      = check_box_tag 'info', 'info', true, onclick: 'toggleFilter(this)'
+    %li{style:'background-color:#e57746; width:40px; padding-left:3px;'}
+      = label_tag 'warn', 'Warn'
+      = check_box_tag 'warn', 'warn', true, onclick: 'toggleFilter(this)'
+    %li{style:'background-color:#d9504c; width:40px; padding-left:3px;'}
+      = label_tag 'error', 'Error'
+      = check_box_tag 'error', 'error', true, onclick: 'toggleFilter(this)'
+
 .twelve.columns.panel
   - if @log_lines.nil? or @log_lines.empty?
     = @error
   - else
-    %table.daemon-log
+    %table.daemon-log.hidden
       %tr
         %th Time
-        %th Type
+        -#%th Type
         %th Message
         %th Service
         %th Team
       - @log_lines.each do |line|
         %tr{class: line[:type].downcase}
-          %td= line[:time]
-          %td= line[:type]
+          %td=line[:time]
+          -#%time.timeago{datetime:line[:time].iso8601}= time_ago_in_words line[:time]
+          -#%td= line[:type]
           %td= line[:message]
           %td= line[:service]
           %td= line[:team]
+    %b.empty-log.hidden
+      There are no logs to display
+
+:javascript
+  var cookie_prefix = 'daemon-log-';
+  var filters = ['info','warn', 'error'];
+  var log_count;
+
+  $(document).ready(function(){
+    log_count = $('.daemon-log tr').length - 1;
+
+    // Set filters based on cookie
+    for(i in filters) {
+      $('#filters #'+filters[i]).prop('checked', $.cookie(cookie_prefix+filters[i]) != 'hide');
+      toggleFilter($('#filters #'+filters[i]));
+    }
+  });
+
+  function updateTable() {
+    if(log_count == 0) {
+      $('.daemon-log').hide();
+      $('.empty-log').show();
+    } else {
+      $('.daemon-log').show();
+      $('.empty-log').hide();
+    }
+  }
+
+  function toggleFilter(filterBox){
+    var checkbox = $(filterBox);
+    var filter = checkbox.attr('id');
+    //alert(filter);
+    //alert(checkbox.prop('checked'));
+    if(checkbox.prop('checked'))
+    {
+      $.cookie(cookie_prefix+filter, 'show');
+      var rows = $('.daemon-log .'+filter);
+      rows.show();
+      log_count += rows.length;
+    }
+    else
+    {
+      $.cookie(cookie_prefix+filter, 'hide');
+      var rows = $('.daemon-log .'+filter);
+      rows.hide();
+      log_count -= rows.length;
+    }
+    updateTable();
+  }
+
