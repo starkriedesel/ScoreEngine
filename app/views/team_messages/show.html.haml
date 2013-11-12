@@ -5,4 +5,4 @@
     %blockquote.message_content
       = simple_format @team_message.content
   .left
-    = link_to '<i class="icon-reply"></i> Reply'.html_safe, new_team_message_path, class: 'button'
+    = link_to '<i class="icon-reply"></i> Reply'.html_safe, team_messages_reply_path(@team_message.id), class: 'button'
