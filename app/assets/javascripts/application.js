@@ -2,14 +2,8 @@
 //= require jquery_ujs
 //= require jquery.ui.effect.all
 //= require formee
-//= require jquery.timeago
 //= require foundation
 //= require jquery.cookie
-
-// Load the timeago plugin
-$(document).ready(function() {
-    $("time.timeago").timeago();
-});
 
 // Make the alerts fade away
 $(document).ready(function() {
