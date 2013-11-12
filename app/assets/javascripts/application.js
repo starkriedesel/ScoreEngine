@@ -40,10 +40,9 @@ function checkMessages() {
     $.ajax({
         url: '/messages.json'
     }).done(function(data) {
-            alert(data.inbox);
-        if(data.inbox && data.inbox > 1) {
+        if(data.inbox && data.inbox > 0) {
             var msg_box = $('#message_alert');
-            msg_box.html('<a href="/messages">You have '+num_msgs+' new message(s)</a>');
+            msg_box.html('<a href="/messages">You have '+data.inbox+' new message(s)</a>');
             msg_box.css('visibility', 'visible');
         }
     });
