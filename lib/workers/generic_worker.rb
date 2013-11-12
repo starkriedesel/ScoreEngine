@@ -147,12 +147,39 @@ module Workers
       true
     end
 
-    def self.dns_lookup(hostname, dns_server, dns_port=53, record_type = Net::DNS::A)
-      dns = nil
+    # Lookup domain; uses given dns server, stored @dns_server, or default system server
+    # Returns first match as string
+    # Will pass through IP addresses
+    # Never throws, returns nil on failure
+    def domain_lookup(hostname, dns_server=nil, dns_port=53, record_type = Net::DNS::A)
+      domain_lookup_with_errors hostname, dns_server, dns_port, record_type
+    rescue => e
+      nil
+    end
+
+    # Same as domain_lookup but throws
+    def domain_lookup_with_errors(hostname, dns_server=nil, dns_port=53, record_type = Net::DNS::A)
+      # pass through IP addresses
+      return hostname unless hostname.match(/^\d+\.\d+\.\d+\.\d+$/).nil?
+
+      packet = raw_domain_lookup hostname, dns_server, dns_port, record_type
+      response = packet.answer.first.address.to_s
+      @log.debug_message += "DNS Response: #{response}\n"
+      response
+    rescue =>e
+      @log.debug_message += "Domain lookup failed: #{e.message}\n"
+      raise e
+    end
+
+    # Performs a lookup similar to domain_lookup but throws and returns the full packet
+    def raw_domain_lookup(hostname, dns_server=nil, dns_port=53, record_type = Net::DNS::A)
+      # use default server if un-specified
+      dns_server ||= @dns_server
+
+      @log.debug_message += "Domain lookup: #{hostname} @#{dns_server.nil? ? 'default' : dns_server} (type #{DnsWorker.record_name record_type})\n"
+
       if dns_server.nil?
-        dns = Net::DNS::Resolver.new(
-            port: dns_port,
-        )
+        dns = Net::DNS::Resolver.new(port: dns_port)
       else
         dns_server.sub!(/(:\d+)$/, '') { dns_port = $1 if dns_port == 53 }
         dns = Net::DNS::Resolver.new(
@@ -163,37 +190,16 @@ module Workers
       end
 
       if dns.nil?
-        return nil
-      end
-
-      dns.query(hostname, record_type)
-
-    rescue Net::DNS::Resolver::NoResponseError
-      puts "************NoResponseError: #{dns_server}, #{dns_port}, #{hostname}\n"
-      nil
-    end
-
-    def self.domain_lookup(hostname, dns_server, dns_port=53, record_type = Net::DNS::A)
-      # ignore if hostname is already an IP
-      return hostname unless hostname.match(/^\d+\.\d+\.\d+\.\d+$/).nil?
-      packet = dns_lookup hostname, dns_server, dns_port, record_type
-      if packet.nil? or packet.answer.blank?
-        nil
+        packet = nil
       else
-        packet.answer.first.address.to_s
+        packet = dns.query hostname, record_type
       end
-    end
 
-    def dns_lookup(hostname, dns_server=nil, dns_port=53, record_type = Net::DNS::A)
-      # use default server if un-specified
-      dns_server ||= @dns_server
-      self.class.dns_lookup hostname, dns_server, dns_port, record_type
-    end
-
-    def domain_lookup(hostname, dns_server=nil, dns_port=53, record_type = Net::DNS::A)
-      # use default server if un-specified
-      dns_server ||= @dns_server
-      self.class.domain_lookup hostname, dns_server, dns_port, record_type
+      if packet.blank? or packet.answer.blank?
+        raise Net::DNS::Resolver::NoResponseError.new
+      else
+        packet
+      end
     end
 
     # Replaced parameters embeded in strings using the #{...} syntax
@@ -212,6 +218,8 @@ module Workers
         log_server_down 'Connection was reset'
       rescue Net::SSH::AuthenticationFailed
         log_server_error 'Authentication failed'
+      rescue Net::DNS::Resolver::NoResponseError
+        log_server_error 'No response from DNS'
       rescue Timeout::Error
         throw Timeout:Error # This error is handled by GenericWorker#check
       rescue => e

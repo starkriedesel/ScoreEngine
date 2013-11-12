@@ -73,6 +73,7 @@ loop do
       worker.log_server_error('Timeout')
       log_daemon_info('Worker timeout', worker.service)
     end
-    log.save or log_daemon_error('Failed to save log', worker.service) unless log.status.nil?
+    log.debug_message ||= 'test'
+    log.save or log_daemon_error('Failed to save log: '+(log.valid? ? 'valid' : 'not valid:   '+log.errors.messages.inspect), worker.service) unless log.status.nil?
   end
 end

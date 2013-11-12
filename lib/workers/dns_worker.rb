@@ -6,6 +6,16 @@ module Workers
       record_type: {description: 'Record type to lookup', default: 'A', required: true},
     })
 
+    def self.record_name(record_type)
+      if record_type == Net::DNS::A
+        return 'A'
+      elsif record_type == Net::DNS::AAAA
+        return 'AAAA'
+      else
+        return '?'
+      end
+    end
+
     def worker_name
       'Dns'
     end
@@ -21,18 +31,15 @@ module Workers
       end
 
       packet = perform_action do
-        dns_lookup params[:hostname], params[:rhost], params[:rport].to_i, record_type
+        raw_domain_lookup params[:hostname], params[:rhost], params[:rport].to_i, record_type
       end
 
-      if packet.blank? or packet.answer.blank?
-        @log.status = ServiceLog::STATUS_ERROR
-        @log.message = "Empty response for '#{params[:hostname]}' (type #{params[:record_type]})"
-      else
+      unless packet.blank? or packet.answer.blank?
         @log.status = ServiceLog::STATUS_RUNNING
-        @log.message = "Recieved response for '#{params[:hostname]}' (type #{params[:record_type]})"
+        @log.message = "Recieved response for '#{params[:hostname]}' (type #{self.class.record_name record_type})"
       end
 
-      @log.debug_message = packet.to_s
+      @log.debug_message += packet.to_s
     end
   end
 end
