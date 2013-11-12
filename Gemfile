@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # Rails
-gem 'rails', '~> 3.2.11'
+gem 'rails', '3.2.14'
 
 # Databases
 gem 'sqlite3'
@@ -23,7 +23,7 @@ group :assets do
   gem 'compass-rails'
   gem 'modular-scale'
 
-  # Zurb CSS Framework
+  # Zurb CSS Framework v3
   gem 'zurb-foundation', '~> 3.2.0'
 end
 
