@@ -235,3 +235,9 @@ a [class^="icon-"] {
     background-color: $daemon-warn-color;
   }
 }
+
+.messages {
+  .new {
+    background-color: $message-new-color;
+  }
+}
