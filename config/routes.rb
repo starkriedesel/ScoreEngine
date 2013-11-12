@@ -28,7 +28,7 @@ ScoreEngine::Application.routes.draw do
 
   # Team Messages
   resources :team_messages, path: 'messages'
-  get '/messages/last/:id' => 'teamMessages#index', as: :last_messages
+  get '/messages/new/:reply_id' => 'teamMessages#new', as: :team_messages_reply
 
   # Challenges
   resources :challenges

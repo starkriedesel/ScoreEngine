@@ -45,6 +45,12 @@ class TeamMessagesController < ApplicationController
   def new
     @header_text = 'New Message'
     @team_message = TeamMessage.new
+    if params[:reply_id]
+      @reply_message = TeamMessage.find(params[:reply_id])
+      @team_message.team_id = @reply_message.team_id if current_user.admin
+      @team_message.subject = "RE: #{@reply_message.subject}"
+      @team_message.content = "\n\n=====================================================\nSent at: #{@reply_message.created_at}\nOriginal Message:\n#{@reply_message.content}"
+    end
   end
 
   # POST /team_messages

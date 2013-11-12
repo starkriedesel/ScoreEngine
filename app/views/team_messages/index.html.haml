@@ -14,12 +14,12 @@
           = #link_to 'Search', '#', class: 'button postfix expand'
 
 .row
-  .three.columns
+  .two.columns
     %dl.vertical.tabs
       %dd.active= link_to 'Inbox', '#inbox'
       %dd= link_to 'Outbox', '#outbox'
     = link_to 'New Message', new_team_message_path, class: 'button'
-  .nine.columns
+  .ten.columns
     %ul.tabs-content
       %li.active#inboxTab
         = render partial: 'table', locals: {messages: @inbox}

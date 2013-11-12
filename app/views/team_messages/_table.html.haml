@@ -2,14 +2,14 @@
   %thead
     %tr
       - if current_user_admin?
+        %th.two
         %th.two Team
         %th.five Subject
-        %th.two Sent
-        %th.three
+        %th.three Sent
       - else
+        %th.one
         %th.eight Subject
-        %th.two Sent
-        %th.two
+        %th.four Sent
 
   %tbody
     - messages.each do |team_message|
