@@ -240,4 +240,11 @@ a [class^="icon-"] {
   .new {
     background-color: $message-new-color;
   }
+
+  ul.inline-list {
+    margin: 0 0 0px -8px;
+    > li {
+      margin-left: 8px;
+    }
+  }
 }
