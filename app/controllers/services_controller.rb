@@ -8,10 +8,26 @@ class ServicesController < ApplicationController
   # GET /services
   def index
     @services = Hash.new([])
-    #@services[nil] = Service.where(team_id: nil).all if current_user_admin?
-    teams = Team.includes(:services).order(:id)
-    teams = teams.where(id: current_user.team_id) unless current_user_admin?
-    teams.all.each {|t| @services[t] += t.services}
+    teams_query = Team.includes(:services).order(:id)
+    teams_query = teams_query.where(id: current_user.team_id) unless current_user_admin?
+    @teams = teams_query.all
+    @teams.each {|t| @services[t] += t.services}
+
+    # Construct overview
+    empty_list = {}
+    @teams.each {|t| empty_list[t.id] = nil}
+    @overview = {}
+    if current_user.admin
+      @services.each do |team,service_list|
+        service_list.each do |service|
+          unless @overview.key? service.name
+            @overview[service.name] = empty_list
+          end
+          @overview[service.name][team.id] = {service_id: service.id, service_img: service_img(service)}
+        end
+      end
+    end
+
     @header_text = 'Services'
   end
 

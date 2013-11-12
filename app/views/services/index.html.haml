@@ -1,14 +1,40 @@
-- if @services.length > 0
+- if @services.length < 1
+  .twelve.panel
+    %b There are no services
+
+- else
   %dl.tabs
     - is_first = true
+    - if current_user_admin?
+      %dd.active{id: 'overview'}
+        = link_to "Overview", "#overview"
+        - is_first = false
     - @services.each do |team, service_list|
       - team = Team.new(name: 'None', id: 0) if team.nil?
       %dd{class: (is_first ? 'active':''), id: team.id}
         = link_to "Team #{team.name}", "#team#{team.id}"
       - is_first = false
-- if @services.length > 0
+
   %ul.tabs-content#team-tabs
     - is_first = true
+    - if current_user_admin?
+      %li#overviewTab.active
+        %table.service-overview
+          %thead
+            %tr
+              %th.two Service
+              - @teams.each do |team|
+                %th.two= "Team #{team.name}"
+          %tbody
+            - @overview.each do |service_name, overview_data|
+              %tr
+                %td
+                  %b= service_name
+                - @teams.each do |team|
+                  %td
+                    %a{href: service_path(overview_data[team.id][:service_id])}
+                      %img{src:overview_data[team.id][:service_img]}
+      - is_first = false
     - @services.each do |team, service_list|
       - team = Team.new(name: 'None', id: 0) if team.nil?
       %li{id: "team#{team.id}Tab", class: (is_first ? 'active':'')}
@@ -82,8 +108,8 @@
 
   function editTeamLink() {
     var team_id = $('#team-tabs .active #team-id').val();
-    if(team_id == 0)
-      alert('Cannot edit the null team');
+    if(!team_id)
+      alert('Not a valid team');
     else
       document.location = '/teams/' + team_id + "/edit"
   }
