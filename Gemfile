@@ -14,6 +14,8 @@ gem 'daemons' # daemon
 # Assets
 gem 'haml-rails' # HAML
 gem 'jquery-rails' # JQuery
+gem 'jquery-ui-rails'
+
 group :assets do
   # CSS
   gem 'sass-rails',   '~> 3.2.3'

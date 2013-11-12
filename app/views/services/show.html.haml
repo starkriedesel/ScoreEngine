@@ -38,6 +38,3 @@
   - @service.service_logs.order('created_at desc').each do |log|
     #service_logs
       = render partial: 'service_log', locals: {log: log}
-
-:javascript
-  setInterval(updateService, 30*1000);
