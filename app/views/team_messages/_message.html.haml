@@ -9,4 +9,4 @@
     %td= "Team #{team_message.team.name}"
   %td= link_to team_message.subject, team_message
   %td
-    %time.timeago{datetime:team_message.created_at.to_time.iso8601}= time_ago_in_words team_message.created_at
+    = team_message.created_at.strftime '%I:%M:%S %p'

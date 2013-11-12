@@ -13,7 +13,7 @@
         %li
           = link_to 'Remove', clear_service_log_path(log), method: :post
       %li.time
-        %time.timeago{datetime:log.created_at.to_time.iso8601}= time_ago_in_words log.created_at
+        = log.created_at.strftime '%I:%M:%S %p'
 
     - if current_user_admin?
       .row.debug
