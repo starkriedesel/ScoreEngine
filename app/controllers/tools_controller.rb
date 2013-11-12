@@ -97,13 +97,8 @@ class ToolsController < ApplicationController
     @error = nil
     begin
       @log_lines = File.open(Settings.daemon.log_file,'r').readlines.collect do |line|
-        partsA = line.split ':'
-        partsB = partsA[4].split ';'
-        dateParts = partsA[0].split '-'
-        dateTimeParts = dateParts[2].split ' '
-        timeParts = partsA[2].split ' '
-        # ignores timezone
-        {time: partsA[0..2].join(':'), type: partsA[3], message: partsA[4], service: partsB[1], team: partsB[2]}
+        parts = line.split ';'
+        {time: parts[0], type: parts[1], message: parts[2], service: parts[3], team: parts[4]}
       end
         @log_lines.reverse!
     rescue Errno::ENOENT => e

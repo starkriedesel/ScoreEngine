@@ -41,8 +41,8 @@ loop do
         w.check
       rescue => e
         w.log_server_error "Exception (#{e.class.to_s})" unless w.nil? # Log error to users if possible
-        log_daemon_error "Exception #{e.class.to_s}: #{e.message}", service # Always log error to daemon log
-        log_daemon_error e.backtrace
+        log_daemon_error "Exception #{e.class.to_s} - #{e.message}", service # Always log error to daemon log
+        #log_daemon_error e.backtrace
       end
     end
   end

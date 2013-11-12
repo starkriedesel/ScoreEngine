@@ -9,7 +9,7 @@ class TeamMessage < ActiveRecord::Base
     team_messages = team_messages.where(team_id: options[:team_id]) unless options[:team_id].nil? or options[:is_admin]
     team_messages = team_messages.where('id > ?', options[:last_message_id]) unless options[:last_message_id].nil?
     team_messages = block.call team_messages unless block.nil?
-    team_messages = team_messages.order(:id).all
+    team_messages = team_messages.order(created_at: :desc).all
 
     # Sort messages into inbox & outbox
     inbox = []
