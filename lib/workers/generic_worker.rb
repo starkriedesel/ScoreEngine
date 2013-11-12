@@ -44,7 +44,7 @@ module Workers
 
       self.params = self.class.default_params.with_indifferent_access
       if service.params? and service.params.kind_of? Hash
-        self.params.merge! service.params[self.worker_name] if service.params[self.worker_name].kind_of? Hash
+        self.params.merge! service.params[self.worker_name.to_s] if service.params[self.worker_name.to_s].kind_of? Hash
       end
 
       self.params.each do |name, value|
