@@ -1,15 +1,18 @@
 .twelve.columns.panel
-  %table.daemon-log
-    %tr
-      %th Time
-      %th Type
-      %th Message
-      %th Service
-      %th Team
-    - @log_lines.each do |line|
-      %tr{class: line[:type].downcase}
-        %td= line[:time]
-        %td= line[:type]
-        %td= line[:message]
-        %td= line[:service]
-        %td= line[:team]
+  - if @log_lines.nil? or @log_lines.empty?
+    = @error
+  - else
+    %table.daemon-log
+      %tr
+        %th Time
+        %th Type
+        %th Message
+        %th Service
+        %th Team
+      - @log_lines.each do |line|
+        %tr{class: line[:type].downcase}
+          %td= line[:time]
+          %td= line[:type]
+          %td= line[:message]
+          %td= line[:service]
+          %td= line[:team]
