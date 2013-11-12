@@ -92,6 +92,7 @@ module Workers
       domain_ip = domain_lookup params[:rhost]
       if domain_ip.nil?
         log_server_error "Domain Lookup Failed: #{params[:rhost]}"
+        log_daemon_info "Domain Lookup Failed: #{params[:rhost]}", @service
         return @log.status if @log.save
         return nil
       end

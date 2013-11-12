@@ -1,14 +1,16 @@
 require_relative 'daemon/log'
 
 # Initialize daemon log file
-log_filepath = Settings.daemon.log_file || nil
-init_daemon_log_file log_filepath
+$log_filepath = Settings.daemon.log_file || nil
+$time_format = Settings.daemon.time_format || '%I:%m:%S %p'
+$tick_time = Settings.daemon.tick_time || 60
+init_daemon_log_file $log_filepath
 
 # Gather settings
-log_daemon_info "daemon.log_file = #{log_filepath}"
-tick_time = Settings.daemon.tick_time || 60
-log_daemon_info "daemon.tick_time = #{tick_time}"
+log_daemon_info "Date/Time Start = #{Time.now}"
+log_daemon_info "daemon.tick_time = #{$tick_time}"
 log_daemon_info "daemon.nofork = #{!!Settings.daemon.nofork}"
+log_daemon_info "daemon.time_format = #{$time_format}"
 
 # Initial tick values
 tick_num = 0
@@ -49,9 +51,9 @@ loop do
 
   # Calculate time used and sleep for appropriate time
   time_off = Time.now.to_i - last_time
-  time_to_sleep = tick_time - time_off
+  time_to_sleep = $tick_time - time_off
   if time_to_sleep < 0
-    log_daemon_warn "Tick processing took longer than allotted time (tick_time: #{tick_time}, actual: #{time_off})"
+    log_daemon_warn "Tick processing took longer than allotted time (tick_time: #{$tick_time}, actual: #{time_off})"
   else
     log_daemon_info "Sleeping for #{time_to_sleep} seconds"
     sleep time_to_sleep
@@ -67,12 +69,10 @@ loop do
   workers.each do |worker|
     log = worker.log
     log_daemon_error('Service has nil log', worker.service) and return if log.nil?
-    log_daemon_info "Worker.complete? = #{worker.complete?}"
     unless worker.complete? or not log.status.nil?
       worker.log_server_error('Timeout')
       log_daemon_info('Worker timeout', worker.service)
     end
-    log_daemon_info('Saving log', worker.service)
     log.save or log_daemon_error('Failed to save log', worker.service) unless log.status.nil?
   end
 end

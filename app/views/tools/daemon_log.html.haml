@@ -14,41 +14,46 @@
   - if @log_lines.nil? or @log_lines.empty?
     = @error
   - else
-    %table.daemon-log.hidden
+    %table.daemon-log.hidden.twelve
       %tr
-        %th Time
-        -#%th Type
-        %th Message
-        %th Service
-        %th Team
+        %th.two Time
+        %th.seven Message
+        %th.three Service / Team
       - @log_lines.each do |line|
         %tr{class: line[:type].downcase}
           %td=line[:time]
-          -#%time.timeago{datetime:line[:time].iso8601}= time_ago_in_words line[:time]
-          -#%td= line[:type]
           %td= line[:message]
-          %td= line[:service]
-          %td= line[:team]
+          %td
+            = line[:service]
+            - unless line[:service].blank? or line[:team].blank?
+              &#47;
+            = line[:team]
     %b.empty-log.hidden
       There are no logs to display
 
 :javascript
   var cookie_prefix = 'daemon-log-';
   var filters = ['info','warn', 'error'];
-  var log_count;
+  var log_count = {'info': 0, 'warn': 0, 'error': 0};
 
   $(document).ready(function(){
-    log_count = $('.daemon-log tr').length - 1;
-
     // Set filters based on cookie
     for(i in filters) {
+      log_count[filters[i]] = $('.daemon-log tr.'+filters[i]).length;
       $('#filters #'+filters[i]).prop('checked', $.cookie(cookie_prefix+filters[i]) != 'hide');
       toggleFilter($('#filters #'+filters[i]));
     }
   });
 
   function updateTable() {
-    if(log_count == 0) {
+    var total_count = 0;
+
+    for(i in filters) {
+      if($('#filters #'+filters[i]).prop('checked'))
+        total_count += log_count[filters[i]];
+    }
+
+    if(total_count == 0) {
       $('.daemon-log').hide();
       $('.empty-log').show();
     } else {
@@ -60,21 +65,17 @@
   function toggleFilter(filterBox){
     var checkbox = $(filterBox);
     var filter = checkbox.attr('id');
-    //alert(filter);
-    //alert(checkbox.prop('checked'));
     if(checkbox.prop('checked'))
     {
       $.cookie(cookie_prefix+filter, 'show');
       var rows = $('.daemon-log .'+filter);
       rows.show();
-      log_count += rows.length;
     }
     else
     {
       $.cookie(cookie_prefix+filter, 'hide');
       var rows = $('.daemon-log .'+filter);
       rows.hide();
-      log_count -= rows.length;
     }
     updateTable();
   }

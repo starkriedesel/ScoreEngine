@@ -18,10 +18,10 @@ def log_daemon(msg, lvl, service)
     else
   end
   unless service.nil?
-    msg += "; Service '#{service.name}' (#{service.worker})"
-    msg += "; Team '#{service.team.name}' (#{service.team_id})" unless service.team.nil? or service.team.id <= 0
+    msg += "; #{service.name}"
+    msg += "; #{service.team.name}" unless service.team.nil? or service.team.id <= 0
   end
-  $daemon_logfile.write("#{Time.now}; #{msg}\n")
+  $daemon_logfile.write("#{Time.now.strftime($time_format)}; #{msg}\n")
   $daemon_logfile.flush
   true
 end
