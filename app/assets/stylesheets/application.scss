@@ -214,9 +214,14 @@ a [class^="icon-"] {
   display: none;
 }
 
-.alert-box ul {
-  list-style-position: inside;
-  margin-bottom: 0px;
+.alert-box {
+  ul {
+    list-style-position: inside;
+    margin-bottom: 0px;
+  }
+  a, a:visited, a:hover {
+    color: $white;
+  }
 }
 
 .daemon-log {

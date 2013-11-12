@@ -9,6 +9,9 @@ class TeamMessagesController < ApplicationController
   def index
     @header_text = 'Messages'
 
+    @last_time_checked = session[:last_time_inbox_checked]
+    @last_time_checked ||= Time.at(0)
+
     messages = TeamMessage.inbox_outbox team_id: current_user.team_id, is_admin: current_user_admin?, last_message_id: params[:id] do |query|
       query = query.where('subject LIKE ?', "%#{params[:search]}%") unless params[:search].blank?
       query
@@ -18,20 +21,15 @@ class TeamMessagesController < ApplicationController
       format.html do
         @inbox = messages[:inbox]
         @outbox = messages[:outbox]
+        session[:last_time_inbox_checked] = Time.now
       end
 
       format.json do
-        inbox_html = ''
-        outbox_html = ''
-        messages[:inbox].each {|team_message| inbox_html += render_to_string(partial: 'message', formats: [:html], locals: {team_message: team_message})}
-        messages[:outbox].each {|team_message| outbox_html += render_to_string(partial: 'message', formats: [:html], locals: {team_message: team_message})}
-
+        messages[:inbox].select! {|m| m.created_at > @last_time_checked}
+        messages[:outbox].select! {|m| m.created_at > @last_time_checked}
         render json: {
-            inbox: inbox_html,
-            outbox: outbox_html,
-            new_inbox: messages[:inbox].length,
-            last_inbox_subject: messages[:inbox].last.subject,
-            last_inbox_time: messages[:inbox].last.created_at
+            inbox: messages[:inbox].length,
+            outbox: messages[:outbox].length
         }
       end
     end

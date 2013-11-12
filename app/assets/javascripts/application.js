@@ -32,3 +32,19 @@ $(document).ready(function() {
     });
 });
 
+$(document).ready(function() {
+    setInterval(checkMessages, 30*1000);
+});
+
+function checkMessages() {
+    $.ajax({
+        url: '/messages.json'
+    }).done(function(data) {
+            alert(data.inbox);
+        if(data.inbox && data.inbox > 1) {
+            var msg_box = $('#message_alert');
+            msg_box.html('<a href="/messages">You have '+num_msgs+' new message(s)</a>');
+            msg_box.css('visibility', 'visible');
+        }
+    });
+}

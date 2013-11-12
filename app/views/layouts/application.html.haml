@@ -36,7 +36,8 @@
       = flash[:error]
       = flash[:alert]
       = flash[:notice] unless flash[:error] or flash[:alert]
-
+    #message_alert.alert-box.success{style:'visibility:hidden'}
+      You have 0 new messages
   .row.content
     .twelve.columns
       = yield
