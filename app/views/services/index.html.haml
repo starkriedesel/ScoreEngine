@@ -55,7 +55,6 @@
   = link_to '<i class="icon-group"></i> Add Team'.html_safe, new_team_path, class: 'button'
   - if @services.length > 0
     = link_to_function '<i class="icon-pencil"></i> Edit Team'.html_safe, 'editTeamLink()', class: 'button'
-  = link_to_function '<i class="icon-pencil"></i> Edit Team'.html_safe, 'editTeamLink()', class: 'button'
 
   #duplicateModal.reveal-modal
     %a.close-reveal-modal &#215;
