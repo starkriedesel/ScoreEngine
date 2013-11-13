@@ -28,6 +28,7 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
+    checkMessages();
     setInterval(checkMessages, 30*1000);
 });
 
@@ -36,9 +37,7 @@ function checkMessages() {
         url: '/messages.json'
     }).done(function(data) {
         if(data.inbox && data.inbox > 0) {
-            var msg_box = $('#message_alert');
-            msg_box.html('<a href="/messages">You have '+data.inbox+' new message(s)</a>');
-            msg_box.css('visibility', 'visible');
+            $('#messages_link').addClass('new_messages');
         }
         if(data.daemon_running) {
             $('.top-bar #text').addClass('running');

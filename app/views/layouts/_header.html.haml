@@ -10,7 +10,7 @@
     %section
       %ul.right
         - if user_signed_in?
-          %li
+          %li#messages_link
             = link_to '<i class="icon-envelope-alt"></i> Messages'.html_safe, team_messages_path
           %li
             = link_to '<i class="icon-cloud"></i> Services'.html_safe, services_path

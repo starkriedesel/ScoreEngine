@@ -47,6 +47,10 @@ form.formee {
   #text.running a {
     color: $top-bar-running-color;
   }
+
+  #messages_link.new_messages a {
+    color: $mainColor;
+  }
 }
 
 header {
