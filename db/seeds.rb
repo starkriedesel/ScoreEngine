@@ -32,3 +32,11 @@ alpha_http_service = Service.create({name: 'Google', on: false, team: team_alpha
 beta_http_service = alpha_http_service.dup
 beta_http_service.team_id = team_beta.id
 beta_http_service.save
+
+alpha_dns_service = Service.create({name: 'Google DNS', on: false, team: team_alpha, worker: 'Dns', params: {
+    'Dns'=>{'rhost'=>'8.8.8.8', 'rport'=>'53', 'hostname'=>'yahoo.com', 'record_type'=>'A'}
+}}, without_protection: true)
+beta_dns_service = alpha_dns_service.dup
+beta_dns_service.team_id = team_beta.id
+beta_dns_service.save
+
