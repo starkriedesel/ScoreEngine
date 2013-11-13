@@ -40,5 +40,12 @@ function checkMessages() {
             msg_box.html('<a href="/messages">You have '+data.inbox+' new message(s)</a>');
             msg_box.css('visibility', 'visible');
         }
+        if(data.daemon_running) {
+            $('.top-bar #text').addClass('running');
+            $('.top-bar #text').removeClass('not-running');
+        } else {
+            $('.top-bar #text').addClass('not-running');
+            $('.top-bar #text').removeClass('running');
+        }
     });
 }

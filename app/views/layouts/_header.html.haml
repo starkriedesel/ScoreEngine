@@ -1,7 +1,7 @@
 .contain-to-grid
   .top-bar
     %ul
-      %li.name
+      %li#text.name{class: (daemon_running? ? 'running' : 'not-running')}
         %h1
           = link_to raw('<i class="icon-cogs"></i>&nbsp;Score&nbsp;Engine'), '/'
       %li.toggle-topbar

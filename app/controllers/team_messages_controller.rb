@@ -25,11 +25,10 @@ class TeamMessagesController < ApplicationController
       end
 
       format.json do
-        messages[:inbox].select! {|m| m.created_at > @last_time_checked}
-        messages[:outbox].select! {|m| m.created_at > @last_time_checked}
+
         render json: {
-            inbox: messages[:inbox].length,
-            outbox: messages[:outbox].length
+            inbox: messages[:inbox].select{|m| m.created_at > @last_time_checked}.length,
+            daemon_running: daemon_running?
         }
       end
     end

@@ -55,4 +55,8 @@ module ApplicationHelper
   def current_user_admin?
     current_user.try(:admin?) ? true : false
   end
+
+  def daemon_running?
+    File.exists?(File.join(Rails.root,'/tmp/pids/ScoreEngine_Daemon.pid'))
+  end
 end

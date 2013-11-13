@@ -40,12 +40,21 @@ form.formee {
     margin-top: 10px;
 }
 
+.top-bar {
+  #text.not-running a {
+    color: $top-bar-not-running-color;
+  }
+  #text.running a {
+    color: $top-bar-running-color;
+  }
+}
+
 header {
     background-color: $mainColor;
     padding: 10px 0px;
 }
 
-header.running {
+header.running{
   background-color: $service-running-color;
 }
 header.down {
