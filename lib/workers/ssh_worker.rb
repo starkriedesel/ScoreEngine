@@ -6,8 +6,8 @@ module Workers
     set_service_params({
      username: {description: 'User to login as', default: 'root', required: true},
      password: {description: 'Password to login with'},
-     command: {description: 'Command to run on server', default: 'ls /home/#{username}/', required: true, param_replace: true},
-     command_check: {description: 'Regex for command response to match', default: '.+', required: true, param_replace: true},
+     command: {description: 'Command to run on server', default: 'ls /home/#{username}/', required: true},
+     command_check: {description: 'Regex for command response to match', default: '.+', required: true},
     })
 
     def worker_name
