@@ -38,7 +38,7 @@ module Workers
           #end
         end
 
-        @log.debug_message += 'Closing connection\n'
+        @log.debug_message += "Closing connection\n"
         sock.close
 
         @log.status = ServiceLog::STATUS_RUNNING

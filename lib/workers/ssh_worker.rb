@@ -30,14 +30,14 @@ module Workers
       end
 
       unless response.nil?
-        @log.debug_message += "Response:\n#{response}\n\nRegex Expected: /#{params[:command_check]}/"
+        @log.debug_message += "Response:\n#{response}\n\nRegex Expected: /#{params[:command_check]}/\n"
 
         if perform_check response, params[:command_check]
           @log.status = ServiceLog::STATUS_RUNNING
-          @log.message = "Correct response recieved"
+          @log.message = 'Correct response recieved'
         else
           @log.status = ServiceLog::STATUS_ERROR
-          @log.message = "Incorrect response"
+          @log.message = 'Incorrect response'
         end
       end
     end

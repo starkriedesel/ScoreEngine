@@ -50,7 +50,7 @@ module Workers
         @log.debug_message += "Http Responce Code #{response.code}\n"
 
         if response.code == '200'
-          @log.debug_message += "Checking page against MD5/Regex: #{params[:home_check]}" unless params[:home_check].blank?
+          @log.debug_message += "Checking page against MD5/Regex: #{params[:home_check]}\n" unless params[:home_check].blank?
           if params[:home_check].blank? or perform_check response.body, params[:home_check]
             @log.message = "Http Responce Code #{response.code}"
             @log.status = ServiceLog::STATUS_RUNNING
@@ -62,7 +62,7 @@ module Workers
           @log.status = ServiceLog::STATUS_ERROR
         end
 
-        #@log.debug_message += "\nResponse:\n#{response.body}"
+        #@log.debug_message += "Response:\n#{response.body}\n"
       end
     end
   end

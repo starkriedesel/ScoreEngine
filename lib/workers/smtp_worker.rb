@@ -55,7 +55,7 @@ module Workers
       register_exception Net::SMTPUnknownError
       register_exception Net::SMTPUnsupportedCommand
       register_exception Net::SMTPServerBusy do |e|
-        log_server_error "Server Busy"
+        log_server_error 'Server Busy'
       end
 
       perform_action do
@@ -78,7 +78,7 @@ module Workers
         end
 
         if smtp.nil?
-          log_server_error "Failed to Connect/Authenticate"
+          log_server_error 'Failed to Connect/Authenticate'
           return
         end
 
@@ -99,9 +99,9 @@ module Workers
       if @log.status.nil?
         if success
           @log.status = ServiceLog::STATUS_RUNNING
-          @log.message = "Send Mail Success"
+          @log.message = 'Send Mail Success'
         else
-          log_server_error "Unknown Error"
+          log_server_error 'Unknown Error'
         end
       end
     end

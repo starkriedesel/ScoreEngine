@@ -39,7 +39,7 @@ module Workers
         @log.message = "Recieved response for '#{params[:hostname]}' (type #{self.class.record_name record_type})"
       end
 
-      @log.debug_message += packet.to_s
+      @log.debug_message += "#{packet.to_s}\n"
     end
   end
 end

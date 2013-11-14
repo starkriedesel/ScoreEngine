@@ -37,7 +37,7 @@ module Workers
           select_response = client.query(sql)
 
           if select_response.nil?
-            log_server_error "No response recieved for select statement"
+            log_server_error 'No response recieved for select statement'
             return
           else
             unless params[:select_check].blank?
@@ -45,7 +45,7 @@ module Workers
               @log.debug_message += "Received response: #{r}\n"
               @log.debug_message += "Checking select response for: #{params[:select_check]}\n"
               unless r =~ %r{#{params[:select_check]}}
-                log_server_error "Incorrect response for select statement"
+                log_server_error 'Incorrect response for select statement'
                 return
               end
             end
@@ -62,7 +62,7 @@ module Workers
 
       if @log.status.nil?
         @log.status = ServiceLog::STATUS_RUNNING
-        @log.message = "No Errors"
+        @log.message = 'No Errors'
       end
     end
   end

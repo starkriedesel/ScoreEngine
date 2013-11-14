@@ -17,7 +17,7 @@ module Workers
         log_server_error "IMAP Error: #{e}"
       end
       register_exception Net::IMAP::NoResponseError do |e|
-        log_server_error "Authentication failed"
+        log_server_error 'Authentication failed'
       end
 
       perform_action do
@@ -33,7 +33,7 @@ module Workers
 
       if @log.status.nil?
         @log.status = ServiceLog::STATUS_RUNNING
-        @log.message = "Service Running"
+        @log.message = 'Service Running'
       end
     end
   end

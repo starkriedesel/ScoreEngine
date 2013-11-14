@@ -50,7 +50,7 @@ module Workers
           @log.debug_message += "Checking file contents, should be MD5/Regex: #{params[:static_file_check]}\n"
           if perform_check static_contents, params[:static_file_check]
             @log.status = ServiceLog::STATUS_ERROR
-            @log.message = "Invalid file contents"
+            @log.message = 'Invalid file contents'
             return
           end
         end
@@ -142,7 +142,7 @@ module Workers
       error = ftp_get_error
       unless error.nil?
         log_server_error "#{message} (FTP Error: #{error[0]})"
-        @log.debug_message += "\nInvalid Response: #{error[1]}"
+        @log.debug_message += "\nInvalid Response: #{error[1]}\n"
         return false
       end
       true

@@ -25,14 +25,14 @@ module Workers
       perform_action do
         success = ldap.bind
         unless success
-          log_server_error "Username/Password Invalid for LDAP Auth"
+          log_server_error 'Username/Password Invalid for LDAP Auth'
           return
         end
-        @log.debug_message += "LDAP Login Successful"
+        @log.debug_message += "LDAP Login Successful\n"
       end
 
       if success
-        @log.message = "LDAP Login Successful"
+        @log.message = 'LDAP Login Successful'
         @log.status = ServiceLog::STATUS_RUNNING
       end
     end

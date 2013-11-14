@@ -102,11 +102,15 @@ module Workers
 
       log_daemon_info 'Checking service', @service
 
+      time_start = Time.now
       begin
         Timeout::timeout(@timeout) { self.do_check }
       rescue Timeout::Error
         log_server_error 'Timeout'
       end
+      time_end = Time.now
+
+      @log.debug_message += "Elapsed Time: #{(time_end - time_start)} sec\n"
 
       @complete = true
       @log
