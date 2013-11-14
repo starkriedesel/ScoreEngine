@@ -31,6 +31,7 @@ module Workers
         Ldap: 'LdapWorker',
         Smtp: 'SmtpWorker',
         Imap: 'ImapWorker',
+        Netcat: 'NetcatWorker',
     }.with_indifferent_access
 
     # @param [Service] service
@@ -48,7 +49,7 @@ module Workers
       end
 
       self.params.each do |name, value|
-        if self.class.service_params.key? name and self.class.service_params[name][:param_replace]
+        if self.class.service_params.key? name
           self.params[name] = param_replace value
         end
       end
@@ -204,7 +205,8 @@ module Workers
 
     # Replaced parameters embeded in strings using the #{...} syntax
     def param_replace(string)
-      string.gsub(/#\{(.+?)\}/) { params.has_key?($1) ? params[$1]: $1 }
+      string = string.gsub(/#\{(.+?)\}/) { params.has_key?($1) ? params[$1]: $1 }
+      string.sub '\\n', "\n"
     end
 
     def perform_action
@@ -257,8 +259,15 @@ module Workers
 
     def perform_check(content, check_value)
       if (check_value =~ /^[a-f0-9]{32}$/i).nil?
-        not (content =~ Regexp.new(check_value)).nil?
+        if check_value.length > 1 and check_value[0] == '/' and check_value[-1] == '/'
+          @log.debug_message += 'Using regex check'
+          not (content =~ Regexp.new(check_value[1..-2])).nil?
+        else
+          @log.debug_message += 'Using include check'
+          content.include? check_value
+        end
       else
+        @log.debug_message += 'Using md5 check'
         Digest::MD5.hexdigest(content) == check_value.downcase
       end
     end
