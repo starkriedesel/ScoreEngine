@@ -180,7 +180,12 @@ class ServicesController < ApplicationController
         service_list = service_list.where(team_id: current_user.team_id) unless current_user_admin?
         service_list = service_list.all.collect do |s|
           status_class = s.current_status == 'off' ? 'off' : status_class(s.current_status)
-          {id: s.id, status_class: status_class, status: s.current_status}
+          if s.current_status == 'off'
+            img = status_img nil
+          else
+            img = status_img s.current_status.to_i
+          end
+          {id: s.id, status_class: status_class, status: s.current_status, image: img}
         end
         output[:service_list] = service_list
 

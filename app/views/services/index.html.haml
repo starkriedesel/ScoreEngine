@@ -34,7 +34,7 @@
                   %td
                     - if overview_data.key? team.id
                       %a{href: service_path(overview_data[team.id][:service_id])}
-                        %img{src:overview_data[team.id][:service_img]}
+                        %img{src:overview_data[team.id][:service_img], id: "overviewIcon#{overview_data[team.id][:service_id]}"}
       - is_first = false
     - @services.each do |team, service_list|
       - team = Team.new(name: 'None', id: 0) if team.nil?

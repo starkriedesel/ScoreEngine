@@ -75,6 +75,9 @@ function updateService() {
 
         // Update Service List
         for(var i=0; i<data.service_list.length; i++) {
+            var overviewImg = $('#overviewIcon'+data.service_list[i].id);
+            if(overviewImg)
+                overviewImg.attr('src',data.service_list[i].image);
             changeStatusClass($('#service'+data.service_list[i].id), data.service_list[i].status_class);
         }
     });
