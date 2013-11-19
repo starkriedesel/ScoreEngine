@@ -14,14 +14,12 @@ class ServicesController < ApplicationController
     @teams.each {|t| @services[t] += t.services}
 
     # Construct overview
-    empty_list = {}
-    @teams.each {|t| empty_list[t.id] = nil}
     @overview = {}
     if current_user.admin
       @services.each do |team,service_list|
         service_list.each do |service|
           unless @overview.key? service.name
-            @overview[service.name] = empty_list
+            @overview[service.name] = {}
           end
           @overview[service.name][team.id] = {service_id: service.id, service_img: service_img(service)}
         end
