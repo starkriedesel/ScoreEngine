@@ -22,11 +22,10 @@ module Workers
 
     def do_login authtype
       if authtype.is_a? String
-        input = authtype
         authtype = authtype.downcase.gsub(' ','_')
         authtype = self.class.auathtype_order.select {|a| a.to_s == authtype}.first
         if authtype.nil?
-          @log.debug_message += "Unknown authentication method: #{input}\n"
+          @log.debug_message += "Unknown authentication method: #{authtype}\n"
           return try_login
         end
       end
@@ -61,7 +60,7 @@ module Workers
       perform_action do
 
         log_server_connect
-        log_server_login
+        log_server_login unless params[:username].blank?
 
         @log.debug_message += "HELO #{params[:helo_domain]}\n" unless params[:helo_domain].blank?
 
@@ -78,7 +77,7 @@ module Workers
         end
 
         if smtp.nil?
-          log_server_error 'Failed to Connect/Authenticate'
+          log_server_error "Failed to Connect/Authenticate\n"
           return
         end
 

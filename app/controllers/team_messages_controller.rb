@@ -14,7 +14,7 @@ class TeamMessagesController < ApplicationController
 
     messages = TeamMessage.inbox_outbox team_id: current_user.team_id, is_admin: current_user_admin?, last_message_id: params[:id] do |query|
       query = query.where('subject LIKE ?', "%#{params[:search]}%") unless params[:search].blank?
-      query
+      query.order(:created_at).reverse_order
     end
 
     respond_to do |format|
@@ -25,7 +25,6 @@ class TeamMessagesController < ApplicationController
       end
 
       format.json do
-
         render json: {
             inbox: messages[:inbox].select{|m| m.created_at > @last_time_checked}.length,
             daemon_running: daemon_running?
@@ -70,6 +69,26 @@ class TeamMessagesController < ApplicationController
       end
     rescue
       render action: 'new'
+    end
+  end
+
+  # GET /team_messages/1/edit
+  def edit
+    @team_message = TeamMessage.find(params[:id])
+    @header_text = 'Edit Message'
+
+
+  end
+
+  # PUT /team_messages/1
+  def update
+    @team_message = TeamMessage.find(params[:id])
+    @header_text = 'Edit Message'
+    @team_message.attributes = params[:team_message]
+    if @team_message.save
+      redirect_to team_messages_path, notice: 'Message was successfully updated.'
+    else
+      render action: "edit"
     end
   end
 

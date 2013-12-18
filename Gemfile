@@ -16,6 +16,8 @@ gem 'haml-rails' # HAML
 gem 'jquery-rails' # JQuery
 gem 'jquery-ui-rails'
 
+gem 'therubyracer'
+
 group :assets do
   # CSS
   gem 'sass-rails',   '~> 3.2.3'

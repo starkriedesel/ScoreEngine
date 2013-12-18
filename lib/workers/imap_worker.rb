@@ -20,16 +20,20 @@ module Workers
         log_server_error 'Authentication failed'
       end
 
+      imap = nil
       perform_action do
         log_server_connect
         imap = Net::IMAP.new params[:rhost], {port: params[:rport]}
         log_server_login
+        puts params.inspect
         imap.login params[:username], params[:password]
         @log.debug_message += "Checking INBOX\n"
         imap.examine 'INBOX'
         @log.debug_message += "Searching by RECENT\n"
         imap.search ['RECENT']
       end
+
+      imap.disconnect unless imap.nil?
 
       if @log.status.nil?
         @log.status = ServiceLog::STATUS_RUNNING

@@ -22,6 +22,14 @@
           DNS server for resolving domains on services within team
         .form-error-text
           = @team.errors[:dns_server].first unless @team.errors[:dns_server].blank?
+      .six.columns
+        = f.label :domain do
+          Domain
+        = f.text_field :domain
+        .hint-text
+          Domain name for team services
+        .form-error-text
+          = @team.errors[:domain].first unless @team.errors[:domain].blank?
 
     .left
       = f.submit ((%w{new create}.include? params[:action]) ? 'Create' : 'Edit')

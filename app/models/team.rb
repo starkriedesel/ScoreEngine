@@ -1,5 +1,5 @@
 class Team < ActiveRecord::Base
-  attr_accessible :dns_server, :name
+  attr_accessible :dns_server, :domain, :name
 
   validates_presence_of :name
 
@@ -10,7 +10,7 @@ class Team < ActiveRecord::Base
 
   def self.options_list
     #[['None',nil]] + Team.all.collect{|t| ["#{t.name}", t.id]}
-    [['Pick One', nil]] + Team.all.collect{|t| [t.name, t.id]}
+    [['All', 'all']] + Team.all.collect{|t| [t.name, t.id]}
   end
 
   def uptime

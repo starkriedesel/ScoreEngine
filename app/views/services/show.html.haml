@@ -28,7 +28,6 @@
         %ul.button-group.even.three-up.radius
           %li= link_to 'Edit', edit_service_path(@service), class:'button radius'
           %li= button_to 'Clear', clear_service_path(@service), class: 'button radius'
-          %li= button_to 'Check', service_check_path(@service) , class:'button radius'
 
   - if @service.service_logs.count == 0
     .row

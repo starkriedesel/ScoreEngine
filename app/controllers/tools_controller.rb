@@ -78,7 +78,7 @@ class ToolsController < ApplicationController
         dns_server = nil
       end
 
-      packet = Workers::GenericWorker.dns_lookup params[:domain], dns_server, 53, record_type
+      packet = Workers::GenericWorker.raw_domain_lookup params[:domain], dns_server, 53, record_type
 
     rescue => e
       flash[:error] = "Error: #{e.message}"
@@ -96,7 +96,7 @@ class ToolsController < ApplicationController
     @log_lines = []
     @error = nil
     begin
-      @log_lines = File.open(Settings.daemon.log_file,'r').readlines.collect do |line|
+      @log_lines = File.open(File.join(Rails.root, Settings.daemon.log_file),'r').readlines.collect do |line|
         parts = line.split ';'
         {time: parts[0], type: parts[1], message: parts[2], service: parts[3], team: parts[4]}
       end

@@ -48,17 +48,23 @@ module Workers
         self.params.merge! service.params[self.worker_name.to_s] if service.params[self.worker_name.to_s].kind_of? Hash
       end
 
-      self.params.each do |name, value|
-        if self.class.service_params.key? name
-          self.params[name] = param_replace value
-        end
-      end
-
       unless options.empty?
         if options.key? :dns_server and not options[:dns_server].blank?
           @dns_server = options[:dns_server]
         else
           @dns_server = nil
+        end
+
+        if options.key? :domain and not options[:domain].blank?
+          self.params[:domain] = options[:domain]
+        else
+          self.params[:domain] = ''
+        end
+      end
+
+      self.params.each do |name, value|
+        if self.class.service_params.key? name
+          self.params[name] = param_replace value
         end
       end
 
@@ -123,7 +129,7 @@ module Workers
     def log_server_down(message)
       @log.status = ServiceLog::STATUS_DOWN
       message ||= 'Server is down'
-      @log.debug_message += message
+      @log.debug_message += "#{message}\n"
       @log.message += message
       true
     end
@@ -131,13 +137,13 @@ module Workers
     def log_server_error(message)
       @log.status = ServiceLog::STATUS_ERROR
       message ||= 'There was an error'
-      @log.debug_message += message
+      @log.debug_message += "#{message}\n"
       @log.message += message
       true
     end
 
     def log_server_connect
-      @log.debug_message = "Opening Connection to: #{params[:rhost]}:#{params[:rport]}\n"
+      @log.debug_message += "Opening Connection to: #{params[:rhost]}:#{params[:rport]}\n"
       true
     end
 
@@ -147,7 +153,7 @@ module Workers
       if password.blank?
         @log.debug_message += "Credentials: #{username} (NO PASSWORD)\n"
       else
-        @log.debug_message += "Credentials: #{username} : #{password}\n"
+        @log.debug_message += "Credentials: #{username}\n" # removed password for security purposes
       end
       true
     end
@@ -168,12 +174,23 @@ module Workers
       return hostname unless hostname.match(/^\d+\.\d+\.\d+\.\d+$/).nil?
 
       packet = raw_domain_lookup hostname, dns_server, dns_port, record_type
-      response = packet.answer.first.address.to_s
-      @log.debug_message += "DNS Response: #{response}\n"
+      answer = packet.answer.first
+      @log.debug_message += "DNS Response: #{answer}\n"
+      if answer.type == 'CNAME' and record_type != Net::DNS::CNAME
+        @log.debug_message += "Found CNAME: #{answer.cname}\n"
+        return domain_lookup_with_errors answer.cname, dns_server, dns_port, record_type
+      else
+        response = answer.address.to_s
+      end
       response
     rescue =>e
       @log.debug_message += "Domain lookup failed: #{e.message}\n"
       raise e
+    end
+
+    def self.raw_domain_lookup(hostname, dns_server=nil, dns_port=53, record_type = Net::DNS::A)
+      tmp_worker = GenericWorker.new(Service.new)
+      tmp_worker.raw_domain_lookup hostname, dns_server,dns_port, record_type
     end
 
     # Performs a lookup similar to domain_lookup but throws and returns the full packet
@@ -190,7 +207,7 @@ module Workers
         dns = Net::DNS::Resolver.new(
             nameservers: dns_server,
             port: dns_port,
-            domain: 'ccdc-practice',
+            domain: params[:domain],
         )
       end
 
@@ -207,9 +224,9 @@ module Workers
       end
     end
 
-    # Replaced parameters embeded in strings using the #{...} syntax
+    # Replaced parameters embeded in strings using the {...} syntax
     def param_replace(string)
-      string = string.gsub(/#\{(.+?)\}/) { params.has_key?($1) ? params[$1]: $1 }
+      string = string.gsub(/\{(.+?)\}/) { params.has_key?($1.downcase) ? params[$1.downcase]: $1 }
       string.sub '\\n', "\n"
     end
 
@@ -222,6 +239,8 @@ module Workers
         log_server_down 'Connection timed out'
       rescue Errno::ECONNRESET
         log_server_down 'Connection was reset'
+      rescue Errno::EHOSTUNREACH
+        log_server_down 'Host Unreachable'
       rescue Net::SSH::AuthenticationFailed
         log_server_error 'Authentication failed'
       rescue Net::DNS::Resolver::NoResponseError
@@ -264,14 +283,14 @@ module Workers
     def perform_check(content, check_value)
       if (check_value =~ /^[a-f0-9]{32}$/i).nil?
         if check_value.length > 1 and check_value[0] == '/' and check_value[-1] == '/'
-          @log.debug_message += 'Using regex check'
+          @log.debug_message += "Using regex check\n"
           not (content =~ Regexp.new(check_value[1..-2])).nil?
         else
-          @log.debug_message += 'Using include check'
+          @log.debug_message += "Using include check\n"
           content.include? check_value
         end
       else
-        @log.debug_message += 'Using md5 check'
+        @log.debug_message += "Using md5 check\n"
         Digest::MD5.hexdigest(content) == check_value.downcase
       end
     end

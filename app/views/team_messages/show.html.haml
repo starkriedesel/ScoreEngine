@@ -2,6 +2,9 @@
   .twelve.columns.panel
     %h3= @team_message.subject
     %b
+      = "Team #{@team_message.team.name}"
+      %br
+      %br
       Sent
       = @team_message.created_at.strftime '%I:%M:%S %p'
     %br

@@ -40,7 +40,7 @@ class Service < ActiveRecord::Base
   end
 
   def make_worker
-    worker_class.new(self, dns_server: (team.nil? ? nil :team.dns_server))
+    worker_class.new(self, {dns_server: (team.nil? ? nil : team.dns_server), domain: (team.nil? ? nil : team.domain)})
   end
 
   def self.check_all

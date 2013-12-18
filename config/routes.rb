@@ -12,13 +12,11 @@ ScoreEngine::Application.routes.draw do
   get '/client_update/poll' => 'clientUpdate#poll'
 
   # Services
-  post '/services/:id/check' => 'services#check', as: :service_check
   post '/services/duplicate' => 'services#duplicate', as: :service_duplicate
   post '/services/:id/clear' => 'services#clear', as: :clear_service
   post '/logs/:id/clear' => 'services#clear_log', as: :clear_service_log
   get '/services/:id/status/:last_log_id' => 'services#status'
   get '/services/status' => 'services#status'
-  get '/services/check_all' => 'services#check_all'
   resources :services
 
   # Users

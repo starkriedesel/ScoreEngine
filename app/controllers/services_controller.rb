@@ -67,13 +67,25 @@ class ServicesController < ApplicationController
 
   # POST /services
   def create
-    @service = Service.new(params[:service])
     @header_text = 'New Service'
+    @service = nil
+    service_params = params[:service]
 
-    if @service.save
-      redirect_to @service, notice: 'Service was successfully created.'
-    else
-      render action: 'new'
+    begin
+      if service_params[:team_id] == 'all'
+        Team.select(:id).all.each do |team|
+          service_params[:team_id] = team.id
+          @service = Service.new(service_params)
+          raise unless @service.save
+        end
+        redirect_to services_url, notice: 'Service was successfully created for all teams.'
+      else
+        @service = Service.new(service_params)
+        raise unless @service.save
+        redirect_to @service, notice: 'Service was successfully created.'
+      end
+    #rescue
+    #  render action: 'new'
     end
   end
 
@@ -95,15 +107,6 @@ class ServicesController < ApplicationController
     @service.destroy
 
     redirect_to services_url
-  end
-
-  # POST /services/:id/check
-  def check
-    @service = Service.find(params[:id])
-    @service.team = Team.new(id:0, name: 'None', dns_server: nil) if @service.team.nil?
-    worker = @service.worker_class.new(@service, dns_server: @service.team.dns_server)
-    worker.check
-    redirect_to @service
   end
 
   # POST /services/duplicate
@@ -180,7 +183,7 @@ class ServicesController < ApplicationController
         service_list = service_list.where(team_id: current_user.team_id) unless current_user_admin?
         service_list = service_list.all.collect do |s|
           status_class = s.current_status == 'off' ? 'off' : status_class(s.current_status)
-          if s.current_status == 'off'
+          if s.current_status == 'off' or s.current_status.nil?
             img = status_img nil
           else
             img = status_img s.current_status.to_i
@@ -199,28 +202,6 @@ class ServicesController < ApplicationController
 
         render json: output
       end
-    end
-  end
-
-  def check_all
-    @check_log = ''
-    Service.includes(:team).where(on: true).all.each do |service|
-      time_start = Time.now
-      service.team = Team.new(id: 0, name:'None', dns_server: nil) if service.team.nil?
-      @check_log += "Checking service: #{service.name}\nTeam: #{service.team.name}\n"
-      begin
-        worker = service.worker_class.new service, dns_server: service.team.dns_server
-        status = worker.check
-        if status.nil?
-          @check_log += "Error while saving log\n"
-        else
-          @check_log += "Status recieved: #{ServiceLog::STATUS[status]}\n"
-        end
-      rescue => e
-        @check_log += "Caught Exception: #{e.to_s}\n"
-      end
-      time_end = Time.now
-      @check_log += "Time: #{((time_end - time_start)*1000).to_i}ms\n\n"
     end
   end
 end

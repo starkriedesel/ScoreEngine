@@ -18,7 +18,11 @@ module Workers
 
     def do_check
       register_exception Mysql2::Error do |e|
-        log_server_error e.to_s
+        if e.to_s.include? '(113)'
+          log_server_down e.to_s
+        else
+          log_server_error e.to_s
+        end
       end
 
       perform_action do

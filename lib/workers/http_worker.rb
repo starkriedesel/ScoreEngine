@@ -40,25 +40,25 @@ module Workers
     def do_check
       url = build_url
 
-      @log.debug_message = "Request: #{url}\n"
+      @log.debug_message += "Request: #{url}\n"
 
       response = perform_action do
         HttpWorker.make_request url, @log
       end
 
       unless response.nil?
-        @log.debug_message += "Http Responce Code #{response.code}\n"
+        @log.debug_message += "Http Response Code #{response.code}\n"
 
         if response.code == '200'
           @log.debug_message += "Checking page against MD5/Regex: #{params[:home_check]}\n" unless params[:home_check].blank?
           if params[:home_check].blank? or perform_check response.body, params[:home_check]
-            @log.message = "Http Responce Code #{response.code}"
+            @log.message = "Http Response Code #{response.code}"
             @log.status = ServiceLog::STATUS_RUNNING
           else
             log_server_error 'Incorrect Response (Defacement?)'
           end
         else
-          @log.message = "Http Responce Code #{response.code}"
+          @log.message = "Http Response Code #{response.code}"
           @log.status = ServiceLog::STATUS_ERROR
         end
 

@@ -2,7 +2,6 @@
   %fieldset
     - if current_user_admin?
       .six.columns
-        -# TODO: Allow multiple select and send to all
         = f.label :team_id do
           Team
           %em.formee-req *
@@ -37,4 +36,4 @@
   .left
     = f.submit ((%w{new create}.include? params[:action]) ? 'Send' : 'Edit')
   .right
-    = button_to_function 'Back', "window.location='#{team_messages_path}'"
+    =# button_to_function 'Back', "window.location='#{team_messages_path}'"

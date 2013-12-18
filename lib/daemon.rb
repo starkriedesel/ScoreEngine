@@ -1,7 +1,7 @@
 require_relative 'daemon/log'
 
 # Initialize daemon log file
-$log_filepath = Settings.daemon.log_file || nil
+$log_filepath = File.join(Rails.root, Settings.daemon.log_file) || nil
 $time_format = Settings.daemon.time_format || '%I:%M:%S %p'
 $tick_time = Settings.daemon.tick_time || 60
 init_daemon_log_file $log_filepath

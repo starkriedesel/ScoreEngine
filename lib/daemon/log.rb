@@ -2,7 +2,7 @@ $daemon_logfile = nil
 
 def init_daemon_log_file filepath
   File.delete filepath if File.exists? filepath
-  $daemon_logfile = File.open(filepath, 'a')
+  $daemon_logfile = File.open(filepath, 'w')
 end
 
 # TODO: Create daemon message log in DB
