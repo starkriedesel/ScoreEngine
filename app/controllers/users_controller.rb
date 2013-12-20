@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  before_filter :authenticate_user!, except: :index
-  before_filter :authenticate_admin!, except: :index
+  before_filter :authenticate_user!
+  before_filter :authenticate_admin!
   before_filter do
     @header_icon = 'group'
   end

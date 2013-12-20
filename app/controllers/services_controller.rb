@@ -1,6 +1,7 @@
 class ServicesController < ApplicationController
   before_filter :authenticate_user!
   before_filter :authenticate_admin!, except: [:index, :show, :status, :daemon_status]
+  before_filter :authenticate_not_red_team!, only: [:show]
   before_filter do
     @header_icon = 'cloud'
   end
@@ -8,14 +9,15 @@ class ServicesController < ApplicationController
   # GET /services
   def index
     @services = Hash.new([])
-    teams_query = Team.includes(:services).order(:id)
-    teams_query = teams_query.where(id: current_user.team_id) unless current_user_admin?
+    teams_query = Team.includes(:services).order('teams.id')
+    teams_query = teams_query.where(id: current_user.team_id) if (not current_user.team_id.nil?) and current_user.team_id > 0
+    teams_query = teams_query.where('services.public' => true) if current_user.is_red_team
     @teams = teams_query.all
     @teams.each {|t| @services[t] += t.services}
 
     # Construct overview
     @overview = {}
-    if current_user.is_admin
+    if current_user.is_admin or current_user.is_red_team
       @services.each do |team,service_list|
         service_list.each do |service|
           unless @overview.key? service.name
@@ -41,7 +43,12 @@ class ServicesController < ApplicationController
     end
 
     @header_text = @service.name
-    @header_text = "Team #{@service.team_name} - #{@header_text}" if current_user_admin?
+    if @service.public
+      private_tag = ''
+    else
+      private_tag = '<div class="label secondary">private</a>'.html_safe
+    end
+    @header_text = "Team #{@service.team_name} - #{@header_text} #{private_tag}".html_safe if current_user_admin?
     @header_class = service_class @service
   end
 

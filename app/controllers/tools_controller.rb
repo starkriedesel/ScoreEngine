@@ -3,11 +3,12 @@ require 'net/dns'
 
 class ToolsController < ApplicationController
   before_filter :authenticate_user!
+  before_filter :authenticate_admin!, only: [:daemon_log]
 
   # GET /tools/hash
   def hash
-    @header_text = "Hash Tool"
-    @header_icon = "lock"
+    @header_text = 'Hash Tool'
+    @header_icon = 'lock'
   end
 
   # POST /tools/hash

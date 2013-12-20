@@ -5,7 +5,7 @@
 - else
   %dl.tabs
     - is_first = true
-    - if current_user_admin?
+    - if current_user.is_admin or current_user.is_red_team
       %dd.active{id: 'overview'}
         = link_to "Overview", "#overview"
         - is_first = false
@@ -17,7 +17,7 @@
 
   %ul.tabs-content#team-tabs
     - is_first = true
-    - if current_user_admin?
+    - if current_user.is_admin or current_user.is_red_team
       %li#overviewTab.active
         %table.service-overview
           %thead
@@ -41,10 +41,11 @@
       %li{id: "team#{team.id}Tab", class: (is_first ? 'active':'')}
         = hidden_field_tag 'team-id', team.id
 
-        .progress.success.text{id: "uptime#{team.id}"}
-          .meter{style:"width:#{team.uptime}%"}
-            .text
-              = "#{team.uptime}%"
+        - unless current_user.is_red_team
+          .progress.success.text{id: "uptime#{team.id}"}
+            .meter{style:"width:#{team.uptime}%"}
+              .text
+                = "#{team.uptime}%"
 
         %table.twelve.services
           %thead
@@ -63,7 +64,10 @@
               - unless service.blank?
                 %tr{class: service_class(service), id:"service#{service.id}"}
                   %td.service_img{style:'padding:0px;'}
-                  %td= link_to service.name, service
+                  %td
+                    = link_to service.name, service
+                    - unless service.public
+                      .label.secondary private
                   %td= service.worker
                   %td= service.params[service.worker]['rhost']+" : "+service.params[service.worker]['rport']
                   %td= "#{service.up_time}%"

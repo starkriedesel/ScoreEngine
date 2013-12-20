@@ -17,14 +17,16 @@
             = link_to '<i class="icon-cloud"></i> Services'.html_safe, services_path
           -#%li
             = link_to '<i class="icon-trophy"></i> Challenges'.html_safe, challenges_path
-          %li
-            = link_to '<i class="icon-group"></i> Users'.html_safe, users_path
+          - if current_user.is_admin
+            %li
+              = link_to '<i class="icon-group"></i> Users'.html_safe, users_path
           %li.has-dropdown
             = link_to '<i class="icon-stethoscope"></i> Tools'.html_safe, '#'
             %ul.dropdown
               %li= link_to '<i class="icon-lock"></i> Hash'.html_safe, hash_tool_path
               %li= link_to '<i class="icon-info-sign"></i> DNS'.html_safe, dns_tool_path
-              %li= link_to '<i class="icon-list-ul"></i> Daemon Log'.html_safe, daemon_log_path
+              - if current_user.is_admin
+                %li= link_to '<i class="icon-list-ul"></i> Daemon Log'.html_safe, daemon_log_path
           %li.has-button
             = link_to '<i class="icon-user" style="color:black;"></i> Logout'.html_safe, destroy_user_session_path, method: :delete, class: 'small button'
         - else

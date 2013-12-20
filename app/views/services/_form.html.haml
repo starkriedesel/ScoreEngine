@@ -49,6 +49,20 @@
         .form-error-text
           = @service.errors[:on].first if @service.errors[:on].length > 0
           &nbsp;
+      .six.columns
+        = f.label :public do
+          &nbsp;
+        %label.checkbox.toggle.candy{style:'height: 30px'}
+          = f.check_box :public
+          %p
+            %span Public
+            %span Private
+          %a.slide-button
+        .hint-text
+          Cosider this services as a public/private service
+        .form-error-text
+          = @service.errors[:public].first if @service.errors[:public].length > 0
+          &nbsp;
     %fieldset
       %legend= "Parameters"
       %div#service-params
