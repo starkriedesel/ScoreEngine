@@ -12,7 +12,7 @@
         - if user_signed_in?
           - unless current_user.is_red_team
             %li#messages_link
-              = link_to '<i class="icon-envelope-alt"></i> Messages'.html_safe, team_messages_path
+              = link_to '<i class="icon-envelope"></i> Messages'.html_safe, team_messages_path
           %li
             = link_to '<i class="icon-cloud"></i> Services'.html_safe, services_path
           -#%li

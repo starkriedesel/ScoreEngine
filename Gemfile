@@ -27,6 +27,8 @@ group :assets do
 
   # Zurb CSS Framework v3
   gem 'zurb-foundation', '~> 3.2.0'
+
+  gem 'font-awesome-rails', '~>3.2.1'
 end
 
 # Helper Libs

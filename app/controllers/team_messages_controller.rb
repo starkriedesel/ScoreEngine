@@ -3,7 +3,7 @@ class TeamMessagesController < ApplicationController
   before_filter :authenticate_not_red_team!
   before_filter :authenticate_admin!, only: [:destroy]
   before_filter do
-    @header_icon = 'envelope-alt'
+    @header_icon = 'envelope'
   end
 
   UPLOAD_PATH = File.join(Rails.root, 'tmp', 'uploads')
