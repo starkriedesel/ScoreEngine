@@ -28,10 +28,11 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
-    if(! is_red_team) {
+    if(is_logged_in && ! is_red_team) {
         checkMessages();
         setInterval(checkMessages, 30*1000);
     }
+    setInterval(checkDaemonStatus, 30*1000);
 });
 
 function checkMessages() {
@@ -41,6 +42,13 @@ function checkMessages() {
         if(data.inbox && data.inbox > 0) {
             $('#messages_link').addClass('new_messages');
         }
+    });
+}
+
+function checkDaemonStatus() {
+    $.ajax({
+        url: '/daemon_status.json'
+    }).done(function(data) {
         if(data.daemon_running) {
             $('.top-bar #text').addClass('running');
             $('.top-bar #text').removeClass('not-running');

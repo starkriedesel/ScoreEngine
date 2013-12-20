@@ -1,6 +1,6 @@
 class ServicesController < ApplicationController
   before_filter :authenticate_user!
-  before_filter :authenticate_admin!, except: [:index, :show, :status]
+  before_filter :authenticate_admin!, except: [:index, :show, :status, :daemon_status]
   before_filter do
     @header_icon = 'cloud'
   end
@@ -201,6 +201,20 @@ class ServicesController < ApplicationController
         end
 
         render json: output
+      end
+    end
+  end
+
+  def daemon_status
+    respond_to do |format|
+      format.html do
+        raise 'Invalid request'
+      end
+
+      format.json do
+        render json: {
+            daemon_running: daemon_running?
+        }
       end
     end
   end
