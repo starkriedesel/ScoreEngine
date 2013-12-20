@@ -53,7 +53,7 @@ module ApplicationHelper
   end
 
   def current_user_admin?
-    current_user.try(:admin?) ? true : false
+    current_user.is_admin
   end
 
   def daemon_running?

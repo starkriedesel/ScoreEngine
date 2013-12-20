@@ -1,5 +1,6 @@
 class TeamMessagesController < ApplicationController
   before_filter :authenticate_user!
+  before_filter :authenticate_not_red_team!
   before_filter :authenticate_admin!, only: [:destroy]
   before_filter do
     @header_icon = 'envelope-alt'
@@ -45,7 +46,7 @@ class TeamMessagesController < ApplicationController
     @team_message = TeamMessage.new
     if params[:reply_id]
       @reply_message = TeamMessage.find(params[:reply_id])
-      @team_message.team_id = @reply_message.team_id if current_user.admin
+      @team_message.team_id = @reply_message.team_id if current_user.is_admin
       @team_message.subject = "RE: #{@reply_message.subject}"
       @team_message.content = "\n\n=====================================================\nSent at: #{@reply_message.created_at}\nOriginal Message:\n#{@reply_message.content}"
     end
@@ -76,8 +77,6 @@ class TeamMessagesController < ApplicationController
   def edit
     @team_message = TeamMessage.find(params[:id])
     @header_text = 'Edit Message'
-
-
   end
 
   # PUT /team_messages/1
@@ -103,7 +102,7 @@ class TeamMessagesController < ApplicationController
   def _send message_params
     @team_message = TeamMessage.new(message_params)
 
-    unless current_user.admin
+    unless current_user.is_admin
       @team_message.team_id = current_user.team_id
       @team_message.from_admin = false
     else

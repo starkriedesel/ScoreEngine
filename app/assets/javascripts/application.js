@@ -28,8 +28,10 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
-    checkMessages();
-    setInterval(checkMessages, 30*1000);
+    if(! is_red_team) {
+        checkMessages();
+        setInterval(checkMessages, 30*1000);
+    }
 });
 
 function checkMessages() {

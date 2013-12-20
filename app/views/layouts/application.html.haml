@@ -20,6 +20,8 @@
   :javascript
     var controllerName = '#{params[:controller]}';
     var actionName = '#{params[:action]}';
+    var is_admin = #{current_user != nil && current_user.is_admin ? 'true' : 'false'};
+    var is_red_team = #{current_user != nil && current_user.is_red_team ? 'true' : 'false'};
 
   = javascript_include_tag 'application'
   - if File.exists? File.join Rails.root, "app/assets/javascripts/#{params[:controller]}.js"

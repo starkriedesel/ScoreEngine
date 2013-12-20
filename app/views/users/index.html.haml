@@ -9,11 +9,12 @@
   - is_first = true
   - @users.each do |team, user_list|
     - team = Team.new(name: 'None', id: 0) if team.nil?
-    %li{id: "team#{team.id}Tab", class: (is_first ? 'active':'')}
+    %li.user_list{id: "team#{team.id}Tab", class: (is_first ? 'active':'')}
       %ul
         - user_list.each do |user|
-          %li{style:(user.admin? ? 'font-weight:bold; ' : '')+'font-size:23px;'}
-            = link_to user.username.capitalize, edit_user_path(user)
+          %li{style:(user.is_admin ? 'font-weight:bold; ' : '')+'font-size:23px;'}
+            .label.radius{style:'font-size: 20px', class: (user.is_admin ? 'admin' : (user.is_red_team ? 'red_team' : 'user'))}
+              = link_to user.username.capitalize, edit_user_path(user)
       - unless user_list.blank?
         %div
           %b Bold

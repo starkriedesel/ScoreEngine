@@ -15,7 +15,7 @@ class ServicesController < ApplicationController
 
     # Construct overview
     @overview = {}
-    if current_user.admin
+    if current_user.is_admin
       @services.each do |team,service_list|
         service_list.each do |service|
           unless @overview.key? service.name

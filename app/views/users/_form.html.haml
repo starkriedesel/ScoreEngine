@@ -23,16 +23,14 @@
           = @user.errors[:team_id].first if @user.errors[:team_id].length > 0
           &nbsp;
       .six.columns
-        = f.label :admin do
-          Priviliges
-        %label.checkbox.toggle.candy{style:'height: 30px'}
-          = f.check_box :admin
-          %p
-            %span Admin
-            %span User
-          %a.slide-button
+        =f.label :user_type do
+          Type
+        = f.select :user_type, [['User', User::USER], ['Admin', User::ADMIN], ['Red Team', User::RED_TEAM]]
         .hint-text
-          Give user admin rights?
+          What type of user is this?
+        .form-error-text
+          = @user.errors[:user_type].first if @user.errors[:user_type].length > 0
+          &nbsp;
     .left
       = f.submit (params[:action] == 'create' ? 'Create' : 'Edit')
     .right

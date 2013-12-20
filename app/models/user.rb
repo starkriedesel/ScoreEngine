@@ -1,6 +1,10 @@
 class User < ActiveRecord::Base
   PASS_MIN_LENGTH = 6
 
+  USER = 0
+  ADMIN = 1
+  RED_TEAM = 2
+
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
@@ -22,5 +26,17 @@ class User < ActiveRecord::Base
   # Borrowed from device validatable
   def password_required?
     !persisted? || !password.nil? || !password_confirmation.nil?
+  end
+
+  def is_admin
+    user_type == ADMIN
+  end
+
+  def is_red_team
+    user_type == RED_TEAM
+  end
+
+  def is_user
+    user_type == USER
   end
 end

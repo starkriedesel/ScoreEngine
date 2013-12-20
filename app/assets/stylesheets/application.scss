@@ -261,3 +261,28 @@ a [class^="icon-"] {
     }
   }
 }
+
+.user_list {
+  .label.admin {
+    background-color: #ddd;
+    a {
+      color: #666;
+    }
+    a:hover {
+      color: #444;
+    }
+  }
+  .label.red_team {
+    background-color: $alertColor;
+  }
+  .label.user {
+    background-color: $mainColor;
+
+  }
+  a {
+    color: #fff;
+  }
+  a:hover {
+    color: #ddd;
+  }
+}
