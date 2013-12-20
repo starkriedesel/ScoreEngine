@@ -1,5 +1,5 @@
 class TeamMessage < ActiveRecord::Base
-  attr_accessible :content, :subject, :team_id
+  attr_accessible :content, :subject, :team_id, :file
   belongs_to :team
 
   def self.inbox_outbox options={}, &block

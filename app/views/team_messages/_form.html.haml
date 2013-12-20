@@ -33,6 +33,12 @@
       .form-error-text
         = @team_message.errors[:content].first if @team_message.errors[:content].length > 0
         &nbsp;
+    .twelve.columns
+      = f.label :file_upload do
+        Upload File
+      = f.file_field :file_upload
+      .hint-text
+        Optional. Upload a file along with your submission.
   .left
     = f.submit ((%w{new create}.include? params[:action]) ? 'Send' : 'Edit')
   .right

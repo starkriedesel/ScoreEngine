@@ -6,6 +6,8 @@ class TeamMessagesController < ApplicationController
     @header_icon = 'envelope-alt'
   end
 
+  UPLOAD_PATH = File.join(Rails.root, 'tmp', 'uploads')
+
   # GET /team_messages
   def index
     @header_text = 'Messages'
@@ -28,7 +30,6 @@ class TeamMessagesController < ApplicationController
       format.json do
         render json: {
             inbox: messages[:inbox].select{|m| m.created_at > @last_time_checked}.length,
-            daemon_running: daemon_running?
         }
       end
     end
@@ -38,6 +39,13 @@ class TeamMessagesController < ApplicationController
   def show
     @header_text = 'Message'
     @team_message = TeamMessage.find(params[:id])
+
+    #@file_path = nil
+    @file_name = nil
+    if @team_message.file? and (not @team_message.file.blank?)
+      #@file_path = File.join(UPLOAD_PATH, @team_message.file)
+      @file_name = @team_message.file[@team_message.file.index('.')+1..-1]
+    end
   end
 
   # GET /team_messages/new
@@ -56,20 +64,37 @@ class TeamMessagesController < ApplicationController
   def create
     @team_message = nil
     message_params = params[:team_message]
+    message_params['file'] = ''
+    unless message_params[:file_upload].nil?
+      data = message_params[:file_upload].read
+      hash = Digest::MD5.hexdigest data
+      filename = hash+'.'+message_params[:file_upload].original_filename
+      File.open(File.join(UPLOAD_PATH, filename), 'wb') do |file|
+        file.write(data)
+      end
+      message_params['file'] = filename
+    end
+    message_params.delete :file_upload
 
     begin
-      if message_params[:team_id] == 'all'
+      if message_params[:team_id] == 'all' and current_user.is_admin
         Team.select(:id).all.each do |team|
           message_params[:team_id] = team.id
           _send message_params
         end
-        redirect_to team_messages_path, notice: 'Message was successfully sent to all teams'
       else
         _send message_params
-        redirect_to @team_message, notice: 'Message was successfully sent'
       end
-    rescue
+    rescue => e
+      raise e
+      @team_message.file = message_params['file']
       render action: 'new'
+    end
+
+    if message_params[:team_id] == 'all' and current_user.is_admin
+      redirect_to team_messages_path, notice: 'Message was successfully sent to all teams'
+    else
+      redirect_to @team_message, notice: 'Message was successfully sent'
     end
   end
 
@@ -96,6 +121,16 @@ class TeamMessagesController < ApplicationController
     @team_message = TeamMessage.find(params[:id])
     @team_message.destroy
     redirect_to team_messages_path, notice: 'Message was successfully deleted'
+  end
+
+  # GET /team_messages/:id/download
+  def download
+    @team_message = TeamMessage.find(params[:id])
+    filepath = File.join(UPLOAD_PATH, @team_message.file)
+    basename = File.basename filepath
+    basename = basename[basename.index('.')+1..-1]
+    raise "Invalid Download: #{basename}/#{params[:filename]}" unless File.exists? filepath and File.file? filepath
+    send_file filepath, filename: basename
   end
 
   private

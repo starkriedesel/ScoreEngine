@@ -7,6 +7,10 @@
       %br
       Sent
       = @team_message.created_at.strftime '%I:%M:%S %p'
+      - unless @file_name.nil?
+        %br
+        %br
+        = link_to @file_name, team_message_download_path(@team_message.id)
     %br
     %br
     %blockquote.message_content
