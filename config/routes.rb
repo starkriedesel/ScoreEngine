@@ -30,6 +30,10 @@ ScoreEngine::Application.routes.draw do
   get '/messages/new/:reply_id' => 'teamMessages#new', as: :team_messages_reply
   get '/messages/:id/download' => 'teamMessages#download', as: :team_message_download
 
+  # Server Manager
+  get '/serverManager' => 'serverManager#index', as: :server_manager
+  get '/serverManager/:id' => 'serverManager#show', as: :server_manager_show
+
   # Challenges
   resources :challenges
   resources :challenge_groups, except: [:index, :show]

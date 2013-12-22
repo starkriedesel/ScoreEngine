@@ -2,3 +2,12 @@ daemon:
   tick_time: 60 # seconds
   log_file: tmp/ScoreEngineDaemon.log
   nofork: false
+
+# To configure an AWS Server Manager
+#  add these configs to the settings.local.yml file
+#server_manager:
+#  aws:
+#    enable: true
+#    region: *****
+#    access_key_id: *****
+#    secret_access_key: *****

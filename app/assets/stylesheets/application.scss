@@ -304,3 +304,17 @@ a [class^="icon-"] {
     }
   }
 }
+
+#server_list {
+  .panel:hover {
+    background-color: darken($secondaryColor, 3);
+  }
+
+  .panel.callout:hover {
+    background-color: darken($mainColor, 3);
+  }
+
+  .panel.callout .button.alert {
+    color: $alertColor;
+  }
+}

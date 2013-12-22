@@ -40,6 +40,7 @@ gem 'bcrypt-ruby', '~> 3.0.0' # To use ActiveModel has_secure_password
 group :development do
   gem 'better_errors' # better html error messages
   gem 'quiet_assets' # do not display asset retrieval in log file
+  gem 'binding_of_caller' # REPL for better_errors
 end
 
 # Protocols
@@ -49,6 +50,9 @@ gem 'net-ssh' # SSH
 gem 'net-sftp' # SFTP
 gem 'ftpfxp' # FTP-TLS
 gem 'net-ldap' # LDAP / AD
+
+# Server Manager Backends
+gem 'aws-sdk', '~>1.0'
 
 # Testing
 gem 'rspec-rails', :group => [:development, :test]
@@ -65,4 +69,3 @@ group :test do
   gem 'wdm', platforms: [:mswin, :mingw], require: false # Windows Directory Monitor
   gem 'guard-rspec'
 end
-
