@@ -1,37 +1,11 @@
 .row
-  = form_for @team, html: {class: 'formee'} do |f|
+  = form_for @team do |f|
     = f.hidden_field :id
 
-    %fieldset
-      %legend Basic
-      .six.columns
-        = f.label :name do
-          Name
-          %em.formee-req *
-        = f.text_field :name
-        .hint-text
-          Name of Team
-        .form-error-text
-          =# @team.errors[:name].first if @team.errors[:name].length > 0
-          &nbsp;
-      .six.columns
-        = f.label :dns_server do
-          DNS Server
-        = f.text_field :dns_server
-        .hint-text
-          DNS server for resolving domains on services within team
-        .form-error-text
-          = @team.errors[:dns_server].first unless @team.errors[:dns_server].blank?
-      .six.columns
-        = f.label :domain do
-          Domain
-        = f.text_field :domain
-        .hint-text
-          Domain name for team services
-        .form-error-text
-          = @team.errors[:domain].first unless @team.errors[:domain].blank?
-
-    .left
-      = f.submit ((%w{new create}.include? params[:action]) ? 'Create' : 'Edit')
-    .right
-      = button_to_function 'Back', "window.location='#{teams_path}'"
+    %fieldset.no-border
+      = render partial: 'layouts/form_row', locals: {f: f, model: @team, html_form: f.text_field(:name), row_id: :name, row_name: 'Name', small_size: 12, large_size: 6, hint: 'Name of Team', required: true}
+      = render partial: 'layouts/form_row', locals: {f: f, model: @team, html_form: f.text_field(:dns_server), row_id: :dns_server, row_name: 'DNS Server', small_size: 12, large_size: 6, hint: 'DNS server for resolving domains on services within team', required: false}
+      = render partial: 'layouts/form_row', locals: {f: f, model: @team, html_form: f.text_field(:domain), row_id: :domain, row_name: 'Domain', small_size: 12, large_size: 6, hint: 'Domain name for team services', required: true}
+    .row
+    .small-12.columns.left
+      = f.submit ((%w{new create}.include? params[:action]) ? 'Create' : 'Edit'), class: 'button'

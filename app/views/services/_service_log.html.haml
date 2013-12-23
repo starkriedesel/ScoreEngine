@@ -1,7 +1,7 @@
 .row.service-log
-  .two.columns
+  .small-2.columns
     %img{src: service_log_img(log)}
-  .ten.columns
+  .small-10.columns
     %p
       %strong Service Check:
       = log.message
@@ -17,7 +17,7 @@
 
     - if current_user_admin?
       .row.debug
-        .ten.columns.panel
+        .small-10.columns.panel
           %p
             %strong Debug:
             = simple_format h(log.debug_message)

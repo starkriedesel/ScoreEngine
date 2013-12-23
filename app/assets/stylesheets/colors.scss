@@ -12,6 +12,7 @@ $darkEdge: rgba(#000, .2);
 
 // Tabs
 $tab-background-color: #d8d8d8;
+$tab-background-color-light: lighten($tab-background-color, 4);
 
 // Top bar
 $top-bar-running-color: #5da423;

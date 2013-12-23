@@ -1,15 +1,15 @@
-%table.twelve.messages
+%table.small-12.columns.messages
   %thead
     %tr
       - if current_user_admin?
-        %th.one
-        %th.two Team
-        %th.six Subject
-        %th.three Sent
+        %th.small-1.columns
+        %th.small-2.columns Team
+        %th.small-6.columns Subject
+        %th.small-3.columns Sent
       - else
-        %th.one
-        %th.eight Subject
-        %th.four Sent
+        %th.small-1.columns
+        %th.small-8.columns Subject
+        %th.small-4.columns Sent
 
   %tbody
     - messages.each do |team_message|

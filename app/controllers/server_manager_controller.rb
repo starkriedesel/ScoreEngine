@@ -10,8 +10,4 @@ class ServerManagerController < ApplicationController
   def index
     @header_text = "Server Manager #{@server_manager.is_fresh ? ' <div class="label alert">fresh</div>' : ' <div class="label secondary">old</div>'}".html_safe
   end
-
-  # GET /server_manager/:id
-  def show
-  end
 end

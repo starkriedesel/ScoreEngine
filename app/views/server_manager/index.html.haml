@@ -1,10 +1,9 @@
 - manager = ServerManager::AWSManager.get_instance
 =# manager.server_list.inspect
 
-.twelve.columns#server_list
-  - count = 0
-  - manager.server_list.each do |s|
-    .five.columns.panel.radius{class: (s[:status] == :running ? 'callout' : '')}
+.small-12.columns#server_blocks
+  - manager.server_list.inject([]){|a,s| a<<s.dup; s[:platform] = :windows; a<<s.dup; s[:platform] = :solaris; s[:status] = :off; a<<s.dup;}.each do |s|
+    .small-5.columns.panel{class: (s[:status] == :running ? 'running' : 'down')}
       %h4
         -if s[:platform] == :linux
           %i.icon-linux
@@ -18,9 +17,6 @@
         %li= "Private IP: #{s[:private_ip]}"
         %li= "Public IP: #{s[:public_ip]}"
       - if s[:status] == :running
-        = link_to '<i class="icon-power-off"></i> Power Off'.html_safe, '#', class: 'button alert'
+        = link_to '<i class="icon-power-off"></i> Power '.html_safe, '#', class: 'button power'
       - else
-        = link_to '<i class="icon-power-off"></i> Power On'.html_safe, '#', class: 'button success'
-    - if count % 2 == 0
-      .two.column &nbsp;
-    - count += 1
+        = link_to '<i class="icon-power-off"></i> Power '.html_safe, '#', class: 'button power'

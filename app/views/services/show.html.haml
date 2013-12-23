@@ -3,37 +3,42 @@
 - last_log_id = last_log.nil? ? 0 : last_log.id
 = hidden_field_tag 'last_log_id', last_log_id
 
-.three.columns
-  .panel
-    %h5= link_to "Team #{@service.team_name}", services_path+"#team#{@service.team_id}"
-    %dl.vertical.tabs.services
+.row
+  .small-3.columns
+    .panel.services
+      %h3= link_to "Team #{@service.team_name}", services_path+"#team#{@service.team_id}"
+      %br
       - Service.where(team_id: @service.team_id).all.each do |s|
-        %dd{class: service_class(s), id:"service#{s.id}"}
-          = link_to s.name, s
+        .row
+          = link_to s.name, s, class: 'button small-12 columns '+service_class(s), id: "service#{s.id}"
+      -#.row
+        %dl.vertical.tabs.services.small-12.columns
+          - Service.where(team_id: @service.team_id).all.each do |s|
+            %dd{class: service_class(s), id:"service#{s.id}"}
+              = link_to s.name, s
 
-.nine.columns
-  .row
-    %table{style:'width:100%; border:none;'}
-      %tr
-        %td{style:'width:15%; vertical-align:middle;'}
-          %h5 Uptime:
-        %td{style:'width:85%;'}
-          .progress.success.text#up_time
-            .meter{style:"width:#{@service.up_time}%"}
-              .text
-                = "#{@service.up_time}%"
-  - if current_user_admin?
+  .small-9.columns
     .row
-      .twelve.columns
-        %ul.button-group.even.three-up.radius
-          %li= link_to 'Edit', edit_service_path(@service), class:'button radius'
-          %li= button_to 'Clear', clear_service_path(@service), class: 'button radius'
+      .small-12.columns
+        .row
+          .small-2.columns{style:'text-align: right;'}
+            %h5 Uptime:
+          .small-10.columns
+            .progress.success.text#uptime
+              .meter{style:"width:#{@service.up_time}%"}
+                .text
+                  = "#{@service.up_time}%"
+    - if current_user_admin?
+      .row
+        %ul.button-group.even
+          %li= link_to 'Edit', edit_service_path(@service), class:'button'
+          %li= button_to 'Clear', clear_service_path(@service), class: 'button alert', confirm: 'Are you sure?'
 
-  - if @service.service_logs.count == 0
-    .row
-      .ten.columns.offset-by-two
-        %h3 No Logs
+    - if @service.service_logs.count == 0
+      .row
+        .small-10.columns.small-offset-2
+          %h3 No Logs
 
-  - @service.service_logs.order('created_at desc').each do |log|
-    #service_logs
-      = render partial: 'service_log', locals: {log: log}
+    - @service.service_logs.order('created_at desc').each do |log|
+      #service_logs
+        = render partial: 'service_log', locals: {log: log}

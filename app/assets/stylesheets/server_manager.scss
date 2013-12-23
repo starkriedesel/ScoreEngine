@@ -1,0 +1,35 @@
+@import "colors.scss";
+
+#server_blocks {
+  .panel.running {
+    border-color: $service-running-color;
+    background-color: lighten($service-running-color, 45%);
+
+    .button.power {
+      background-color: $alertColor;
+    }
+    .button.power:after {
+      content: "Off";
+    }
+  }
+
+  .panel.down {
+    border-color: $service-down-color;
+    background-color: lighten($service-down-color, 45%);
+
+    .button.power {
+      background-color: $successColor;
+    }
+    .button.power:after {
+      content: "On";
+    }
+  }
+
+  .panel:nth-child(even) {
+    float: right;
+  }
+
+  .panel:nth-child(odd) {
+    float: left;
+  }
+}

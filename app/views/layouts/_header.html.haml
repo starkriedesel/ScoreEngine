@@ -1,13 +1,12 @@
 .contain-to-grid
-  .top-bar
-    %ul
-      %li#text.name{class: (daemon_running? ? 'running' : 'not-running')}
-        %h1
-          = link_to raw('<i class="icon-cogs"></i>&nbsp;Score&nbsp;Engine'), '/'
-      %li.toggle-topbar
-        = link_to '', '#'
+  .top-bar{'data-topbar'=>''}
+    %ul.title-area
+      %li.name{class: (daemon_running? ? 'running' : 'not-running')}
+        %h1= link_to '<i class="icon-cogs"></i>&nbsp;Score&nbsp;Engine'.html_safe, '/'
+      %li.toggle-topbar.menu-icon
+        = link_to '<span>Menu</span>'.html_safe, '#'
 
-    %section
+    %section.top-bar-section
       %ul.right
         - if user_signed_in?
           - unless current_user.is_red_team
@@ -30,16 +29,25 @@
                 %li= link_to '<i class="icon-list-ul"></i> Daemon Log'.html_safe, daemon_log_path
           %li.has-button
             = link_to '<i class="icon-user" style="color:black;"></i> Logout'.html_safe, destroy_user_session_path, method: :delete, class: 'small button'
-        - else
-          %li.has-button
-            = link_to '<i class="icon-user"></i> Login'.html_safe, new_user_session_path, class: 'small button'
 
+#global_alert
+  .row
+    .small-8.columns.small-offset-2.alert-box{style:'visibility:'+(flash[:error] || flash[:alert] || flash[:notice] ? 'visible' : 'hidden'), class:(flash[:error] || flash[:alert] ? 'alert' : '')}
+      = flash[:error]
+      = flash[:alert]
+      = flash[:notice] unless flash[:error] or flash[:alert]
 
 - if not @header_text.nil?
   %header#titlebar{class: @header_class}
+    -#.row
+      .small-8.columns.small-offset-2.alert-box#global_alert{style:'visibility:'+(flash[:error] || flash[:alert] || flash[:notice] ? 'visible' : 'hidden'), class:(flash[:error] || flash[:alert] ? 'alert' : '')}
+        .text
+          = flash[:error]
+          = flash[:alert]
+          = flash[:notice] unless flash[:error] or flash[:alert]
     .row
-      .twelve.columns
-        %h1
+      .small-12.columns
+        %h1.text
           - unless @header_icon.blank?
             %i{class:"icon-#{@header_icon}"}
           = @header_text

@@ -1,45 +1,9 @@
-= form_for @team_message, html: {class: 'formee'} do |f|
-  %fieldset
+= form_for @team_message do |f|
+  %fieldset.no-border
     - if current_user_admin?
-      .six.columns
-        = f.label :team_id do
-          Team
-          %em.formee-req *
-        - team_list = [['All','all']]
-        - team_list.concat(Team.options_list.select{|t| not t[1].blank?})
-        = f.select :team_id, team_list
-        .hint-text
-          Team to send message to
-        .form-error-text
-          = @team_message.errors[:team_id].first if @team_message.errors[:team_id].length > 0
-          &nbsp;
-    .twelve.columns
-      = f.label :subject do
-        Subject
-        %em.formee-req *
-      = f.text_field :subject
-      .hint-text
-        Subject of message
-      .form-error-text
-        = @team_message.errors[:subject].first if @team_message.errors[:subject].length > 0
-        &nbsp;
-    .twelve.columns
-      = f.label :content do
-        Content
-        %em.formee-req *
-      = f.text_area :content
-      .hint-text
-        Content of message
-      .form-error-text
-        = @team_message.errors[:content].first if @team_message.errors[:content].length > 0
-        &nbsp;
-    .twelve.columns
-      = f.label :file_upload do
-        Upload File
-      = f.file_field :file_upload
-      .hint-text
-        Optional. Upload a file along with your submission.
-  .left
-    = f.submit ((%w{new create}.include? params[:action]) ? 'Send' : 'Edit')
-  .right
-    =# button_to_function 'Back', "window.location='#{team_messages_path}'"
+      = render partial: 'layouts/form_row', locals: {f: f, model: @team_message, html_form: f.select(:team_id, Team.options_list.select{|t| not t[1].blank?}), row_id: :team_id, row_name: 'Team', small_size: 12, large_size: 6, hint: 'Team(s) to send message to', required: true}
+    = render partial: 'layouts/form_row', locals: {f: f, model: @team_message, html_form: f.file_field(:file_upload), row_id: :file_upload, row_name: 'Upload File', small_size: 12, large_size: 6, hint: 'Optional. Upload a file along with your submission', required: false}
+    = render partial: 'layouts/form_row', locals: {f: f, model: @team_message, html_form: f.text_field(:subject), row_id: :subject, row_name: 'Subject', small_size: 12, large_size: 12, hint: 'Subject of the message', required: true}
+    = render partial: 'layouts/form_row', locals: {f: f, model: @team_message, html_form: f.text_area(:content, style: 'height: 100px;'), row_id: :content, row_name: 'Content', small_size: 12, large_size: 12, hint: 'Content of the message', required: true}
+    .small-3.columns.left
+      = f.submit ((%w{new create}.include? params[:action]) ? 'Send' : 'Edit'), class: 'button'

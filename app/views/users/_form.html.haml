@@ -1,37 +1,9 @@
-.row
-  = form_for @user, html: {class: 'formee'} do |f|
-    %fieldset
-      %legend Basic
-      .six.columns
-        = f.label :username do
-          User Name
-          %em.formee-req *
-        = f.text_field :username
-        .hint-text
-          Name of User
-        .form-error-text
-          = @user.errors[:username].first if @user.errors[:username].length > 0
-          &nbsp;
-      .six.columns
-        = f.label :team_id do
-          Team
-          %em.formee-req *
-        = f.select :team_id, Team.options_list
-        .hint-text
-          Assign this user to a team
-        .form-error-text
-          = @user.errors[:team_id].first if @user.errors[:team_id].length > 0
-          &nbsp;
-      .six.columns
-        =f.label :user_type do
-          Type
-        = f.select :user_type, [['User', User::USER], ['Admin', User::ADMIN], ['Red Team', User::RED_TEAM]]
-        .hint-text
-          What type of user is this?
-        .form-error-text
-          = @user.errors[:user_type].first if @user.errors[:user_type].length > 0
-          &nbsp;
-    .left
-      = f.submit (params[:action] == 'create' ? 'Create' : 'Edit')
-    .right
-      = button_to_function 'Back', "window.location='#{users_path}'"
+= form_for @user do |f|
+  %fieldset.no-border
+    = render partial: 'layouts/form_row', locals: {f: f, model: @user, html_form: f.text_field(:username), row_id: :username, row_name: 'UserName', small_size: 12, large_size: 6, hint: 'Name of User', required: true}
+    = render partial: 'layouts/form_row', locals: {f: f, model: @user, html_form: f.select(:team_id, Team.options_list), row_id: :team_id, row_name: 'Team', small_size: 12, large_size: 6, hint: 'Assign this user to a team', required: false}
+    = render partial: 'layouts/form_row', locals: {f: f, model: @user, html_form: f.select(:user_type, [['User', User::USER], ['Admin', User::ADMIN], ['Red Team', User::RED_TEAM]]), row_id: :user_type, row_name: 'Type', small_size: 12, large_size: 6, hint: 'What type of user is this?', required: false}
+
+  .row
+  .small-12.columns.left
+    = f.submit (params[:action] == 'create' ? 'Create' : 'Edit'), class: 'button'

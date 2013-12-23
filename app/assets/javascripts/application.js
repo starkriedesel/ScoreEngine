@@ -1,13 +1,13 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery.ui.effect.all
-//= require formee
-//= require foundation
 //= require jquery.cookie
+
+$(document).ready(function() { $(document).foundation(); });
 
 // Make the alerts fade away
 $(document).ready(function() {
-    $('#global_alert').delay(5000).animate({opacity: 0}, 1500, 'swing')
+    $('#global_alert').delay(5000).slideUp({duration: 1500});
 });
 
 

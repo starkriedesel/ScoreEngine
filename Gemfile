@@ -24,9 +24,13 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
   gem 'compass-rails'
   gem 'modular-scale'
+  gem 'modernizr-rails'
 
   # Zurb CSS Framework v3
-  gem 'zurb-foundation', '~> 3.2.0'
+  #gem 'zurb-foundation', '~> 3.2.0'
+
+  # Zurb CSS Framework v5
+  gem 'foundation-rails', '~> 5.0.0'
 
   gem 'font-awesome-rails', '~>3.2.1'
 end

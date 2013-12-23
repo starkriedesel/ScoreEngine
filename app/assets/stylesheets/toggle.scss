@@ -1,0 +1,57 @@
+@import "compass/css3/border-radius";
+@import "compass/css3/box-shadow";
+@import "compass/css3/transition";
+
+.toggle {
+  input[type=checkbox] {
+    display: none;
+
+    & ~ label {
+      display: block;
+      width: 44px;
+      height: 26px;
+      background: #fafafa;
+      @include border-radius(26px);
+      @include box-shadow(inset 0 0 0 1px #ccc);
+      border: 1px solid #d3d3d3;
+      z-index: -1;
+      padding: 1px;
+    }
+
+    &:checked ~ label {
+      border-color: #53d76a;
+      @include box-shadow(inset 0 0 0 17px #53d76a);
+    }
+
+    & ~ label .slider {
+      height: 26px;
+      display: block;
+      float: left;
+      width: 26px;
+      padding: 0px;
+      @include border-radius(26px);
+      background-color: #fff;
+      border: 1px solid #c8c8c8;
+      margin: -2px -1px;
+      @include box-shadow(0 0 0 1px rgba(0,0,0,.1),
+                          0 4px 5px rgba(0,0,0,.1),
+                          inset 0 -3px 3px hsla(0,0%,0%,.025),
+                          0 1px 4px hsla(0,0%,0%,.15),
+                          0 4px 4px hsla(0,0%,0%,.1));
+    }
+
+    & ~ label {
+      display: block;
+      margin: 8px 0;
+    }
+
+    &:checked ~ label .slider {
+      margin: -2px 19px;
+      border: 1px solid #53d76a;
+      @include transition(box-shadow 0.5s, margin 0.25s 0.25s, border-color 1s);
+    }
+    & ~ label, & ~ label .slider, &:checked ~ label {
+      @include transition(box-shadow 0.65s, margin 0.2s ease-out, border-color 0.25s);
+    }
+  }
+}

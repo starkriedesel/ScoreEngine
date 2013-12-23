@@ -1,29 +1,26 @@
 .row
-  .six.columns.offset-by-six
-    .row.collapse
-      = form_tag team_messages_path, method: :get, class: 'foundation' do
-        .two.columns
+  .small-5.columns.small-offset-7
+    = form_tag team_messages_path, method: :get, class: 'foundation' do
+      .row.collapse
+        .small-2.columns
           - if params[:search].blank?
             &nbsp;
           - else
-            = link_to 'Clear', team_messages_path, class: 'button prefix expand'
-        .eight.columns
-          = text_field_tag 'search', params[:search]
-        .two.columns
-          = submit_tag 'Search', class: 'button expand postfix'
-          = #link_to 'Search', '#', class: 'button postfix expand'
+            = link_to 'Clear', team_messages_path, class: 'button prefix'
+        .small-10.columns
+          = text_field_tag 'search', params[:search], placeholder: 'search'
 
 .row
-  .two.columns
-    %dl.vertical.tabs
-      %dd.active= link_to 'Inbox', '#inbox'
-      %dd= link_to 'Outbox', '#outbox'
+  %dl.messages.vertical.tabs{'data-tab'=>''}
+    %dd.active= link_to 'Inbox', '#inboxTab'
+    %dd= link_to 'Outbox', '#outboxTab'
+    %br
     = link_to 'New Message', new_team_message_path, class: 'button'
-  .ten.columns
-    %ul.tabs-content
-      %li.active#inboxTab
-        = render partial: 'table', locals: {messages: @inbox}
-      %li#outboxTab
-        = render partial: 'table', locals: {messages: @outbox}
+
+  .tabs-content.vertical
+    #inboxTab.content.active
+      = render partial: 'table', locals: {messages: @inbox}
+    #outboxTab.content
+      = render partial: 'table', locals: {messages: @outbox}
 
 

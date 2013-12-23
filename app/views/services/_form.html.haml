@@ -1,74 +1,20 @@
 .row
-  = form_for @service, html: {class: 'formee'} do |f|
+  = form_for @service do |f|
     = f.hidden_field :id
 
     %fieldset
       %legend Basic
-      .six.columns
-        = f.label :name do
-          Name
-          %em.formee-req *
-        = f.text_field :name
-        .hint-text
-          Name of Service
-        .form-error-text
-          = @service.errors[:name].first if @service.errors[:name].length > 0
-          &nbsp;
-      .six.columns
-        = f.label :worker do
-          Worker
-          %em.formee-req *
-        - n = 0
-        = f.select :worker, Workers::GenericWorker::WORKERS.collect {|name,_| [name,name] }
-        .hint-text
-          Worker Class
-        .form-error-text
-          = @service.errors[:worker].first if @service.errors[:worker].length > 0
-          &nbsp;
-      .six.columns
-        = f.label :team_id do
-          Team
-          %em.formee-req *
-        = f.select :team_id, Team.options_list
-        .hint-text
-          Assign this service to a team
-        .form-error-text
-          = @service.errors[:team_id].first if @service.errors[:team_id].length > 0
-          &nbsp;
-      .six.columns
-        = f.label :on do
-          &nbsp;
-        %label.checkbox.toggle.candy{style:'height: 30px'}
-          = f.check_box :on
-          %p
-            %span On
-            %span Off
-          %a.slide-button
-        .hint-text
-          Turns service checking on/off
-        .form-error-text
-          = @service.errors[:on].first if @service.errors[:on].length > 0
-          &nbsp;
-      .six.columns
-        = f.label :public do
-          &nbsp;
-        %label.checkbox.toggle.candy{style:'height: 30px'}
-          = f.check_box :public
-          %p
-            %span Public
-            %span Private
-          %a.slide-button
-        .hint-text
-          Cosider this services as a public/private service
-        .form-error-text
-          = @service.errors[:public].first if @service.errors[:public].length > 0
-          &nbsp;
+      = render partial: 'layouts/form_row', locals: {f: f, model: @service, html_form: f.text_field(:name), row_id: :name, row_name: 'Name', small_size: 12, large_size: 6, hint: 'Name of Service', required: true}
+      = render partial: 'layouts/form_row', locals: {f: f, model: @service, html_form: f.select(:worker, Workers::GenericWorker::WORKERS.collect{|name,_| [name,name]}), row_id: :worker, row_name: 'Worker', small_size: 6, large_size:3, hint: 'Worker Class', required: true}
+      = render partial: 'layouts/form_row', locals: {f: f, model: @service, html_form: f.select(:team_id, Team.options_list), row_id: :team_id, row_name: 'Team', small_size:6, large_size: 3, hint: 'Assign this service to a team', required: true}
+      .row
+      = render partial: 'layouts/form_row_slider', locals: {f: f, model: @service, row_id: :public, row_name: 'Public?'}
+      = render partial: 'layouts/form_row_slider', locals: {f: f, model: @service, row_id: :on, row_name: 'On?'}
+
     %fieldset
-      %legend= "Parameters"
+      %legend Parameters
       %div#service-params
         = render partial: 'worker_form', locals: {worker_name: (@service.worker || Workers::GenericWorker::WORKERS.keys.first)}
 
-    .left
-      = f.submit ((%w{new create}.include? params[:action]) ? 'Create' : 'Edit')
-    .right
-      = button_to_function 'Back', "window.location='#{services_path}'"
+    .small-12.columns.left
+      = f.submit ((%w{new create}.include? params[:action]) ? 'Create' : 'Edit'), class: 'button'

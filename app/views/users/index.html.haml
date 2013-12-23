@@ -1,15 +1,15 @@
-%dl.tabs
+%dl.tabs{'data-tab'=>''}
   - is_first = true
   - @users.each do |team, user_list|
     - team = Team.new(name: 'None', id: 0) if team.nil?
-    %dd{class: (is_first ? 'active':'')}= link_to "Team #{team.name}", "#team#{team.id}"
+    %dd{class: (is_first ? 'active':'')}= link_to "Team #{team.name}", "#team#{team.id}Tab"
     - is_first = false
 
-%ul.tabs-content
+.tabs-content
   - is_first = true
   - @users.each do |team, user_list|
     - team = Team.new(name: 'None', id: 0) if team.nil?
-    %li{id: "team#{team.id}Tab", class: (is_first ? 'active':'')}
+    .content{id: "team#{team.id}Tab", class: (is_first ? 'active':'')}
       %ul.user_list
         - user_list.each do |user|
           %li

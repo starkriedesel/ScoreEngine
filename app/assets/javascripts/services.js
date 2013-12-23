@@ -20,14 +20,6 @@ function editTeamLink()
     window.location = url;
 }
 
-// Used by Services#index
-function duplicate_service(service_id, team_id, service_name) {
-    $('#duplicateModal #service_name').html("'"+service_name+"'");
-    $('#duplicateModal #service_id').val(service_id);
-    $('#duplicateModal #team_id').val(team_id);
-    $("#duplicateModal").reveal();
-}
-
 // Used by Services#index and Services#show
 function updateService() {
     var service_id = $('#service_id').val();
@@ -119,7 +111,7 @@ function getServiceParams()
     var new_param_html = $('#params-'+worker_name);
 
     var fadeOut = function() {
-        $('#service-params').animate({height: new_param_html.height()}, speed*2);
+        $('#service-params').animate({height: new_param_html.height()-40}, speed*2);
         var oldSpans = $('#service-params').children(':visible');
         if(oldSpans.length > 0)
             oldSpans.fadeOut(speed, fadeIn);

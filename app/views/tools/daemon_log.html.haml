@@ -1,4 +1,4 @@
-.twelve#filters
+.small-12.columns#filters
   %ul.inline-list
     %li{style:'background-color:#ccc; width:40px; padding-left:8px;'}
       = label_tag 'info', 'Info'
@@ -10,15 +10,15 @@
       = label_tag 'error', 'Error'
       = check_box_tag 'error', 'error', true, onclick: 'toggleFilter(this)'
 
-.twelve.columns.panel
+.small-12.columns
   - if @log_lines.nil? or @log_lines.empty?
     = @error
   - else
-    %table.daemon-log.hidden.twelve
+    %table.daemon-log.hidden.small-12.columns
       %tr
-        %th.two Time
-        %th.seven Message
-        %th.three Service / Team
+        %th.small-2.columns Time
+        %th.small-7.columns Message
+        %th.small-3.columns Service / Team
       - @log_lines.each do |line|
         %tr{class: line[:type].downcase}
           %td=line[:time]

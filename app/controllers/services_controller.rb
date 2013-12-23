@@ -116,17 +116,6 @@ class ServicesController < ApplicationController
     redirect_to services_url
   end
 
-  # POST /services/duplicate
-  def duplicate
-    @service = Service.find(params[:service_id])
-    new_service = @service.dup
-    new_service.team_id = params[:team_id]
-    if new_service.save
-      flash[:notice] = "Service '#{@service.name}' duplicated to Team '#{@service.team_name}'"
-    end
-    redirect_to @service.team
-  end
-
   # POST /services/:id/clear
   def clear
     @service = Service.find(params[:id])

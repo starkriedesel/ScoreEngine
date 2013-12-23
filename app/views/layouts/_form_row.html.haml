@@ -1,0 +1,15 @@
+- has_error = ((not f.nil?) and (not model.nil?) and (model.errors.has_key? row_id) and (model.errors[row_id].length > 0))
+.columns.left.hint{class: "small-#{small_size} #{large_size.nil? ? '' : "large-#{large_size}"} #{has_error ? 'error' : ''}"}
+  - if f.nil?
+    = label_tag do
+      row_name
+      - if required
+        %em.formee-req *
+  - else
+    = f.label row_id do
+      = row_name
+      - if required
+        %em.formee-req *
+  = html_form
+  %small.hint= hint
+  %small.error= model.errors[row_id].first if has_error

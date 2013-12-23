@@ -12,7 +12,6 @@ ScoreEngine::Application.routes.draw do
   get '/client_update/poll' => 'clientUpdate#poll'
 
   # Services
-  post '/services/duplicate' => 'services#duplicate', as: :service_duplicate
   post '/services/:id/clear' => 'services#clear', as: :clear_service
   post '/logs/:id/clear' => 'services#clear_log', as: :clear_service_log
   get '/services/:id/status/:last_log_id' => 'services#status'
@@ -32,7 +31,6 @@ ScoreEngine::Application.routes.draw do
 
   # Server Manager
   get '/serverManager' => 'serverManager#index', as: :server_manager
-  get '/serverManager/:id' => 'serverManager#show', as: :server_manager_show
 
   # Challenges
   resources :challenges

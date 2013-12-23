@@ -1,15 +1,15 @@
-.twelve.columns.panel
+.small-12.columns.panel
   = form_tag dns_tool_path, class: 'formee' do
     - unless flash[:dns_packet].nil?
       .row
-        .twelve.columns
+        .small-12.columns
           %h5
             - if flash[:first_anser].blank?
               Domain Not Found
             - else
               = "First Result: #{flash[:first_anser]}"
       .row
-        .twelve.columns.optional
+        .small-12.columns.optional
           %h5
             Full Results:
             = link_to_function '[+]', 'toggle_optional(this)'
@@ -19,27 +19,27 @@
       %hr
 
     .row.do_resizeY
-      .six.columns.resize_toY
+      .small-6.columns.resize_toY
         = label_tag 'domain', 'Domain'
         = text_field_tag 'domain'
-      .six.columns.resize_fromY
+      .small-6.columns.resize_fromY
         %div{style:'position: absolute; bottom: 5px; left: 5px;'}
-          = submit_tag 'Go'
+          = submit_tag 'Go', class: 'button'
     %hr
 
     .optional
       .row
-        .six.columns
+        .small-6.columns
           = label_tag 'server', 'DNS Server'
           = select_tag 'server', options_for_select([['Default DNS','default'],['Custom DNS','ip']] + @team_list)
-        .six.columns
+        .small-6.columns
           = label_tag 'type', 'Record Type'
           = select_tag 'type', options_for_select([['A','A'],['AAAA','AAAA'],['MX','MX']])
 
       %hr.hidden
       .content
         .row
-          .six.columns
+          .small-6.columns
             = label_tag 'server_ip', 'DNS IP'
             = text_field_tag 'server_ip'
 

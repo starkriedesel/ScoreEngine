@@ -3,22 +3,22 @@
     %b There are no services
 
 - else
-  %dl.tabs
+  %dl.tabs{'data-tab'=>''}
     - is_first = true
     - if current_user.is_admin or current_user.is_red_team
       %dd.active{id: 'overview'}
-        = link_to "Overview", "#overview"
+        = link_to "Overview", "#overviewTab"
         - is_first = false
     - @services.each do |team, service_list|
       - team = Team.new(name: 'None', id: 0) if team.nil?
       %dd{class: (is_first ? 'active':''), id: team.id}
-        = link_to "Team #{team.name}", "#team#{team.id}"
+        = link_to "Team #{team.name}", "#team#{team.id}Tab"
       - is_first = false
 
-  %ul.tabs-content#team-tabs
+  .tabs-content#team-tabs
     - is_first = true
     - if current_user.is_admin or current_user.is_red_team
-      %li#overviewTab.active
+      #overviewTab.content.active
         %table.service-overview
           %thead
             %tr
@@ -38,7 +38,7 @@
       - is_first = false
     - @services.each do |team, service_list|
       - team = Team.new(name: 'None', id: 0) if team.nil?
-      %li{id: "team#{team.id}Tab", class: (is_first ? 'active':'')}
+      .content{id: "team#{team.id}Tab", class: (is_first ? 'active':'')}
         = hidden_field_tag 'team-id', team.id
 
         - unless current_user.is_red_team
@@ -47,7 +47,7 @@
               .text
                 = "#{team.uptime}%"
 
-        %table.twelve.services
+        %table.small-12.columns.services
           %thead
             %tr
               %th
@@ -75,7 +75,6 @@
                     %td
                       %ul.inline-list
                         %li= link_to '<i class="icon-pencil"> </i>Edit'.html_safe, edit_service_path(service)
-                        %li= link_to_function '<i class="icon-bolt"> </i>Duplicate'.html_safe, "duplicate_service('#{service.id}','#{service.team_id}','#{service.name}')"
                         %li= link_to '<i class="icon-trash"> </i>Destroy'.html_safe, service, method: :delete, data: { confirm: 'Are you sure?' }
       - is_first = false
 
@@ -87,29 +86,8 @@
   - if @services.length > 0
     = link_to_function '<i class="icon-pencil"></i> Edit Team'.html_safe, 'editTeamLink()', class: 'button'
 
-  #duplicateModal.reveal-modal
-    %a.close-reveal-modal &#215;
-    %h2
-      Duplicate
-      %span#service_name
-    = form_tag service_duplicate_path, method: :post, class: 'formee' do
-      = hidden_field_tag 'service_id', ''
-      .row
-        .eight.columns.end
-          = label_tag 'Team'
-          = select_tag 'team_id', options_for_select(Team.options_list)
-      .row
-        = submit_tag 'Duplicate'
-
 :javascript
   setInterval(updateService, 30*1000);
-
-  function duplicate_service(service_id, team_id, service_name) {
-    $('#duplicateModal #service_name').html("'"+service_name+"'");
-    $('#duplicateModal #service_id').val(service_id);
-    $('#duplicateModal #team_id').val(team_id);
-    $("#duplicateModal").reveal();
-  }
 
   function editTeamLink() {
     var team_id = $('#team-tabs .active #team-id').val();

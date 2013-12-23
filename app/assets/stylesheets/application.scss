@@ -10,116 +10,153 @@
  *
  *= require_self
  *= require foundation_and_overrides
- *= require formee
- *= require toggle-switch
+ *= require toggle
  *= require font-awesome
+ *= require server_manager
  */
-
 @import "compass/css3";
 @import "colors";
+@import "foundation/components/forms";
 
-// Override foundation settings with formee conformant settings
-form.formee {
-  input[type="text"], input[type="password"], input[type="date"], input[type="datetime"], input[type="email"], input[type="number"], input[type="search"], input[type="tel"], input[type="time"], input[type="url"], textarea {
-    height: auto;
-    margin: 0px;
-  }
+// Remove float for certain content
+.tabs-content > .content, td.columns, th.columns, td.column, th.column {
+  float: none !important;
 }
 
-form.formee {
-  fieldset {
-    background-color: $secondaryColor;
-    legend {
-      background-color: transparent;
-      color: $mainColor;
-    }
-  }
-}
-
-.content {
-    margin-top: 10px;
-}
-
+// Navigation Bar
 .top-bar {
-  #text.not-running a {
-    color: $top-bar-not-running-color;
+  h1 a {
+    font-weight: bold !important;
   }
-  #text.running a {
-    color: $top-bar-running-color;
+  .not-running a {
+    color: $top-bar-not-running-color !important;
   }
-
+  .running a {
+    color: $top-bar-running-color !important;
+  }
   #messages_link.new_messages a {
     color: $mainColor;
   }
 }
 
+// Page header
 header {
-    background-color: $mainColor;
-    padding: 10px 0px;
-}
-
-header.running{
-  background-color: $service-running-color;
-}
-header.down {
-  background-color: $service-down-color;
-}
-header.error {
-  background-color: $service-error-color;
-}
-header.off {
-  background-color: $service-off-color;
-  h1 {
-    color: $service-off-dark-color;
+  background-color: $mainColor;
+  padding: 0px 0px 5px 0px;
+  margin-bottom: 20px;
+  &.running {
+    background-color: $service-running-color;
+  }
+  &.down {
+    background-color: $service-down-color;
+  }
+  &.error {
+    background-color: $service-error-color;
+  }
+  &.off {
+    background-color: $service-off-color;
+    h1.text {
+      color: $service-off-dark-color;
+    }
+  }
+  h1.text {
+    color: $white;
+    font-weight: 500;
+    padding-top: 12px;
   }
 }
 
-header h1 {
-    color: $white;
-    font-weight: 500;
+#global_alert {
+  position: absolute;
+  top: 45px;
+  width: 100%;
+  z-index: 99;
+  .alert-box {
+    font-size: 0.9em;
+    padding-top: 4px;
+    padding-bottom: 8px;
+    border-top: 0px;
+  }
 }
 
-.hint-text {
-    padding-top: 5px;
+// Service List vertical buttons
+.services .button {
+  margin-bottom: 0px !important;
+  text-align: left;
+  &:hover {
+    padding-left: 10px;
+    @include transition(padding-left 1s ease);
+  }
+  &.running {
+    background-color: $service-running-color;
+  }
+  &.off {
+    background-color: $service-off-dark-color;
+  }
+  &.down {
+    background-color: $service-down-color;
+  }
+  &.error {
+    background-color: $service-error-color;
+  }
+}
+
+// Inbox/Outbox vertical tabs
+.messages.tabs.vertical {
+  dd:hover a {
+    background-color: $tab-background-color;
+    padding-left: 10px;
+    @include transition-property(background-color, padding-left);
+    @include transition-duration(1s);
+    @include transition-timing-function(ease);
+  }
+  dd.active:hover a {
+    background-color: $tab-background-color-light;
+  }
+}
+
+// Forms
+fieldset{
+  padding-bottom: 4px !important;
+  &.no-border {
+    border: none;
+  }
+  &:last-of-type {
+    margin-bottom: 9px;
+  }
+}
+input[type=file] {
+  @include form-element();
+  border: none;
+}
+.hint {
+  select, input, textarea {
+    margin-bottom: 1px !important;
+  }
+  small.hint {
+    @include form-error-message($white);
     color: $form-hint-text-color;
-    float: right;
+  }
+  small.error {
+    display: none !important;
+  }
+  &.error {
+    select, input, textarea {
+      margin-bottom: 0px !important;
+    }
+    small.hint {
+      display: none;
+    }
+    small.error {
+      display: block !important;
+    }
+  }
 }
-
-.form-error-text {
-    padding-top: 5px;
-    color: $form-error-text-color;
-    float: left;
-}
-
-input:focus ~ .hint-text, input:hover ~ .hint-text, select:hover ~ .hint-text {
+input:focus ~ .hint, input:hover ~ .hint, select:hover ~ .hint, select:focus ~ .hint, textarea:focus ~ .hint, textarea:hover ~ .hint   {
   color: #000;
   @include transition(all 0.15s linear);
 }
 
-.tabs.vertical.services {
-  dd a{
-    font-weight: bold;
-    color: inherit;
-  }
-  dd.off {
-    border-left-color: $service-off-color;
-    color: $service-off-dark-color;
-  }
-  dd.down {
-    border-left-color: $service-down-color;
-    color: $service-down-color;
-  }
-
-  dd.running {
-    border-left-color: $service-running-color;
-    color: $service-running-color;
-  }
-
-  dd.error {
-    border-left-color: $service-error-color;
-    color: $service-error-color;
-  }
-}
 
 table a {
   font-weight: bold;
@@ -179,18 +216,6 @@ td ul.inline-list, td ol.inline-list {
 
 ul.inline-list .label, ol.inline-list .label {
   margin-top: 1px;
-}
-
-.tabs.vertical dd:hover {
-  a {
-    background-color: $tab-background-color;
-    padding-left: 10px;
-    -webkit-transition: all 1s ease;
-    -moz-transition: all 1s ease;
-    -o-transition: all 1s ease;
-    -ms-transition: all 1s ease;
-    transition: all 1s ease;
-  }
 }
 
 .service-log .details, .service-log .debug {
@@ -263,7 +288,8 @@ a [class^="icon-"] {
 }
 
 .user_list {
-  li { // hack to space out names
+  li {
+    // hack to space out names
     font-size: 23px;
   }
 
@@ -302,19 +328,5 @@ a [class^="icon-"] {
     a:hover {
       color: #ddd;
     }
-  }
-}
-
-#server_list {
-  .panel:hover {
-    background-color: darken($secondaryColor, 3);
-  }
-
-  .panel.callout:hover {
-    background-color: darken($mainColor, 3);
-  }
-
-  .panel.callout .button.alert {
-    color: $alertColor;
   }
 }
