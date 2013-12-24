@@ -74,17 +74,17 @@
                   - if current_user_admin?
                     %td
                       %ul.inline-list
-                        %li= link_to '<i class="icon-pencil"> </i>Edit'.html_safe, edit_service_path(service)
-                        %li= link_to '<i class="icon-trash"> </i>Destroy'.html_safe, service, method: :delete, data: { confirm: 'Are you sure?' }
+                        %li= link_to fa_icon(:pencil, text: 'Edit'), edit_service_path(service)
+                        %li= link_to fa_icon('trash-o', text: 'Destroy'), service, method: :delete, data: { confirm: 'Are you sure?' }
       - is_first = false
 
 - if current_user_admin?
   - if @services.length > 0
     %br
-  = link_to '<i class="icon-cloud"></i> Add Service'.html_safe, new_service_path, class: 'button'
-  = link_to '<i class="icon-group"></i> Add Team'.html_safe, new_team_path, class: 'button'
+  = link_to fa_icon(:cloud, text: 'Add Service'), new_service_path, class: 'button'
+  = link_to fa_icon(:group, text: 'Add Team'), new_team_path, class: 'button'
   - if @services.length > 0
-    = link_to_function '<i class="icon-pencil"></i> Edit Team'.html_safe, 'editTeamLink()', class: 'button'
+    = link_to_function fa_icon(:pencil, text: 'Edit Team'), 'editTeamLink()', class: 'button'
 
 :javascript
   function editTeamLink() {

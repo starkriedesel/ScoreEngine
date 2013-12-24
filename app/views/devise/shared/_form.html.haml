@@ -30,6 +30,7 @@
               = f.check_box :remember_me
               = f.label :remember_me do
                 %span.slider
+      %br
 
       .row
         .small.ten.columns.small.offset-1.end
@@ -37,4 +38,4 @@
             = f.submit "Sign #{verb.capitalize}", class: 'button'
           - if verb.downcase == 'in'
             .right
-              = link_to 'Sign Up', new_user_registration_path, class: 'button'
+              = link_to 'Sign Up', new_user_registration_path, class: 'button secondary'

@@ -2,7 +2,7 @@
   .top-bar{'data-topbar'=>''}
     %ul.title-area
       %li.name{class: (daemon_running? ? 'running' : 'not-running')}
-        %h1= link_to '<i class="icon-cogs"></i>&nbsp;Score&nbsp;Engine'.html_safe, '/'
+        %h1= link_to fa_icon(:cogs, text: '&nbsp;Score&nbsp;Engine'.html_safe), '/'
       %li.toggle-topbar.menu-icon
         = link_to '<span>Menu</span>'.html_safe, '#'
 
@@ -11,24 +11,24 @@
         - if user_signed_in?
           - unless current_user.is_red_team
             %li#messages_link{class: (TeamMessage.user_new_messages(current_user, last_time_inbox_checked) > 0 ? 'new_messages' : '')}
-              = link_to '<i class="icon-envelope"></i> Messages'.html_safe, team_messages_path
+              = link_to fa_icon(:envelope, text: 'Messages'), team_messages_path
           %li
-            = link_to '<i class="icon-dashboard"></i> Services'.html_safe, services_path
-          -#%li
-            = link_to '<i class="icon-trophy"></i> Challenges'.html_safe, challenges_path
+            = link_to fa_icon(:dashboard, text: 'Services'), services_path
+          -#s%li
+            = link_to fa_icon(:trophy, text: 'Challenges'), challenges_path
           - if current_user.is_admin
             %li
-              = link_to '<i class="icon-desktop"></i> Servers'.html_safe, server_manager_path
+              = link_to fa_icon(:desktop, text: 'Servers'), server_manager_path
           %li.has-dropdown
-            = link_to '<i class="icon-stethoscope"></i> Tools'.html_safe, '#'
+            = link_to fa_icon(:stethoscope, text: 'Tools'), '#'
             %ul.dropdown
-              %li= link_to '<i class="icon-lock"></i> Hash'.html_safe, hash_tool_path
-              %li= link_to '<i class="icon-info-sign"></i> DNS'.html_safe, dns_tool_path
+              %li= link_to fa_icon(:lock, text: 'Hash'), hash_tool_path
+              %li= link_to fa_icon('info-circle', text: 'DNS'), dns_tool_path
               - if current_user.is_admin
-                %li= link_to '<i class="icon-group"></i> Users'.html_safe, users_path
-                %li= link_to '<i class="icon-list-ul"></i> Daemon Log'.html_safe, daemon_log_path
+                %li= link_to fa_icon(:group, text: 'Users'), users_path
+                %li= link_to fa_icon('list-ul', text: 'Daemon Log'), daemon_log_path
           %li.has-button
-            = link_to '<i class="icon-user" style="color:black;"></i> Logout'.html_safe, destroy_user_session_path, method: :delete, class: 'small button'
+            = link_to fa_icon(:user, style: 'color:black', text: 'Logout'), destroy_user_session_path, method: :delete, class: 'small button'
 
 #global_alert
   .row
@@ -39,15 +39,9 @@
 
 - if not @header_text.nil?
   %header#titlebar{class: @header_class}
-    -#.row
-      .small-8.columns.small-offset-2.alert-box#global_alert{style:'visibility:'+(flash[:error] || flash[:alert] || flash[:notice] ? 'visible' : 'hidden'), class:(flash[:error] || flash[:alert] ? 'alert' : '')}
-        .text
-          = flash[:error]
-          = flash[:alert]
-          = flash[:notice] unless flash[:error] or flash[:alert]
     .row
       .small-12.columns
         %h1.text
           - unless @header_icon.blank?
-            %i{class:"icon-#{@header_icon}"}
+            = fa_icon @header_icon
           = @header_text

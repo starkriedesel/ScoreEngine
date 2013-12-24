@@ -6,17 +6,14 @@
     .small-5.columns.panel{class: (s[:status] == :running ? 'running' : 'down')}
       %h4
         -if s[:platform] == :linux
-          %i.icon-linux
+          = fa_icon :linux
         -elsif s[:platform] == :windows
-          %i.icon-windows
+          = fa_icon :windows
         - else
-          %i.icon-hdd
+          = fa_icon 'hdd-o'
         = s[:name]
       %ul{style:'margin-left: 10px'}
         %li= "Last Launch: #{time_ago_in_words(s[:last_launch])} ago"
         %li= "Private IP: #{s[:private_ip]}"
         %li= "Public IP: #{s[:public_ip]}"
-      - if s[:status] == :running
-        = link_to '<i class="icon-power-off"></i> Power '.html_safe, '#', class: 'button power'
-      - else
-        = link_to '<i class="icon-power-off"></i> Power '.html_safe, '#', class: 'button power'
+      = link_to fa_icon('power-off', text: 'Power'), '#', class: 'button power'

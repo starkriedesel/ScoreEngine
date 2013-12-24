@@ -10,10 +10,10 @@
       - unless @file_name.nil?
         %br
         %br
-        = link_to "<i class='icon-download-alt'></i> #{@file_name}".html_safe, team_message_download_path(@team_message.id)
+        = link_to fa_icon(:download, text: @file_name), team_message_download_path(@team_message.id)
     %br
     %br
     %blockquote.message_content
       = simple_format @team_message.content
   .left
-    = link_to '<i class="icon-reply"></i> Reply'.html_safe, team_messages_reply_path(@team_message.id), class: 'button'
+    = link_to fa_icon(:reply, text: 'Reply'), team_messages_reply_path(@team_message.id), class: 'button'

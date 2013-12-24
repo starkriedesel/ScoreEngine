@@ -26,12 +26,12 @@
     - if current_user_admin?
       .row
         %ul.button-group.even
-          %li= link_to 'Edit', edit_service_path(@service), class:'button'
+          %li= link_to fa_icon(:pencil, text: 'Edit'), edit_service_path(@service), class:'button'
           - if @service.on
-            %li= button_to 'Off', service_power_path(@service), class: 'button alert', confirm: 'Are you sure you want to POWER OF this service?'
+            %li= link_to fa_icon('power-off', text: 'Off'), service_power_path(@service), method: :post, class: 'button alert', confirm: 'Are you sure you want to POWER OF this service?'
           - else
-            %li= button_to 'On', service_power_path(@service), class: 'button success', confirm: 'Are you sure you want to POWER ON this service?'
-          %li= button_to 'Clear', clear_service_path(@service), class: 'button alert', confirm: 'Are you sure you want to CLEAR LOGS for this service?'
+            %li= link_to fa_icon('power-off', text: 'On'), service_power_path(@service), method: :post, class: 'button success', confirm: 'Are you sure you want to POWER ON this service?'
+          %li= link_to fa_icon('trash-o', text: 'Clear'), clear_service_path(@service), method: :post, class: 'button alert', confirm: 'Are you sure you want to CLEAR LOGS for this service?'
 
     - if @service.service_logs.count == 0
       .row
