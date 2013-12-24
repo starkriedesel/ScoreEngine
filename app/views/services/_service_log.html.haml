@@ -11,7 +11,7 @@
           = link_to_function 'Debug', 'toggleLogDebug(this)'
       - if current_user_admin?
         %li
-          = link_to 'Remove', clear_service_log_path(log), method: :post
+          = link_to 'Remove', clear_service_log_path(log.service_id,log.id), method: :post
       %li.time
         = log.created_at.strftime '%I:%M:%S %p'
 

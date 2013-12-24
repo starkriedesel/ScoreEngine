@@ -87,8 +87,6 @@
     = link_to_function '<i class="icon-pencil"></i> Edit Team'.html_safe, 'editTeamLink()', class: 'button'
 
 :javascript
-  setInterval(updateService, 30*1000);
-
   function editTeamLink() {
     var team_id = $('#team-tabs .active #team-id').val();
     if(!team_id)

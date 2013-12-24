@@ -11,11 +11,6 @@
       - Service.where(team_id: @service.team_id).all.each do |s|
         .row
           = link_to s.name, s, class: 'button small-12 columns '+service_class(s), id: "service#{s.id}"
-      -#.row
-        %dl.vertical.tabs.services.small-12.columns
-          - Service.where(team_id: @service.team_id).all.each do |s|
-            %dd{class: service_class(s), id:"service#{s.id}"}
-              = link_to s.name, s
 
   .small-9.columns
     .row

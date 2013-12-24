@@ -116,88 +116,22 @@ class ServicesController < ApplicationController
     redirect_to services_url
   end
 
-  # POST /services/:id/clear
+  # POST /services/:id/clear/[:log_id]
   def clear
-    @service = Service.find(params[:id])
-    if @service.service_logs.destroy_all
-      flash[:notice] = "Cleared logs for '#{@service.name}'"
-    end
-    redirect_to @service
-  end
-
-  # POST /logs/:id/clear
-  def clear_log
-    @log = ServiceLog.find(params[:id])
-    service = @log.service
-    log_id = @log.id
-    if @log.destroy
-      flash[:notice] = "Cleared log ##{log_id} for '#{service.name}'"
-    end
-    redirect_to service
-  end
-
-  # GET /status.json
-  # GET /:id/status/:last_log_id.json
-  def status
-    respond_to do |format|
-      format.html do
-        raise 'Invalid request'
+    if params[:log_id].nil?
+      service = Service.find(params[:id])
+      if service.service_logs.destroy_all
+        flash[:notice] = "Cleared logs for '#{service.name}'"
       end
-
-      format.json do
-        output = {}
-
-        # If a service is specified, then check for updates on that service
-        unless params[:id].nil?
-          service = Service.find(params[:id])
-          if current_user_admin? or current_user.team_id == service.team_id # user must be an admin or a member of the service team
-            logs = ServiceLog.where('service_id = ? AND id > ?', params[:id], params[:last_log_id]).order('created_at desc').all
-            log_html = ''
-            logs.each {|log| log_html += render_to_string(partial: 'service_log', formats: [:html], locals: {log: log})}
-
-            output[:header_class] = status_class(service.status)
-            output[:last_log_id] = logs.first.nil? ? 0 : logs.first.id
-            output[:uptime] = service.up_time
-            output[:log_html] = log_html
-          end
-        end
-
-        # The way each db engine handles booleans is different, so this complex query must be custom written for each
-        sql_select_status = ''
-        adapter = ActiveRecord::Base.connection.instance_values['config'][:adapter]
-        if adapter == 'mysql2' or adapter == 'mysql'
-          sql_select_status = 'services.id, (CASE WHEN `on` THEN (SELECT service_logs.status FROM service_logs WHERE service_logs.service_id=services.id ORDER BY service_logs.created_at DESC LIMIT 1) ELSE "off" END) as current_status'
-        elsif adapter == 'sqlite3' or adapter == 'sqlite'
-          # TODO: Test with sqlite3 adapter
-          sql_select_status = '"id", (CASE WHEN services."on" = "t" THEN (SELECT status FROM service_logs WHERE service_logs.service_id=services.id ORDER BY created_at DESC LIMIT 1) ELSE "off" END) as current_status'
-        else
-          # TODO: Handle non-mysql and non-sqlite database query
-          # One option is to just not use a boolean
-        end
-
-        service_list = Service.select(sql_select_status)
-        service_list = service_list.where(team_id: current_user.team_id) unless current_user_admin?
-        service_list = service_list.all.collect do |s|
-          status_class = s.current_status == 'off' ? 'off' : status_class(s.current_status)
-          if s.current_status == 'off' or s.current_status.nil?
-            img = status_img nil
-          else
-            img = status_img s.current_status.to_i
-          end
-          {id: s.id, status_class: status_class, status: s.current_status, image: img}
-        end
-        output[:service_list] = service_list
-
-        if params[:id].nil?
-          teams = Team
-          teams = teams.where(id: current_user.team_id) unless current_user_admin?
-          teams = teams.all
-          teams<< Team.new(id:0) if current_user_admin?
-          output[:team_uptime] = teams.collect {|t| {id: t.id, uptime: t.uptime}}
-        end
-
-        render json: output
+      redirect_to service
+    else
+      log = ServiceLog.find(params[:log_id])
+      service = log.service
+      log_id = log.id
+      if log.destroy
+        flash[:notice] = "Cleared log ##{log_id} for '#{service.name}'"
       end
+      redirect_to service
     end
   end
 end

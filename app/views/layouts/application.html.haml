@@ -23,10 +23,10 @@
     var is_logged_in = #{current_user != nil ? 'true' : 'false'};
     var is_admin = #{current_user != nil && current_user.is_admin ? 'true' : 'false'};
     var is_red_team = #{current_user != nil && current_user.is_red_team ? 'true' : 'false'};
+    var status_class = { #{ServiceLog::STATUS.keys.map{|s| "'#{s}': '#{status_class(s)}'"}.join(', ')} };
+    var status_img = { #{ServiceLog::STATUS.keys.map{|s| "'#{s}': '#{status_img(s)}'"}.join(', ')} };
 
   = javascript_include_tag :application
-  - if File.exists? File.join Rails.root, "app/assets/javascripts/#{params[:controller]}.js"
-    = javascript_include_tag params[:controller]
   = javascript_include_tag :modernizr
   = stylesheet_link_tag :application
 
@@ -39,11 +39,6 @@
 
   = render 'layouts/header'
 
-  -#.row{style:'padding-top: 10px;'}
-    #global_alert.alert-box{style:'visibility:'+(flash[:error] || flash[:alert] || flash[:notice] ? 'visible' : 'hidden'), class:(flash[:error] || flash[:alert] ? 'alert' : '')}
-      = flash[:error]
-      = flash[:alert]
-      = flash[:notice] unless flash[:error] or flash[:alert]
   .row.content
     .twelve.columns
       = yield

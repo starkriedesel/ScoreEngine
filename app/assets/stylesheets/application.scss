@@ -48,21 +48,7 @@ header {
   background-color: $mainColor;
   padding: 0px 0px 5px 0px;
   margin-bottom: 20px;
-  &.running {
-    background-color: $service-running-color;
-  }
-  &.down {
-    background-color: $service-down-color;
-  }
-  &.error {
-    background-color: $service-error-color;
-  }
-  &.off {
-    background-color: $service-off-color;
-    h1.text {
-      color: $service-off-dark-color;
-    }
-  }
+
   h1.text {
     color: $white;
     font-weight: 500;

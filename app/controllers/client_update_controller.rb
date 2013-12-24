@@ -1,5 +1,5 @@
 class ClientUpdateController < ApplicationController
-  # GET /client_update/poll.json
+  # GET /client_update/poll.json?[service_id=#]&[last_log_id=#]
   def poll
     respond_to do |format|
       format.html do
@@ -15,8 +15,8 @@ class ClientUpdateController < ApplicationController
           messages = TeamMessage
           messages = messages.where(team_id: current_user.team_id) unless current_user.is_admin
           messages = messages.where('created_at > ?', last_time_checked)
-          messages = messages.where('from_admin', !(current_user.is_admin))
-          output[new_inbox: messages.count]
+          messages = messages.where(from_admin: !(current_user.is_admin))
+          output[:new_inbox] = messages.count
         end
 
         # Services
@@ -34,7 +34,7 @@ class ClientUpdateController < ApplicationController
           output[:service_list] = {}
           service_list.each do |s|
             show_service_details = true if s.id == service_id
-            output[:service_list][s.id] = s.last_status
+            output[:service_list][s.id] = s.status
           end
 
           # Team Uptimes
@@ -56,15 +56,17 @@ class ClientUpdateController < ApplicationController
 
           # Service Details
           if show_service_details
+            count = ServiceLog.where(service_id: service_id).count
+            running_count = ServiceLog.where(service_id: service_id, status: ServiceLog::STATUS_RUNNING).count
+            output[:service_uptime] = (running_count * 100.0 / count).to_i
+
             service_logs = ServiceLog.where(service_id: service_id)
             service_logs = service_logs.where('id > ?', params[:last_log_id].to_i) unless params[:last_log_id].nil?
             service_logs = service_logs.order(:id).all
-            output[:last_log_id] = service_logs.last.id unless service_logs.length == 0
-            output[:num_running_logs] = 0
-            output[:logs_html] = []
+            output[:last_service_log_id] = service_logs.last.id unless service_logs.length == 0
+            output[:service_logs_html] = []
             service_logs.each do |l|
-              output[:num_running_logs] += l.status == ServiceLog::STATUS_RUNNING ? 1 : 0
-              output[:logs_html] << render_to_string(partial: 'services/service_log', formats: ['html'], layout: false, locals: {log: l})
+              output[:service_logs_html] << render_to_string(partial: 'services/service_log', formats: ['html'], layout: false, locals: {log: l})
             end
           end
         end

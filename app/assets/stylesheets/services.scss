@@ -1,5 +1,24 @@
 @import "colors";
 @import "compass";
+@import "keyframes";
+
+// Service List button flash feyframes
+@mixin flashAnimation($name, $baseColor) {
+  @include keyframes($name) {
+    0% {
+      background-color: lighten($baseColor, 20);
+    }
+    100% {
+      background-color: $baseColor;
+    }
+  }
+}
+@include flashAnimation(service-running-flash, $service-running-color);
+@include flashAnimation(service-down-flash, $service-down-color);
+@include flashAnimation(service-off-flash, $service-off-color);
+@include flashAnimation(service-off-dark-flash, $service-off-dark-color);
+@include flashAnimation(service-error-flash, $service-error-color);
+
 
 // Service List vertical buttons
 .services .button {
@@ -9,17 +28,46 @@
     padding-left: 10px;
     @include transition(padding-left 1s ease);
   }
+}
+
+// Service Colors (buttons and header)
+.services .button, header#titlebar {
   &.running {
     background-color: $service-running-color;
-  }
-  &.off {
-    background-color: $service-off-dark-color;
+    &.flash {
+      @include animation(service-running-flash, 0s, 2s);
+    }
   }
   &.down {
     background-color: $service-down-color;
+    &.flash {
+      @include animation(service-down-flash, 0s, 2s);
+    }
   }
   &.error {
     background-color: $service-error-color;
+    &.flash {
+      @include animation(service-error-flash, 0s, 2s);
+    }
+  }
+}
+.services .button {
+  &.off {
+    background-color: $service-off-dark-color;
+    &.flash {
+      @include animation(service-off-dark-flash, 0s, 2s);
+    }
+  }
+}
+header#titlebar {
+  &.off {
+    background-color: $service-off-color !important;
+    &.flash {
+      @include animation(service-off-flash, 0s, 2s);
+    }
+    h1.text {
+      color: $service-off-dark-color;
+    }
   }
 }
 
