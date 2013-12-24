@@ -134,9 +134,17 @@ input:focus ~ .hint, input:hover ~ .hint, select:hover ~ .hint, select:focus ~ .
 }
 
 // Tables
+table {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
 table a {
   font-weight: bold;
   text-decoration: underline;
+}
+td.has-inline-list {
+  padding-left: 4px;
+  padding-right: 4px;
 }
 td ul.inline-list, td ol.inline-list {
   margin-bottom: 0px;

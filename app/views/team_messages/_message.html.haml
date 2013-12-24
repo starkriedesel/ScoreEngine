@@ -1,5 +1,5 @@
 %tr{class: (team_message.created_at > @last_time_checked ? 'new' : '')}
-  %td
+  %td.has-inline-list
     %ul.inline-list
       %li
         = link_to '<i class="icon-reply" style="text-decoration:none;"></i>'.html_safe, team_messages_reply_path(team_message.id)
