@@ -2,7 +2,7 @@
 .columns.left.hint{class: "small-#{small_size} #{large_size.nil? ? '' : "large-#{large_size}"} #{has_error ? 'error' : ''}"}
   - if f.nil?
     = label_tag do
-      row_name
+      = row_name
       - if required
         %em.formee-req *
   - else
