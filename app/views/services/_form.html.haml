@@ -6,7 +6,7 @@
       %legend Basic
       = render partial: 'layouts/form_row', locals: {f: f, model: @service, html_form: f.text_field(:name), row_id: :name, row_name: 'Name', small_size: 12, large_size: 6, hint: 'Name of Service', required: true}
       = render partial: 'layouts/form_row', locals: {f: f, model: @service, html_form: f.select(:worker, Workers::GenericWorker::WORKERS.collect{|name,_| [name,name]}), row_id: :worker, row_name: 'Worker', small_size: 6, large_size:3, hint: 'Worker Class', required: true}
-      = render partial: 'layouts/form_row', locals: {f: f, model: @service, html_form: f.select(:team_id, Team.options_list), row_id: :team_id, row_name: 'Team', small_size:6, large_size: 3, hint: 'Assign this service to a team', required: true}
+      = render partial: 'layouts/form_row', locals: {f: f, model: @service, html_form: f.select(:team_id, Team.options_list.select{|t| t[1] != 'all' or @service.team_id.nil?}), row_id: :team_id, row_name: 'Team', small_size:6, large_size: 3, hint: 'Assign this service to a team', required: true}
       .row
       = render partial: 'layouts/form_row_slider', locals: {f: f, model: @service, row_id: :public, row_name: 'Public?'}
       = render partial: 'layouts/form_row_slider', locals: {f: f, model: @service, row_id: :on, row_name: 'On?'}

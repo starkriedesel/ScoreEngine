@@ -19,17 +19,6 @@
 @include flashAnimation(service-off-dark-flash, $service-off-dark-color);
 @include flashAnimation(service-error-flash, $service-error-color);
 
-
-// Service List vertical buttons
-.services .button {
-  margin-bottom: 0px !important;
-  text-align: left;
-  &:hover {
-    padding-left: 10px;
-    @include transition(padding-left 1s ease);
-  }
-}
-
 // Service Colors (buttons and header)
 .services .button, header#titlebar {
   &.running {
@@ -51,14 +40,44 @@
     }
   }
 }
-.services .button {
-  &.off {
-    background-color: $service-off-dark-color;
-    &.flash {
-      @include animation(service-off-dark-flash, 0s, 2s);
+
+// Service Buttons
+.services {
+  .button {
+    margin-bottom: 0px !important;
+    text-align: left;
+    &:hover {
+      padding-left: 10px;
+      @include transition(all 1s ease);
+      &.running {
+        background-color: darken($service-running-color, 10);
+      }
+      &.down {
+        background-color: darken($service-down-color, 10);
+      }
+      &.error {
+        background-color: darken($service-error-color, 10);
+      }
+      &.off {
+        background-color: darken($service-off-dark-color, 10);
+      }
+    }
+    &.off {
+      background-color: $service-off-dark-color;
+      &.flash {
+        @include animation(service-off-dark-flash, 0s, 2s);
+      }
+    }
+  }
+  .row {
+    border-bottom: 1px solid $secondaryColor;
+    &:last-of-type {
+      border-bottom-width: 0px !important;
     }
   }
 }
+
+// Service header
 header#titlebar {
   &.off {
     background-color: $service-off-color !important;
