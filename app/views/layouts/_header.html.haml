@@ -10,7 +10,7 @@
       %ul.right
         - if user_signed_in?
           - unless current_user.is_red_team
-            %li#messages_link
+            %li#messages_link{class: (TeamMessage.user_new_messages(current_user, last_time_inbox_checked) > 0 ? 'new_messages' : '')}
               = link_to '<i class="icon-envelope"></i> Messages'.html_safe, team_messages_path
           %li
             = link_to '<i class="icon-dashboard"></i> Services'.html_safe, services_path

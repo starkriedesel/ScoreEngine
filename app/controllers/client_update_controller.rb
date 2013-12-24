@@ -7,17 +7,13 @@ class ClientUpdateController < ApplicationController
       end
 
       format.json do
-        output = {daemon_running: daemon_running?, new_inbox: 0}
+        output = {}
+
+        # Daemon
+        output[:daemon_running] = daemon_running?
 
         # Inbox
-        unless current_user.is_red_team
-          last_time_checked = session[:last_time_inbox_checked] || Time.at(0)
-          messages = TeamMessage
-          messages = messages.where(team_id: current_user.team_id) unless current_user.is_admin
-          messages = messages.where('created_at > ?', last_time_checked)
-          messages = messages.where(from_admin: !(current_user.is_admin))
-          output[:new_inbox] = messages.count
-        end
+        output[:new_inbox] = TeamMessage.user_new_messages current_user, last_time_inbox_checked
 
         # Services
         #  0  = all services (which you have access to)

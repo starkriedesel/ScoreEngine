@@ -24,4 +24,13 @@ class TeamMessage < ActiveRecord::Base
 
     {inbox: inbox, outbox: outbox}
   end
+
+  def self.user_new_messages user, last_time_checked
+    return 0 if user.is_red_team
+    messages = TeamMessage
+    messages = messages.where(team_id: user.team_id) unless user.is_admin
+    messages = messages.where('created_at > ?', last_time_checked)
+    messages = messages.where(from_admin: !(user.is_admin))
+    return messages.count
+  end
 end

@@ -59,4 +59,12 @@ module ApplicationHelper
   def daemon_running?
     File.exists?(File.join(Rails.root,'/tmp/pids/ScoreEngine_Daemon.pid'))
   end
+
+  def last_time_inbox_checked(new_time=nil)
+    if new_time.nil?
+      session[:last_time_inbox_checked] || Time.at(0)
+    else
+      session[:last_time_inbox_checked] = new_time
+    end
+  end
 end

@@ -12,8 +12,8 @@ class TeamMessagesController < ApplicationController
   def index
     @header_text = 'Messages'
 
-    @last_time_checked = session[:last_time_inbox_checked]
-    @last_time_checked ||= Time.at(0)
+    @last_time_checked = last_time_inbox_checked
+    last_time_inbox_checked Time.now
 
     messages = TeamMessage.inbox_outbox team_id: current_user.team_id, is_admin: current_user_admin?, last_message_id: params[:id] do |query|
       query = query.where('subject LIKE ?', "%#{params[:search]}%") unless params[:search].blank?
@@ -22,7 +22,6 @@ class TeamMessagesController < ApplicationController
 
     @inbox = messages[:inbox]
     @outbox = messages[:outbox]
-    session[:last_time_inbox_checked] = Time.now
   end
 
   # GET /team_messages/1
