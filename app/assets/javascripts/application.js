@@ -3,13 +3,13 @@
 //= require jquery.ui.effect.all
 //= require jquery.cookie
 
+// Load foundation
 $(document).ready(function() { $(document).foundation(); });
 
 // Make the alerts fade away
 $(document).ready(function() {
     $('#global_alert').delay(5000).slideUp({duration: 1500});
 });
-
 
 // resize divs dynamically on load
 //  wrap divs in .do_resize(X/Y)
@@ -27,34 +27,30 @@ $(document).ready(function() {
     });
 });
 
+// Poll for client update
+//  All ajax updates should be done here
 $(document).ready(function() {
-    if(is_logged_in && ! is_red_team) {
-        checkMessages();
-        setInterval(checkMessages, 30*1000);
-    }
-    setInterval(checkDaemonStatus, 30*1000);
+    if(is_logged_in)
+        setInterval(clientPoll, 30*1000); // every 30 seconds
 });
-
-function checkMessages() {
+function clientPoll() {
     $.ajax({
-        url: '/messages.json'
+        url: '/client_update/poll.json'
     }).done(function(data) {
-        if(data.inbox && data.inbox > 0) {
-            $('#messages_link').addClass('new_messages');
-        }
+        if(data)
+            clientPollComplete(data);
     });
 }
+function clientPollComplete(data) {
 
-function checkDaemonStatus() {
-    $.ajax({
-        url: '/daemon_status.json'
-    }).done(function(data) {
-        if(data.daemon_running) {
-            $('.top-bar #text').addClass('running');
-            $('.top-bar #text').removeClass('not-running');
-        } else {
-            $('.top-bar #text').addClass('not-running');
-            $('.top-bar #text').removeClass('running');
-        }
-    });
+    if(data.new_inbox && data.new_inbox > 0) {
+        $('#messages_link').addClass('new_messages');
+    }
+    if(data.daemon_running) {
+        $('.top-bar .name').addClass('running');
+        $('.top-bar .name').removeClass('not-running');
+    } else {
+        $('.top-bar .name').addClass('not-running');
+        $('.top-bar .name').removeClass('running');
+    }
 }

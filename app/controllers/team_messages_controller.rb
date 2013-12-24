@@ -20,19 +20,9 @@ class TeamMessagesController < ApplicationController
       query.order(:created_at).reverse_order
     end
 
-    respond_to do |format|
-      format.html do
-        @inbox = messages[:inbox]
-        @outbox = messages[:outbox]
-        session[:last_time_inbox_checked] = Time.now
-      end
-
-      format.json do
-        render json: {
-            inbox: messages[:inbox].select{|m| m.created_at > @last_time_checked}.length,
-        }
-      end
-    end
+    @inbox = messages[:inbox]
+    @outbox = messages[:outbox]
+    session[:last_time_inbox_checked] = Time.now
   end
 
   # GET /team_messages/1

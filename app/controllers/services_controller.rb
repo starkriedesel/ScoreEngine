@@ -200,18 +200,4 @@ class ServicesController < ApplicationController
       end
     end
   end
-
-  def daemon_status
-    respond_to do |format|
-      format.html do
-        raise 'Invalid request'
-      end
-
-      format.json do
-        render json: {
-            daemon_running: daemon_running?
-        }
-      end
-    end
-  end
 end
