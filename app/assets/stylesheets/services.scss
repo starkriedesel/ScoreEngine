@@ -1,0 +1,96 @@
+@import "colors";
+@import "compass";
+
+// Service List vertical buttons
+.services .button {
+  margin-bottom: 0px !important;
+  text-align: left;
+  &:hover {
+    padding-left: 10px;
+    @include transition(padding-left 1s ease);
+  }
+  &.running {
+    background-color: $service-running-color;
+  }
+  &.off {
+    background-color: $service-off-dark-color;
+  }
+  &.down {
+    background-color: $service-down-color;
+  }
+  &.error {
+    background-color: $service-error-color;
+  }
+}
+
+// Service List
+table.services, table.challenges {
+  tr {
+    min-height: 32px;
+    td a {
+      color: inherit;
+    }
+  }
+
+  td.service_img {
+    width: 32px;
+    background-repeat: no-repeat;
+  }
+
+  tr.running, tr.complete {
+    td.service_img {
+      background-image: url("/assets/blueberry/check.png");
+    }
+    td {
+      color: $service-running-color;
+    }
+  }
+  tr.down {
+    td.service_img {
+      background-image: url("/assets/blueberry/close_delete.png");
+    }
+    td {
+      color: $service-down-color;
+    }
+  }
+  tr.error {
+    td.service_img {
+      background-image: url("/assets/blueberry/attention.png");
+    }
+    td {
+      color: $service-error-color;
+    }
+  }
+  tr.off, tr.incomplete {
+    td.service_img {
+      background-image: url("/assets/blueberry/off.png");
+    }
+    td {
+      color: $service-off-dark-color;
+    }
+  }
+}
+
+// Service Logs
+.service-log {
+  .details, .service-log .debug {
+    display: none;
+  }
+
+  .service-log .time {
+    color: #888;
+  }
+}
+
+// Progress Bar
+.progress.text {
+  height: auto;
+  .progress.text .meter .text {
+    padding: 4px;
+    color: black;
+    font-weight: bold;
+    //text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.4);
+    text-align: center;
+    //overflow: hidden;
+  }
+}

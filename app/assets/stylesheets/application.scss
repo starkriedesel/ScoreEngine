@@ -12,9 +12,13 @@
  *= require foundation_and_overrides
  *= require toggle
  *= require font-awesome
+ *= require users
+ *= require tools
+ *= require team_messages
+ *= require services
  *= require server_manager
  */
-@import "compass/css3";
+@import "compass";
 @import "colors";
 @import "foundation/components/forms";
 
@@ -65,12 +69,11 @@ header {
     padding-top: 12px;
   }
 }
-
 #global_alert {
   position: absolute;
   top: 45px;
   width: 100%;
-  z-index: 99;
+  z-index: 20;
   .alert-box {
     font-size: 0.9em;
     padding-top: 4px;
@@ -78,40 +81,13 @@ header {
     border-top: 0px;
   }
 }
-
-// Service List vertical buttons
-.services .button {
-  margin-bottom: 0px !important;
-  text-align: left;
-  &:hover {
-    padding-left: 10px;
-    @include transition(padding-left 1s ease);
+.alert-box {
+  ul {
+    list-style-position: inside;
+    margin-bottom: 0px;
   }
-  &.running {
-    background-color: $service-running-color;
-  }
-  &.off {
-    background-color: $service-off-dark-color;
-  }
-  &.down {
-    background-color: $service-down-color;
-  }
-  &.error {
-    background-color: $service-error-color;
-  }
-}
-
-// Inbox/Outbox vertical tabs
-.messages.tabs.vertical {
-  dd:hover a {
-    background-color: $tab-background-color;
-    padding-left: 10px;
-    @include transition-property(background-color, padding-left);
-    @include transition-duration(1s);
-    @include transition-timing-function(ease);
-  }
-  dd.active:hover a {
-    background-color: $tab-background-color-light;
+  a, a:visited, a:hover {
+    color: $white;
   }
 }
 
@@ -157,176 +133,24 @@ input:focus ~ .hint, input:hover ~ .hint, select:hover ~ .hint, select:focus ~ .
   @include transition(all 0.15s linear);
 }
 
-
+// Tables
 table a {
   font-weight: bold;
   text-decoration: underline;
 }
-
-table.services, table.challenges {
-  tr {
-    min-height: 32px;
-    td a {
-      color: inherit;
-    }
-  }
-
-  td.service_img {
-    width: 32px;
-    background-repeat: no-repeat;
-  }
-
-  tr.running, tr.complete {
-    td.service_img {
-      background-image: url("/assets/blueberry/check.png");
-    }
-    td {
-      color: $service-running-color;
-    }
-  }
-  tr.down {
-    td.service_img {
-      background-image: url("/assets/blueberry/close_delete.png");
-    }
-    td {
-      color: $service-down-color;
-    }
-  }
-  tr.error {
-    td.service_img {
-      background-image: url("/assets/blueberry/attention.png");
-    }
-    td {
-      color: $service-error-color;
-    }
-  }
-  tr.off, tr.incomplete {
-    td.service_img {
-      background-image: url("/assets/blueberry/off.png");
-    }
-    td {
-      color: $service-off-dark-color;
-    }
-  }
-}
-
 td ul.inline-list, td ol.inline-list {
   margin-bottom: 0px;
 }
-
 ul.inline-list .label, ol.inline-list .label {
   margin-top: 1px;
 }
 
-.service-log .details, .service-log .debug {
-  display: none;
-}
-
-.service-log .time {
-  color: #888;
-}
-
-.progress.text {
-  height: auto;
-}
-
-.progress.text .meter .text {
-  padding: 4px;
-  color: black;
-  font-weight: bold;
-  //text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.4);
-  text-align: center;
-  //overflow: hidden;
-}
-
-.message_content * {
-  font-size: 1.7em;
-  color: black;
-}
-
+// Icons
 a [class^="icon-"] {
   text-decoration: none;
 }
 
+// Utility
 .hidden {
   display: none;
-}
-
-.alert-box {
-  ul {
-    list-style-position: inside;
-    margin-bottom: 0px;
-  }
-  a, a:visited, a:hover {
-    color: $white;
-  }
-}
-
-.daemon-log {
-  .info {
-    background-color: $daemon-info-color;
-  }
-  .error {
-    background-color: $daemon-error-color;
-  }
-  .warn {
-    background-color: $daemon-warn-color;
-  }
-}
-
-.messages {
-  .new {
-    background-color: $message-new-color;
-  }
-
-  ul.inline-list {
-    margin: 0 0 0px -8px;
-    > li {
-      margin-left: 8px;
-    }
-  }
-}
-
-.user_list {
-  li {
-    // hack to space out names
-    font-size: 23px;
-  }
-
-  .label {
-    font-size: 20px;
-  }
-
-  .label.admin {
-    background-color: #ddd;
-    color: #666;
-    a {
-      color: #666;
-    }
-    a:hover {
-      color: #444;
-    }
-  }
-
-  .label.red_team {
-    background-color: $alertColor;
-    color: #fff;
-    a {
-      color: #fff;
-    }
-    a:hover {
-      color: #ddd;
-    }
-  }
-
-  .label.user {
-    background-color: $mainColor;
-    color: #fff;
-    a {
-      color: #fff;
-    }
-    a:hover {
-      color: #ddd;
-    }
-  }
 }

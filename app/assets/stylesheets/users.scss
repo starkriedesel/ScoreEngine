@@ -1,0 +1,45 @@
+@import "colors";
+
+.user_list {
+  li {
+    // hack to space out names
+    font-size: 23px;
+  }
+
+  .label {
+    font-size: 20px;
+  }
+
+  .label.admin {
+    background-color: #ddd;
+    color: #666;
+    a {
+      color: #666;
+    }
+    a:hover {
+      color: #444;
+    }
+  }
+
+  .label.red_team {
+    background-color: $alertColor;
+    color: #fff;
+    a {
+      color: #fff;
+    }
+    a:hover {
+      color: #ddd;
+    }
+  }
+
+  .label.user {
+    background-color: $mainColor;
+    color: #fff;
+    a {
+      color: #fff;
+    }
+    a:hover {
+      color: #ddd;
+    }
+  }
+}

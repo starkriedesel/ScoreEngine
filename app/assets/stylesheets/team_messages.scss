@@ -1,0 +1,22 @@
+@import "colors";
+@import "compass";
+
+// Inbox/Outbox vertical tabs
+.messages.tabs.vertical {
+  dd:hover a {
+    background-color: $tab-background-color;
+    padding-left: 10px;
+    @include transition-property(background-color, padding-left);
+    @include transition-duration(1s);
+    @include transition-timing-function(ease);
+  }
+  dd.active:hover a {
+    background-color: $tab-background-color-light;
+  }
+}
+
+// Content
+.message_content * {
+  font-size: 1.7em;
+  color: black;
+}

@@ -1,0 +1,13 @@
+@import "colors";
+
+.daemon-log {
+  .info {
+    background-color: $daemon-info-color;
+  }
+  .error {
+    background-color: $daemon-error-color;
+  }
+  .warn {
+    background-color: $daemon-warn-color;
+  }
+}
