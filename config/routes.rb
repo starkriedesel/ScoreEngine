@@ -15,6 +15,7 @@ ScoreEngine::Application.routes.draw do
   post '/services/:id/clear' => 'services#clear', as: :clear_service
   post '/logs/:id/clear/:log_id' => 'services#clear', as: :clear_service_log
   get '/services/:id/status/:last_log_id' => 'services#status'
+  post '/services/:id/power' => 'services#power', as: :service_power
   resources :services
 
   # Users

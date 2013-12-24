@@ -134,4 +134,14 @@ class ServicesController < ApplicationController
       redirect_to service
     end
   end
+
+  # POST /services/:id/power
+  def power
+    service = Service.find(params[:id])
+
+    service.on = ! service.on
+    service.save
+
+    redirect_to service
+  end
 end

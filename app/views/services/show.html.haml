@@ -27,7 +27,11 @@
       .row
         %ul.button-group.even
           %li= link_to 'Edit', edit_service_path(@service), class:'button'
-          %li= button_to 'Clear', clear_service_path(@service), class: 'button alert', confirm: 'Are you sure?'
+          - if @service.on
+            %li= button_to 'Off', service_power_path(@service), class: 'button alert', confirm: 'Are you sure you want to POWER OF this service?'
+          - else
+            %li= button_to 'On', service_power_path(@service), class: 'button success', confirm: 'Are you sure you want to POWER ON this service?'
+          %li= button_to 'Clear', clear_service_path(@service), class: 'button alert', confirm: 'Are you sure you want to CLEAR LOGS for this service?'
 
     - if @service.service_logs.count == 0
       .row
