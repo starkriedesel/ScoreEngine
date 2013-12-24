@@ -20,7 +20,7 @@
  */
 @import "compass";
 @import "colors";
-@import "foundation/components/forms";
+@import "foundation";
 
 // Remove float for certain content
 .tabs-content > .content, td.columns, th.columns, td.column, th.column {
@@ -137,6 +137,17 @@ td ul.inline-list, td ol.inline-list {
 }
 ul.inline-list .label, ol.inline-list .label {
   margin-top: 1px;
+}
+table tbody tr {
+  &:nth-child(even) {
+    background-color: $panel-bg;
+    &:hover {
+      background-color: darken($panel-bg, 5%);
+    }
+  }
+  &:hover {
+    background-color: darken($panel-bg, 5%);
+  }
 }
 
 // Icons
