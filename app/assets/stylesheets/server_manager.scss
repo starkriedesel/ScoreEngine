@@ -5,11 +5,11 @@
     border-color: $service-running-color;
     background-color: lighten($service-running-color, 45%);
 
-    .button.power {
-      background-color: $alertColor;
-    }
-    .button.power:after {
-      content: "Off";
+    .button.command {
+      background-color: $successColor;
+      &:after{
+        content: "Running";
+      }
     }
   }
 
@@ -17,11 +17,23 @@
     border-color: $service-down-color;
     background-color: lighten($service-down-color, 45%);
 
-    .button.power {
-      background-color: $successColor;
+    .button.command {
+      background-color: $alertColor;
+      &:after{
+        content: "Not Running";
+      }
     }
-    .button.power:after {
-      content: "On";
+  }
+
+  .panel.paused {
+    border-color: $service-off-dark-color;
+    background-color: $service-off-color;
+
+    .button.command {
+      background-color: $service-off-dark-color;
+      &:after {
+        content: "Paused";
+      }
     }
   }
 

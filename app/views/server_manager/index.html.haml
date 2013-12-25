@@ -1,9 +1,7 @@
-- manager = ServerManager::AWSManager.get_instance
-=# manager.server_list.inspect
-
 .small-12.columns#server_blocks
-  - manager.server_list.inject([]){|a,s| a<<s.dup; s[:platform] = :windows; a<<s.dup; s[:platform] = :solaris; s[:status] = :off; a<<s.dup;}.each do |s|
-    .small-5.columns.panel{class: (s[:status] == :running ? 'running' : 'down')}
+  - i = 0
+  - @server_manager.server_list.each do |s|
+    .small-5.columns.panel{class: s[:status].to_s}
       %h4
         -if s[:platform] == :linux
           = fa_icon :linux
@@ -13,7 +11,17 @@
           = fa_icon 'hdd-o'
         = s[:name]
       %ul{style:'margin-left: 10px'}
-        %li= "Last Launch: #{time_ago_in_words(s[:last_launch])} ago"
+        %li= "Last Launch: #{time_ago_in_words(s[:last_launch])} ago" unless s[:last_launch].nil?
         %li= "Private IP: #{s[:private_ip]}"
         %li= "Public IP: #{s[:public_ip]}"
-      = link_to fa_icon('power-off', text: 'Power'), '#', class: 'button power'
+      %a{href:'#', class: 'button split command'}
+        %span{'data-dropdown'=>"commands#{i}"}
+      %ul.f-dropdown{'data-dropdown-content'=>'', id: "commands#{i}"}
+        - if s[:status] == :running
+          %li= link_to fa_icon('pause', text: 'Pause'), server_manager_command_path(s[:id], :pause), method: :post
+          %li= link_to fa_icon('power-off', text: 'Power Off'), server_manager_command_path(s[:id], :power_off), method: :post
+        - elsif s[:status] == :paused
+          %li= link_to fa_icon('play', text: 'Resume'), server_manager_command_path(s[:id], :resume), method: :post
+        - else
+          %li= link_to fa_icon('power-off', text: 'Power On'), server_manager_command_path(s[:id], :power_on), method: :post
+    - i += 1

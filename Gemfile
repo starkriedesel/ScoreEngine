@@ -54,6 +54,7 @@ gem 'net-ldap' # LDAP / AD
 
 # Server Manager Backends
 gem 'aws-sdk', '~>1.0'
+gem 'ruby-libvirt', '~>0.5'
 
 # Testing
 gem 'rspec-rails', :group => [:development, :test]

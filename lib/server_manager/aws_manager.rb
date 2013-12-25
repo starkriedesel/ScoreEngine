@@ -2,12 +2,7 @@ module ServerManager
   class AWSManager < Base
     attr_accessor :last_updated, :is_fresh
 
-    def self.get_instance(settings = {})
-      fresh = false
-      aws = Rails.cache.fetch('aws_server_manager', expires_in: 1.minute) { fresh = true; AWSManager.new settings }
-      aws.is_fresh= fresh
-      aws
-    end
+    caching_instance 'aws_server_manager'
 
     def initialize(settings = {})
       settings[:logger] = Logger.new($stdout)
@@ -21,8 +16,6 @@ module ServerManager
       end
       @images = {}
       ec2.describe_images(image_ids: image_ids)[:images_set].each {|i| @images[i[:image_id]] = i }
-      @last_updated = Time.now
-      @is_fresh = true
     end
 
     def server_list
