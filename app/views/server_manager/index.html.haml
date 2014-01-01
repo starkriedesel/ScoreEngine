@@ -1,6 +1,6 @@
 .small-12.columns#server_blocks
   - i = 0
-  - @server_manager.server_list.each do |s|
+  - @server_manager.server_list.sort_by{|s| s[:name]}.sort_by{|s| s[:status] == :running ? 0 : (s[:status] == :paused ? 1 : 2)}.each do |s|
     .small-5.columns.panel{class: s[:status].to_s}
       %h4
         -if s[:platform] == :linux
@@ -10,6 +10,7 @@
         - else
           = fa_icon 'hdd-o'
         = s[:name]
+      =# s
       %ul{style:'margin-left: 10px'}
         %li= "Last Launch: #{time_ago_in_words(s[:last_launch])} ago" unless s[:last_launch].nil?
         %li= "Private IP: #{s[:private_ip]}"
