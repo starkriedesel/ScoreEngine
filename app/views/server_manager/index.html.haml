@@ -23,8 +23,9 @@
             %li= link_to fa_icon('play', text: 'Resume'), server_manager_command_path(s[:id], :resume), method: :post
           - elsif s[:status] == :running
             %li= link_to fa_icon('pause', text: 'Pause'), server_manager_command_path(s[:id], :pause), method: :post
-        - if s[:status] == :running
-          %li= link_to fa_icon('power-off', text: 'Power Off'), server_manager_command_path(s[:id], :power_off), method: :post
-        - elsif s[:status] == :down
-          %li= link_to fa_icon('power-off', text: 'Power On'), server_manager_command_path(s[:id], :power_on), method: :post
+        - if @server_manager.available_commands.include? :power_off
+          - if s[:status] == :running
+            %li= link_to fa_icon('power-off', text: 'Power Off'), server_manager_command_path(s[:id], :power_off), method: :post
+          - elsif s[:status] == :down
+            %li= link_to fa_icon('power-off', text: 'Power On'), server_manager_command_path(s[:id], :power_on), method: :post
     - i += 1
