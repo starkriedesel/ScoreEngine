@@ -16,7 +16,7 @@ gem 'haml-rails' # HAML
 gem 'jquery-rails' # JQuery
 gem 'jquery-ui-rails'
 
-gem 'therubyracer'
+gem 'therubyracer', platform: :ruby
 
 group :assets do
   # CSS
