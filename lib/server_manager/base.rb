@@ -41,6 +41,10 @@ module ServerManager
         def set_available_commands(*args)
           args.each{|c| available_commands << c }
         end
+
+        def clear_cache
+          Rails.cache.delete cache_key
+        end
       end
     end
 
@@ -57,6 +61,10 @@ module ServerManager
     def initialize
       @is_fresh = true
       @last_updated = Time.now
+    end
+
+    def clear_cache
+      self.class.clear_cache
     end
   end
 end

@@ -31,6 +31,7 @@ ScoreEngine::Application.routes.draw do
   # Server Manager
   get '/serverManager' => 'serverManager#index', as: :server_manager
   post '/serverManager/:id/command/:command' => 'serverManager#command', as: :server_manager_command
+  post '/serverManager/refresh' => 'serverManager#refresh', as: :server_manager_refresh
 
   # Challenges
   resources :challenges
