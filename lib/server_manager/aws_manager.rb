@@ -97,7 +97,8 @@ module ServerManager
           private_ip: instance[:private_ip_address],
           public_ip: instance[:ip_address],
           last_launch: instance[:launch_time],
-          platform: platform
+          platform: platform,
+          manager: :aws
       }
     end
   end

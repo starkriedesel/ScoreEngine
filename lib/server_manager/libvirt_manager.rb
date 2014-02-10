@@ -2,7 +2,7 @@ require 'libvirt'
 
 module ServerManager
   class LibvirtManager < Base
-    set_available_commands :power_on, :power_off, :pause, :resume
+    set_available_commands :power_on, :power_off, :pause, :resume, :reboot
 
     def initialize(settings={})
       settings[:uri] = Settings.server_manager.libvirt.uri unless settings.key? :uri
@@ -32,13 +32,16 @@ module ServerManager
     def power_on id
       return false if is_running? id
       @domains[id].create
-      true
     end
 
     def power_off id
       return false unless is_running? id
       @domains[id].destroy
-      false
+    end
+
+    def reboot id
+      return false unless is_running? id
+      @domains[id].reboot
     end
 
     def is_paused? id
@@ -75,7 +78,8 @@ module ServerManager
           private_ip: '',
           public_ip: '',
           last_lauch: '',
-          platform: :unknown
+          platform: :unknown,
+          manager: :libvirt
       }
     end
   end

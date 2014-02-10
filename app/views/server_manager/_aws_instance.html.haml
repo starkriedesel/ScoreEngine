@@ -1,0 +1,4 @@
+%ul{style:'margin-left: 10px'}
+  %li= "Last Launch: #{time_ago_in_words(s[:last_launch])} ago" unless s[:last_launch].nil?
+  %li= "Private IP: #{s[:private_ip]}"
+  %li= "Public IP: #{s[:public_ip]}"
