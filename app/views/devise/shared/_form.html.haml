@@ -4,27 +4,27 @@
   - url = registration_path(resource_name)
 
 .row
-  .small-6.columns.small-offset-3.end.panel
+  .small-6.columns.small-offset-3.panel
     %h2= "Sign #{verb.capitalize}"
     = form_for resource, as: resource_name, url: url do |f|
       .row
-        .small-10.columns.small-offset-1.end
+        .small-10.columns.small-offset-1
           = f.label :username
           = f.text_field :username, autofocus: true
       .row
-        .small-10.columns.small-offset-1.end
+        .small-10.columns.small-offset-1
           =f.label :password
           = f.password_field :password
 
       - if verb.downcase == 'up'
         .row
-          .small-10.columns.small-offset-1.end
+          .small-10.columns.small-offset-1
             = f.label :password_confirmation
             = f.password_field :password_confirmation
 
       - elsif devise_mapping.rememberable?
         .row
-          .small-10.columns.small-offset-1.end
+          .small-10.columns.small-offset-1
             %label Remember Me
             .toggle
               = f.check_box :remember_me
@@ -33,7 +33,7 @@
       %br
 
       .row
-        .small.ten.columns.small.offset-1.end
+        .small.ten.columns.small.offset-1
           .left
             = f.submit "Sign #{verb.capitalize}", class: 'button'
           - if verb.downcase == 'in'
