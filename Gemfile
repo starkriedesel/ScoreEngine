@@ -71,3 +71,6 @@ group :test do
   gem 'wdm', platforms: [:mswin, :mingw], require: false # Windows Directory Monitor
   gem 'guard-rspec'
 end
+
+# Fast binstubs
+gem 'spring'
