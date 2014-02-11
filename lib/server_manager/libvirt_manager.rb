@@ -2,19 +2,24 @@ require 'libvirt'
 
 module ServerManager
   class LibvirtManager < Base
-    set_available_commands :power_on, :power_off, :pause, :resume, :reboot
+    set_available_commands :power_on, :power_off, :pause, :resume, :reboot, :revert
 
     def initialize(settings={})
       settings[:uri] = Settings.server_manager.libvirt.uri unless settings.key? :uri
       @libvirt = Libvirt.open settings[:uri]
       @domains = {}
       @libvirt.list_defined_domains.each{|dom_name|
-        @domains[Digest::MD5.hexdigest(dom_name)] = @libvirt.lookup_domain_by_name(dom_name)
+        dom = @libvirt.lookup_domain_by_name(dom_name)
+        @domains[dom.uuid] = dom
       }
       @libvirt.list_domains.each{|domid|
         dom = @libvirt.lookup_domain_by_id(domid)
-        @domains[Digest::MD5.hexdigest(dom.name)] = dom
+        @domains[dom.uuid] = dom
       }
+    end
+
+    def _virt
+      @libvit
     end
 
     def server_list
@@ -58,6 +63,10 @@ module ServerManager
       @domains[id].resume
     end
 
+    def revert id, snap_name
+      @domains[id].revert_to_snapshot @domains[id].lookup_snapshot_by_name(snap_name)
+    end
+
     def state id
       case @domains[id].state[0]
         when Libvirt::Domain::PAUSED
@@ -69,6 +78,10 @@ module ServerManager
       end
     end
 
+    def snapshot_list id
+      @domains[id].list_snapshots
+    end
+
     private
     def _domain_hash id, domain
       {
@@ -78,6 +91,7 @@ module ServerManager
           private_ip: '',
           public_ip: '',
           last_lauch: '',
+          snapshots: snapshot_list(id),
           platform: :unknown,
           manager: :libvirt
       }

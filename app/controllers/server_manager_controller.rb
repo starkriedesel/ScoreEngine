@@ -31,6 +31,8 @@ class ServerManagerController < ApplicationController
   def command
     if @server_manager.available_commands.map(&:to_s).include? params[:command]
       @server_manager.send(params[:command], params[:id])
+    else
+      flash[:error] = "Error: Command not found"
     end
     redirect_to server_manager_path
   rescue Exception => e
@@ -38,7 +40,26 @@ class ServerManagerController < ApplicationController
     redirect_to server_manager_path
   end
 
-  #POST /server_manager/refresh
+  # GET /server_manager/:id/snapshot
+  def snapshot
+    @service = @server_manager.get_server params[:id]
+    render action: 'snapshot', layout: nil
+  end
+
+  # GET /server_manager/:id/revert
+  def revert
+    if params[:snapshot].blank?
+      flash[:error] = 'Error: You Must Select a Snapshot'
+    else
+      @server_manager.send('revert', params[:id], params[:snapshot])
+    end
+    redirect_to server_manager_path
+  rescue Exception => e
+    flash[:error] = "Error: #{e.message}"
+    redirect_to server_manager_path
+  end
+
+  # POST /server_manager/refresh
   def refresh
     @server_manager.clear_cache
     redirect_to server_manager_path

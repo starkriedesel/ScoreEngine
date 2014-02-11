@@ -14,6 +14,8 @@
       %a{href:'#', class: 'button split command'}
         %span{'data-dropdown'=>"commands#{i}"}
       %ul.f-dropdown{'data-dropdown-content'=>'', id: "commands#{i}"}
+        - if @server_manager.available_commands.include? :revert and s[:status] == :down and s[:snapshots].length > 0
+          %li= link_to fa_icon('frown-o', text: 'Snapshot'), server_manager_snapshot_path(s[:id]), 'data-reveal-id' => 'snapshot_modal', 'data-reveal-ajax' => 'true'
         - if @server_manager.available_commands.include? :pause
           - if s[:status] == :paused
             %li= link_to fa_icon('play', text: 'Resume'), server_manager_command_path(s[:id], :resume), method: :post
@@ -27,3 +29,5 @@
           - elsif s[:status] == :down
             %li= link_to fa_icon('power-off', text: 'Power On'), server_manager_command_path(s[:id], :power_on), method: :post
     - i += 1
+
+#snapshot_modal.reveal-modal.tiny(data-reveal)
