@@ -1,5 +1,9 @@
 %ul{style:'margin-left: 10px'}
   - if s[:snapshots].length > 0
     %li= "#{pluralize s[:snapshots].length, 'Snapshot'} available"
+  - else
+    %li No snapshots
   - if s[:rdp_port]
     %li= "RDP on port #{s[:rdp_port]}"
+  - else
+    %li No RDP

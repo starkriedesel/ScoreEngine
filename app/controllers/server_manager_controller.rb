@@ -5,21 +5,29 @@ class ServerManagerController < ApplicationController
     @header_text = 'Server Manager'
     @header_icon = 'desktop'
 
-    unless Settings.server_manager.nil?
-      if !Settings.server_manager.aws.nil? and Settings.server_manager.aws.enable
-        @server_manager = ServerManager::AWSManager.get_instance
-      elsif !Settings.server_manager.libvirt.nil? and Settings.server_manager.libvirt.enable
-        @server_manager = ServerManager::LibvirtManager.get_instance
+    begin
+      unless Settings.server_manager.nil?
+        if !Settings.server_manager.aws.nil? and Settings.server_manager.aws.enable
+          @server_manager = ServerManager::AWSManager.get_instance
+        elsif !Settings.server_manager.libvirt.nil? and Settings.server_manager.libvirt.enable
+          @server_manager = ServerManager::LibvirtManager.get_instance
+        end
       end
-    end
-    if @server_manager.nil?
-      @server_manager_error = 'No Server Manager Enabled'
-      render 'error'
-    else
-      if @server_manager.server_list.length <= 0
-        @server_manager_error = 'No Servers in Manager'
+      if @server_manager.nil?
+        @server_manager_error = 'No Server Manager Enabled'
         render 'error'
+      else
+        if @server_manager.server_list.length <= 0
+          @server_manager_error = 'No Servers in Manager'
+          render 'error'
+        end
       end
+    rescue Libvirt::ConnectionError => e
+      @server_manager_error = e.to_s
+      if e.to_s.include? 'virConnectOpen failed: unable to connect to server'
+        @server_manager_error += '<br/><br/>Start libvirtd with:<br/><pre>$ libvirtd -ldf /etc/libvirt/libvirtd.conf</pre>'
+      end
+      render 'error'
     end
   end
 
@@ -58,6 +66,8 @@ class ServerManagerController < ApplicationController
     else
       if params[:new_name].blank?
         flash[:error] = 'Error: Name must not be blank'
+      elsif @server_manager.server_list.select { |s| s[:name] == params[:new_name] }.length > 0
+        flash[:error] = 'Error: Name must be unique'
       else
         begin
           @server_manager.send('rename', params[:id], params[:new_name])

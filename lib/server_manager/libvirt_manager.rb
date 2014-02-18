@@ -6,7 +6,7 @@ module ServerManager
     set_available_commands :power_on, :power_off, :pause, :resume, :reboot, :revert, :rename
 
     def initialize(settings={})
-      settings[:uri] = Settings.server_manager.libvirt.uri unless settings.key? :uri
+      settings[:uri] = Settings.server_manager.libvirt.uri.to_s unless settings.key? :uri
       @libvirt = Libvirt.open settings[:uri]
       @domains = {}
       @libvirt.list_defined_domains.each{|dom_name|
