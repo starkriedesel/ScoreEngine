@@ -29,4 +29,19 @@ class ServiceLog < ActiveRecord::Base
       STATUS_ACCESS => 'User Access Denied',
       STATUS_ERROR => 'Error',
   }
+
+  def self.running_percentage service_ids, interval=5.minutes
+    service_ids = [service_ids] unless service_ids.is_a? Array
+    service_data = {}
+    scope = ServiceLog.where(service_id: service_ids)
+    time = scope.order(:created_at).first.created_at
+    last_time = scope.order(:created_at).last.created_at
+    while time < last_time
+      time += interval
+      running_count = scope.where('status = ? AND created_at < ?', ServiceLog::STATUS_RUNNING, time).count || 0
+      not_running_count = scope.where('status != ? AND created_at < ?', ServiceLog::STATUS_RUNNING, time).count || 0
+      service_data[time] = (running_count * 100 / (running_count + not_running_count)).to_i if running_count + not_running_count > 0
+    end
+    service_data
+  end
 end

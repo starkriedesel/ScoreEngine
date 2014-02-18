@@ -19,6 +19,14 @@
     - is_first = true
     - if current_user.is_admin or current_user.is_red_team
       #overviewTab.content.active
+
+        - unless current_user.is_red_team
+          .small-1.end
+            = link_to_function fa_icon('bar-chart-o'), "loadGraph('graphSectionOverview')", class:'button expandGraph round'
+          .graphSection.panel.small-12.columns.hidden{id: 'graphSectionOverview'}
+            .graphArea{id: "serviceGraphOverview", 'data-graph-url' => services_graph_path('overview')}
+              Loading...
+
         %table.service-overview
           %thead
             %tr
@@ -42,10 +50,15 @@
         = hidden_field_tag 'team-id', team.id
 
         - unless current_user.is_red_team
-          .progress.success.text{id: "uptime#{team.id}"}
+          .progress.success.text.small-11.columns{id: "uptime#{team.id}"}
             .meter{style:"width:#{team.uptime}%"}
               .text
                 = "#{team.uptime}%"
+          .small-1.columns
+            = link_to_function fa_icon('bar-chart-o'), "loadGraph('graphSection#{team.id}')", class:'button expandGraph round'
+          .graphSection.panel.small-12.columns.hidden{id: "graphSection#{team.id}"}
+            .graphArea{id: "serviceGraph#{team.id}", 'data-graph-url' => services_graph_path(team.id)}
+              Loading...
 
         %table.small-12.columns.services
           %thead

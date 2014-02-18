@@ -15,6 +15,8 @@ gem 'daemons' # daemon
 gem 'haml-rails' # HAML
 gem 'jquery-rails' # JQuery
 gem 'jquery-ui-rails'
+gem 'highcharts-rails', '~> 3.0.0' # Chart Renderer
+gem 'chartkick' # Chart API
 
 gem 'therubyracer', platform: :ruby
 
@@ -27,7 +29,7 @@ group :assets do
   gem 'modernizr-rails'
 
   # Zurb CSS Framework v5
-  gem 'foundation-rails', '~> 5.0.0'
+  gem 'foundation-rails', '~> 5.1.0'
 
   gem 'font-awesome-rails', '~>4.0.3'
 end

@@ -2,6 +2,9 @@
 //= require jquery_ujs
 //= require jquery.ui.effect.all
 //= require jquery.cookie
+//= require highcharts
+//= require chartkick
+//= require graphing
 
 // Load foundation
 $(document).ready(function() { $(document).foundation(); });

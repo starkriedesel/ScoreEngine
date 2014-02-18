@@ -144,4 +144,26 @@ class ServicesController < ApplicationController
 
     redirect_to service
   end
+
+  def graph
+    raise 'Invalid Access' if current_user.is_red_team
+
+    data = []
+    if params[:team_id] == 'overview'
+      Team.all.each do |team|
+        data << {name: "Team #{team.name}", data: ServiceLog.running_percentage(team.services.select(:id).map(&:id))}
+      end
+    else
+      team = Team.where(id: params[:team_id]).first
+      unless team.nil?
+        team.services.select([:id, :name]).all.each do |service|
+          data << {name: service.name, data: ServiceLog.running_percentage(service.id)}
+        end
+      end
+    end
+
+    #rand = Random.new
+    #render json: [{name: 'Google', data: {10.minutes.ago=>rand.rand, 5.minutes.ago=>rand.rand, 0.minutes.ago=>rand.rand}}, {name: 'Google DNS', data: {10.minutes.ago => rand.rand, 5.minutes.ago => rand.rand, 0.minutes.ago => rand.rand}}]
+    render json: data
+  end
 end

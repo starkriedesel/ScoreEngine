@@ -160,3 +160,17 @@ table.services, table.challenges {
     text-align: center;
   }
 }
+
+// Graph Section
+.button.expandGraph {
+  font-weight: bold;
+  padding: 5px;
+}
+.graphSection .graphArea {
+  height: 300px;
+  text-align: center;
+  color: #999;
+  line-height: 300px;
+  font-size: 14px;
+  font-family: 'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;
+}
