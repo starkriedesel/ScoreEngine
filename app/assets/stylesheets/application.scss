@@ -134,6 +134,7 @@ td.has-inline-list {
 }
 td ul.inline-list, td ol.inline-list {
   margin-bottom: 0px;
+  font-size: inherit;
 }
 ul.inline-list .label, ol.inline-list .label {
   margin-top: 1px;
