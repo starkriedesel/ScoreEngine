@@ -47,8 +47,27 @@ class ServerManagerController < ApplicationController
 
   # GET /server_manager/:id/snapshot
   def snapshot
-    @service = @server_manager.get_server params[:id]
+    @server = @server_manager.get_server params[:id]
     render action: 'snapshot', layout: nil
+  end
+
+  def rename
+    if params[:new_name].nil?
+      @server = @server_manager.get_server params[:id]
+      render action: 'rename', layout: nil
+    else
+      if params[:new_name].blank?
+        flash[:error] = 'Error: Name must not be blank'
+      else
+        begin
+          @server_manager.send('rename', params[:id], params[:new_name])
+        rescue Exception => e
+          flash[:error] = "Error: #{e.message}"
+         redirect_to server_manager_path
+        end
+      end
+      redirect_to server_manager_path
+    end
   end
 
   # GET /server_manager/:id/revert

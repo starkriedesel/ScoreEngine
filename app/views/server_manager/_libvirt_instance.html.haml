@@ -1,2 +1,5 @@
 %ul{style:'margin-left: 10px'}
-  %li= "#{pluralize s[:snapshots].length, 'snapshot'}"
+  - if s[:snapshots].length > 0
+    %li= "#{pluralize s[:snapshots].length, 'Snapshot'} available"
+  - if s[:rdp_port]
+    %li= "RDP on port #{s[:rdp_port]}"

@@ -1,10 +1,10 @@
 %a.close-reveal-modal &#215;
 %h3 Revert to Snapshot
-= form_tag server_manager_revert_path(@service[:id]) do
+= form_tag server_manager_revert_path(@server[:id]) do
   .row
     .columns.hint.small-8
       %label
-      = select_tag 'snapshot', options_for_select([['Choose Snapshot', nil]].concat(@service[:snapshots]), nil)
+      = select_tag 'snapshot', options_for_select([['Choose Snapshot', nil]].concat(@server[:snapshots]), nil)
       %small.hint Reset server to snapshot
   .row
     .columns.hint.small-4

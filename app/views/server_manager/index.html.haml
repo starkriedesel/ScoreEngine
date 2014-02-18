@@ -28,6 +28,9 @@
             %li= link_to fa_icon('power-off', text: 'Power Off'), server_manager_command_path(s[:id], :power_off), method: :post
           - elsif s[:status] == :down
             %li= link_to fa_icon('power-off', text: 'Power On'), server_manager_command_path(s[:id], :power_on), method: :post
+        - if @server_manager.available_commands.include? :rename and s[:status] == :down
+          %li= link_to fa_icon('pencil', text: 'Rename'), server_manager_rename_path(s[:id], :rename), 'data-reveal-id' => 'rename_modal', 'data-reveal-ajax' => 'true'
     - i += 1
 
 #snapshot_modal.reveal-modal.tiny(data-reveal)
+#rename_modal.reveal-modal.tiny(data-reveal)

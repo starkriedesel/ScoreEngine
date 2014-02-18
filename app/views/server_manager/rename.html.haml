@@ -1,0 +1,11 @@
+%a.close-reveal-modal &#215;
+%h3 Rename Server
+= form_tag server_manager_rename_path(@server[:id]) do
+  .row
+    .columns.hint.small-8
+      %label
+      = text_field_tag 'new_name', @server[:name]
+      %small.hint Rename the server
+  .row
+    .columns.hint.small-4
+      = submit_tag 'Go', class: 'button'

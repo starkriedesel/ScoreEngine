@@ -1,8 +1,9 @@
 require 'libvirt'
+require 'nokogiri'
 
 module ServerManager
   class LibvirtManager < Base
-    set_available_commands :power_on, :power_off, :pause, :resume, :reboot, :revert
+    set_available_commands :power_on, :power_off, :pause, :resume, :reboot, :revert, :rename
 
     def initialize(settings={})
       settings[:uri] = Settings.server_manager.libvirt.uri unless settings.key? :uri
@@ -71,6 +72,20 @@ module ServerManager
       @domains[id].revert_to_snapshot @domains[id].lookup_snapshot_by_name(snap_name)
     end
 
+    def rename id, new_name
+      # Alter xml
+      xml = Nokogiri::XML(@domains[id].xml_desc)
+      nodes = xml.xpath('/domain/name')
+      return false if nodes.nil? or nodes.length !=1
+      nodes[0].content = new_name
+
+      # Undefine old xml and define new xml
+      @domains[id].undefine
+      @libvirt.define_domain_xml xml.to_s
+
+      true
+    end
+
     def state id
       case @domains[id].state[0]
         when Libvirt::Domain::PAUSED
@@ -80,6 +95,13 @@ module ServerManager
         else
           :down
       end
+    end
+
+    def rdp_port id
+      xml = Nokogiri::XML(@domains[id].xml_desc)
+      port_node = xml.xpath('/domain/devices/graphics[@type=\'rdp\']/@port')
+      return nil if port_node.nil? or port_node.length == 0
+      port_node[0].value.to_s
     end
 
     def snapshot_list id
@@ -97,7 +119,8 @@ module ServerManager
           last_lauch: '',
           snapshots: snapshot_list(id),
           platform: :unknown,
-          manager: :libvirt
+          manager: :libvirt,
+          rdp_port: rdp_port(id)
       }
     end
   end

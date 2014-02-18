@@ -1,12 +1,15 @@
 require 'spec_helper'
 require 'libvirt'
 require 'tilt/erb'
+require 'nokogiri'
 
 describe 'Libvirt' do
   context 'virtuabox' do
     before(:all) do
       @conn = Libvirt::open('vbox:///session')
       @temp_domain_uuid = UUID.generate
+      @temp_domain_name = "Rspec Test #{@temp_domain_uuid}"
+      @temp_domain_alt_name = "#{@temp_domain_name}-ALT"
       @temp_snapshot_name1 = "Snap-#{UUID.generate}"
       @temp_snapshot_name2 = "Snap-#{UUID.generate}"
       @screenshot_path = Rails.root+"tmp/#{@temp_domain_uuid}.png"
@@ -34,10 +37,11 @@ describe 'Libvirt' do
 
     it 'creates a domain' do
       puts Rails.root + 'spec/test_dom.xml.erb'
-      dom_xml = Tilt::ERBTemplate.new((Rails.root + 'spec/test_dom.xml.erb').to_s).render(Object.new, uuid: @temp_domain_uuid, vmdk_file: @vmdk_file)
+      dom_xml = Tilt::ERBTemplate.new((Rails.root + 'spec/test_dom.xml.erb').to_s).render(Object.new, uuid: @temp_domain_uuid, vmdk_file: @vmdk_file, name: @temp_domain_name)
       File.write(@dom_xml_path, dom_xml)
       dom = @conn.define_domain_xml(dom_xml)
       expect(dom).to be_a Libvirt::Domain
+      expect(dom.name).to eq(@temp_domain_name)
       expect(dom.uuid).to eq(@temp_domain_uuid)
     end
 
@@ -128,8 +132,22 @@ describe 'Libvirt' do
       expect(dom.list_snapshots).not_to include(@temp_snapshot_name1)
     end
 
-    it 'deletes a domain' do
+    it 'renames a domain' do
+      # Alter xml
+      xml = Nokogiri::XML(dom.xml_desc)
+      nodes = xml.xpath('/domain/name')
+      expect(nodes.length).to eq(1)
+      nodes[0].content = @temp_domain_alt_name
+
+      # Undefine old xml and define new xml
+      dom.undefine
+      dom = @conn.define_domain_xml xml.to_s
+      expect(dom).to be_a(Libvirt::Domain)
+      expect(dom.name).to eq(@temp_domain_alt_name)
       expect(dom.uuid).to eq(@temp_domain_uuid)
+    end
+
+    it 'deletes a domain' do
       dom.undefine
       expect(@conn.list_all_domains.map(&:uuid)).not_to include(@temp_domain_uuid)
     end
