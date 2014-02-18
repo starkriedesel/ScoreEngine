@@ -46,7 +46,7 @@ class ClientUpdateController < ApplicationController
               service_query = service_query.where(public: true) if current_user.is_red_team
               count = service_query.count
               running_count = service_query.where(status: ServiceLog::STATUS_RUNNING).count
-              output[:team_uptime][team_id] = (running_count * 100.0 / count).to_i
+              output[:team_uptime][team_id] = count == 0 ? 0 : (running_count * 100.0 / count).to_i
             end
           end
 
