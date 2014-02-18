@@ -55,6 +55,7 @@ gem 'net-ldap' # LDAP / AD
 # Server Manager Backends
 gem 'aws-sdk', '~>1.0'
 gem 'ruby-libvirt', '~>0.5', platform: :ruby # windows requires compiling this from source: https://github.com/photron/msys_setup
+gem 'uuid'
 
 # Testing
 gem 'rspec-rails', :group => [:development, :test]

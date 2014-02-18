@@ -63,6 +63,10 @@ module ServerManager
       @last_updated = Time.now
     end
 
+    def close
+      # empty default implementation
+    end
+
     def clear_cache
       self.class.clear_cache
     end

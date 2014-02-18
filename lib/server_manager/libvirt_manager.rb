@@ -18,6 +18,10 @@ module ServerManager
       }
     end
 
+    def close
+      @libvirt.close
+    end
+
     def _virt
       @libvit
     end

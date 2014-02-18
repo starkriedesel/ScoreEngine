@@ -1,0 +1,37 @@
+<domain type='vbox'>
+  <name>Rspec Test <%= uuid %></name>
+  <uuid><%= uuid %></uuid>
+  <memory unit='MiB'>128</memory>
+  <currentMemory unit='MiB'>128</currentMemory>
+  <vcpu>1</vcpu>
+  <os>
+    <type arch='i686'>hvm</type>
+    <boot dev='hd'/>
+  </os>
+  <features>
+    <acpi/>
+  </features>
+  <clock offset='localtime'/>
+  <on_poweroff>destroy</on_poweroff>
+  <on_reboot>restart</on_reboot>
+  <on_crash>destroy</on_crash>
+  <devices>
+    <disk type='file' device='disk'>
+      <source file='<%= vmdk_file %>'/>
+      <target dev='sda' bus='sata'/>
+    </disk>
+    <interface type='internal'>
+      <mac address='52:54:01:60:3c:95'/>
+      <source name='rspecnet'/>
+      <model type='82540EM'/>
+    </interface>
+    <input type='mouse' bus='ps2'/>
+    <graphics type='desktop'/>
+    <sound model='ac97'/>
+    <video>
+      <model type='vbox' vram='12288' heads='1'>
+        <acceleration accel3d='no' accel2d='no'/>
+      </model>
+    </video>
+  </devices>
+</domain>

@@ -4,6 +4,7 @@ class ServerManagerController < ApplicationController
   before_filter do
     @header_text = 'Server Manager'
     @header_icon = 'desktop'
+
     unless Settings.server_manager.nil?
       if !Settings.server_manager.aws.nil? and Settings.server_manager.aws.enable
         @server_manager = ServerManager::AWSManager.get_instance
@@ -20,6 +21,10 @@ class ServerManagerController < ApplicationController
         render 'error'
       end
     end
+  end
+
+  after_filter do
+    @server_manager.close unless @server_manager.nil?
   end
 
   # GET /server_manager
