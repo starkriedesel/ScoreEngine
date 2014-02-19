@@ -59,6 +59,13 @@ class ServerManagerController < ApplicationController
     render action: 'snapshot', layout: nil
   end
 
+  # GET /server_manager/:id/screen
+  def screen
+    screen_path, mime = @server_manager.send('screenshot', params[:id])
+    send_data open(screen_path, 'rb').read, type: mime
+  end
+
+  # GET/POST /server_manager/:id/rename
   def rename
     if params[:new_name].nil?
       @server = @server_manager.get_server params[:id]

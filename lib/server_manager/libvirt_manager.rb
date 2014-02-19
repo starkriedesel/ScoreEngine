@@ -3,7 +3,7 @@ require 'nokogiri'
 
 module ServerManager
   class LibvirtManager < Base
-    set_available_commands :power_on, :power_off, :pause, :resume, :reboot, :revert, :rename
+    set_available_commands :power_on, :power_off, :pause, :resume, :reboot, :revert, :rename, :screenshot
 
     def initialize(settings={})
       settings[:uri] = Settings.server_manager.libvirt.uri.to_s unless settings.key? :uri
@@ -84,6 +84,20 @@ module ServerManager
       @libvirt.define_domain_xml xml.to_s
 
       true
+    end
+
+    def screenshot id
+      screenshot_path = Rails.root+"tmp/#{@domains[id].uuid}-screen.png"
+      stream = @libvirt.stream
+      mime =@domains[id].screenshot stream, 0
+      file = File.open(screenshot_path, 'wb')
+      stream.recvall(file) do |data, f|
+        f.write(data)
+        data.length # must return number of bytes written
+      end
+      file.close
+      stream.finish
+      [screenshot_path,mime]
     end
 
     def state id

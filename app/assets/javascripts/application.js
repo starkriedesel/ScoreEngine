@@ -68,7 +68,7 @@ function clientPollComplete(data) {
     } else {
         $('.top-bar .name').addClass('not-running');
         $('.top-bar .name').removeClass('running');
-    }w
+    }
     if(data.service_list) {
         // Update title bar if we know about this service
         if(this_service_id != undefined && this_service_id in data.service_list)

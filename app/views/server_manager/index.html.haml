@@ -10,6 +10,8 @@
         - else
           = fa_icon 'hdd-o'
         = s[:name]
+        - if s[:status] == :running and @server_manager.available_commands.include? :screenshot
+          = link_to_function fa_icon('camera'), "screenshotOpen('#{s[:id]}')", class: 'button round screen-button'
       = render partial: "#{s[:manager]}_instance", locals: {s: s}
       %a{href:'#', class: 'button split command'}
         %span{'data-dropdown'=>"commands#{i}"}
@@ -34,3 +36,27 @@
 
 #snapshot_modal.reveal-modal.tiny(data-reveal)
 #rename_modal.reveal-modal.tiny(data-reveal)
+#screen_modal.reveal-modal.tiny(data-reveal)
+  %a.close-reveal-modal &#215;
+  = image_tag '', id: 'screen_img'
+
+:javascript
+  var screenInterval = null;
+  function screenshotOpen(server_id) {
+    $('#screen_modal #screen_img').attr('src', '#{server_manager_screen_path('@id')}?'.replace('@id',server_id) + new Date().getTime());
+    $('#screen_modal').foundation('reveal', 'open');
+  }
+  function updateScreenShot() {
+    var src = $('#screen_modal #screen_img').attr('src');
+    src = src.split('?')[0] + '?' + new Date().getTime();
+    $('#screen_modal #screen_img').attr('src', src);
+  }
+  $(document).on('opened', '#screen_modal', function() {
+    if(screenInterval != null)
+      clearInterval(screenInterval);
+    screenInterval = setInterval(updateScreenShot, 3000);
+  });
+  $(document).on('closed', '#screen_modal', function() {
+    screenInterval = clearInterval(screenInterval);
+    screenInterval = null;
+  });

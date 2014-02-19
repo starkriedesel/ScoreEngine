@@ -32,6 +32,7 @@ ScoreEngine::Application.routes.draw do
   # Server Manager
   get '/serverManager' => 'serverManager#index', as: :server_manager
   get '/serverManager/:id/snapshot' => 'serverManager#snapshot', as: :server_manager_snapshot
+  get '/serverManager/:id/screen' => 'serverManager#screen', as: :server_manager_screen
   get '/serverManager/:id/rename' => 'serverManager#rename', as: :server_manager_rename
   post '/serverManager/:id/rename' => 'serverManager#rename', as: :server_manager_rename
   post '/serverManager/:id/command/:command' => 'serverManager#command', as: :server_manager_command
