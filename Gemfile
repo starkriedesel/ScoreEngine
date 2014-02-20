@@ -1,7 +1,8 @@
 source 'https://rubygems.org'
 
 # Rails
-gem 'rails', '3.2.14'
+gem 'rails', '3.2.17'
+gem 'systemu', '~> 2.5.0'
 
 # Databases
 gem 'sqlite3'
