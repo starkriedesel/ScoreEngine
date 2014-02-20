@@ -38,6 +38,7 @@ ScoreEngine::Application.routes.draw do
   post '/serverManager/:id/command/:command' => 'serverManager#command', as: :server_manager_command
   post '/serverManager/:id/revert' => 'serverManager#revert', as: :server_manager_revert
   post '/serverManager/refresh' => 'serverManager#refresh', as: :server_manager_refresh
+  post '/serverManager/start_libvirt' => 'serverManager#start_libvirt', as: :server_manager_start_libvirt
 
   # Challenges
   resources :challenges

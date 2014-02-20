@@ -20,7 +20,7 @@ describe 'Libvirt' do
 
     after(:all) do
       @vmdk_file.delete or puts 'VMDK Deletion Failed' if @vmdk_file.exist?
-      @screenshot_path.delete or puts 'Screenshot Deletion Failed' if @screenshot_path.exist?
+      #@screenshot_path.delete or puts 'Screenshot Deletion Failed' if @screenshot_path.exist?
       @dom_xml_path.delete or puts 'Domain XML Deletion Failed' if @dom_xml_path.exist?
     end
 

@@ -1,7 +1,7 @@
 class ServerManagerController < ApplicationController
   before_filter :authenticate_user!
   before_filter :authenticate_admin!
-  before_filter do
+  before_filter except: :start_libvirt do
     @header_text = 'Server Manager'
     @header_icon = 'desktop'
 
@@ -25,7 +25,7 @@ class ServerManagerController < ApplicationController
     rescue Libvirt::ConnectionError => e
       @server_manager_error = e.to_s
       if e.to_s.include? 'virConnectOpen failed: unable to connect to server'
-        @server_manager_error += '<br/><br/>Start libvirtd with:<br/><pre>$ libvirtd -ldf /etc/libvirt/libvirtd.conf</pre>'
+        @server_manager_error += "<br/><br/>Start libvirtd with:<br/><pre>$ libvirtd -ldf /etc/libvirt/libvirtd.conf</pre><br/>#{view_context.link_to 'Start Libvirtd', server_manager_start_libvirt_path, class: 'button', method: :post}"
       end
       render 'error'
     end
@@ -103,6 +103,12 @@ class ServerManagerController < ApplicationController
   # POST /server_manager/refresh
   def refresh
     @server_manager.clear_cache
+    redirect_to server_manager_path
+  end
+
+  # POST /server_manager/start_libvirt
+  def start_libvirt
+    system('libvirtd -ldf /etc/libvirt/libvirtd.conf')
     redirect_to server_manager_path
   end
 end
