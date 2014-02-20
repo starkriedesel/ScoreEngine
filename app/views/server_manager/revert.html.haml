@@ -1,0 +1,11 @@
+%a.close-reveal-modal &#215;
+%h3 Revert to Snapshot
+= form_tag server_manager_command_path(@server[:id], :revert) do
+  .row
+    .columns.hint.small-8
+      %label
+      = select_tag 'data', options_for_select([['Choose Snapshot', nil]].concat(@server[:snapshots]), nil)
+      %small.hint Reset server to snapshot
+  .row
+    .columns.hint.small-4
+      = submit_tag 'Go', class: 'button'

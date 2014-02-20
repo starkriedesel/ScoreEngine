@@ -40,64 +40,31 @@ class ServerManagerController < ApplicationController
     @header_text = "#{@header_text} #{view_context.link_to((@server_manager.is_fresh ? 'fresh' : 'old'), server_manager_refresh_path, method: :post, class: "label #{@server_manager.is_fresh ? 'alert' : 'secondary'}")}".html_safe
   end
 
-  # GET /server_manager/:id/command/:command
+  # GET/POST /server_manager/:id/:command
   def command
-    if @server_manager.available_commands.map(&:to_s).include? params[:command]
-      @server_manager.send(params[:command], params[:id])
-    else
-      flash[:error] = "Error: Command not found"
-    end
-    redirect_to server_manager_path
-  rescue Exception => e
-    flash[:error] = "Error: #{e.message}"
-    redirect_to server_manager_path
-  end
-
-  # GET /server_manager/:id/snapshot
-  def snapshot
-    @server = @server_manager.get_server params[:id]
-    render action: 'snapshot', layout: nil
-  end
-
-  # GET /server_manager/:id/screen
-  def screen
-    screen_path, mime = @server_manager.send('screenshot', params[:id])
-    send_data open(screen_path, 'rb').read, type: mime
-  end
-
-  # GET/POST /server_manager/:id/rename
-  def rename
-    if params[:new_name].nil?
-      @server = @server_manager.get_server params[:id]
-      render action: 'rename', layout: nil
-    else
-      if params[:new_name].blank?
-        flash[:error] = 'Error: Name must not be blank'
-      elsif @server_manager.server_list.select { |s| s[:name] == params[:new_name] }.length > 0
-        flash[:error] = 'Error: Name must be unique'
-      else
-        begin
-          @server_manager.send('rename', params[:id], params[:new_name])
-        rescue Exception => e
-          flash[:error] = "Error: #{e.message}"
-         redirect_to server_manager_path
+    if @server_manager.available_commands.include? params[:command].to_sym
+      if request.post? || params[:command] == 'screenshot'
+        data = nil
+        args = [params[:command], params[:id]]
+        args << params[:data] if params[:data]
+        #begin
+          data = @server_manager.try(*args)
+        #rescue Exception => e
+          #flash[:error] = e.to_s
+        #end
+        if params[:command] == 'screenshot'
+          send_data open(data[0], 'rb').read, type: data[1]
+        else
+          redirect_to server_manager_path
         end
+      else
+        @server = @server_manager.get_server params[:id]
+        render action: params[:command], layout: nil
       end
+    else
+      flash[:error] = 'Error: Command not available: '+params[:command]
       redirect_to server_manager_path
     end
-  end
-
-  # GET /server_manager/:id/revert
-  def revert
-    if params[:snapshot].blank?
-      flash[:error] = 'Error: You Must Select a Snapshot'
-    else
-      @server_manager.send('revert', params[:id], params[:snapshot])
-    end
-    redirect_to server_manager_path
-  rescue Exception => e
-    flash[:error] = "Error: #{e.message}"
-    redirect_to server_manager_path
   end
 
   # POST /server_manager/refresh

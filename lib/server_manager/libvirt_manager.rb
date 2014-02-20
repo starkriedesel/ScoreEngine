@@ -3,7 +3,7 @@ require 'nokogiri'
 
 module ServerManager
   class LibvirtManager < Base
-    set_available_commands :power_on, :power_off, :pause, :resume, :reboot, :revert, :rename, :screenshot
+    set_available_commands :power_on, :power_off, :pause, :resume, :reboot, :snapshot, :revert, :rename, :screenshot
 
     def initialize(settings={})
       settings[:uri] = Settings.server_manager.libvirt.uri.to_s unless settings.key? :uri
@@ -35,9 +35,21 @@ module ServerManager
       _domain_hash id, @domains[id]
     end
 
+    ### Predicates
+
     def is_running? id
       state(id) == :running
     end
+
+    def is_down? id
+      state(id) == :down
+    end
+
+    def is_paused? id
+      state(id) == :paused
+    end
+
+    ### Commands
 
     def power_on id
       return false if is_running? id
@@ -54,10 +66,6 @@ module ServerManager
       @domains[id].reboot
     end
 
-    def is_paused? id
-      state(id) == :paused
-    end
-
     def pause id
       return false unless is_running? id
       @domains[id].suspend
@@ -69,7 +77,14 @@ module ServerManager
     end
 
     def revert id, snap_name
+      return false unless is_down? id
       @domains[id].revert_to_snapshot @domains[id].lookup_snapshot_by_name(snap_name)
+    end
+
+    def snapshot id, snap_name
+      return false unless is_down? id
+      snap = @domains[id].snapshot_create_xml "<domainsnapshot><name>#{snap_name}</name><description>Snapshot taken at #{Time.now}</description><memory snapshot='no'/></domainsnapshot>"
+      !snap.nil?
     end
 
     def rename id, new_name
@@ -97,8 +112,10 @@ module ServerManager
       end
       file.close
       stream.finish
-      [screenshot_path,mime]
+      [screenshot_path, mime]
     end
+
+    ### Domain Data
 
     def state id
       case @domains[id].state[0]
@@ -123,6 +140,7 @@ module ServerManager
     end
 
     private
+    ### Final server information hash
     def _domain_hash id, domain
       {
           id: id,

@@ -16,8 +16,6 @@
       %a{href:'#', class: 'button split command'}
         %span{'data-dropdown'=>"commands#{i}"}
       %ul.f-dropdown{'data-dropdown-content'=>'', id: "commands#{i}"}
-        - if @server_manager.available_commands.include? :revert and s[:status] == :down and s[:snapshots].length > 0
-          %li= link_to fa_icon('frown-o', text: 'Snapshot'), server_manager_snapshot_path(s[:id]), 'data-reveal-id' => 'snapshot_modal', 'data-reveal-ajax' => 'true'
         - if @server_manager.available_commands.include? :pause
           - if s[:status] == :paused
             %li= link_to fa_icon('play', text: 'Resume'), server_manager_command_path(s[:id], :resume), method: :post
@@ -31,11 +29,14 @@
           - elsif s[:status] == :down
             %li= link_to fa_icon('power-off', text: 'Power On'), server_manager_command_path(s[:id], :power_on), method: :post
         - if @server_manager.available_commands.include? :rename and s[:status] == :down
-          %li= link_to fa_icon('pencil', text: 'Rename'), server_manager_rename_path(s[:id], :rename), 'data-reveal-id' => 'rename_modal', 'data-reveal-ajax' => 'true'
+          %li= link_to fa_icon('pencil', text: 'Rename'), server_manager_command_path(s[:id], :rename), 'data-reveal-id' => 'ajax_modal', 'data-reveal-ajax' => 'true'
+        - if @server_manager.available_commands.include? :revert and s[:status] == :down and s[:snapshots].length > 0
+          %li= link_to fa_icon('frown-o', text: 'Revert to Snapshot'), server_manager_command_path(s[:id], :revert), 'data-reveal-id' => 'ajax_modal', 'data-reveal-ajax' => 'true'
+        - if @server_manager.available_commands.include? :snapshot and s[:status] == :down
+          %li= link_to fa_icon('thumb-tack', text: 'New Snapshot'), server_manager_command_path(s[:id], :snapshot), 'data-reveal-id' => 'ajax_modal', 'data-reveal-ajax' => 'true'
     - i += 1
 
-#snapshot_modal.reveal-modal.tiny(data-reveal)
-#rename_modal.reveal-modal.tiny(data-reveal)
+#ajax_modal.reveal-modal.tiny(data-reveal)
 #screen_modal.reveal-modal.tiny(data-reveal)
   %a.close-reveal-modal &#215;
   = image_tag '', id: 'screen_img'
@@ -43,7 +44,7 @@
 :javascript
   var screenInterval = null;
   function screenshotOpen(server_id) {
-    $('#screen_modal #screen_img').attr('src', '#{server_manager_screen_path('@id')}?'.replace('@id',server_id) + new Date().getTime());
+    $('#screen_modal #screen_img').attr('src', '#{server_manager_command_path('@id','screenshot')}?'.replace('@id',server_id) + new Date().getTime());
     $('#screen_modal').foundation('reveal', 'open');
   }
   function updateScreenShot() {

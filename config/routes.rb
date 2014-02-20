@@ -31,14 +31,10 @@ ScoreEngine::Application.routes.draw do
 
   # Server Manager
   get '/serverManager' => 'serverManager#index', as: :server_manager
-  get '/serverManager/:id/snapshot' => 'serverManager#snapshot', as: :server_manager_snapshot
-  get '/serverManager/:id/screen' => 'serverManager#screen', as: :server_manager_screen
-  get '/serverManager/:id/rename' => 'serverManager#rename', as: :server_manager_rename
-  post '/serverManager/:id/rename' => 'serverManager#rename', as: :server_manager_rename
-  post '/serverManager/:id/command/:command' => 'serverManager#command', as: :server_manager_command
-  post '/serverManager/:id/revert' => 'serverManager#revert', as: :server_manager_revert
   post '/serverManager/refresh' => 'serverManager#refresh', as: :server_manager_refresh
   post '/serverManager/start_libvirt' => 'serverManager#start_libvirt', as: :server_manager_start_libvirt
+  get '/serverManager/:id/:command' => 'serverManager#command', as: :server_manager_command
+  post '/serverManager/:id/:command' => 'serverManager#command', as: :server_manager_command
 
   # Challenges
   resources :challenges
