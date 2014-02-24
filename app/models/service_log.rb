@@ -34,7 +34,9 @@ class ServiceLog < ActiveRecord::Base
     service_ids = [service_ids] unless service_ids.is_a? Array
     service_data = {}
     scope = ServiceLog.where(service_id: service_ids)
-    time = scope.order(:created_at).first.created_at
+    first_log = scope.order(:created_at).first
+    return {} if first_log.nil?
+    time = first_log.created_at
     last_time = scope.order(:created_at).last.created_at
     while time < last_time
       time += interval
