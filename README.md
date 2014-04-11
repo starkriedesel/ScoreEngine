@@ -2,6 +2,7 @@ This is a [CCDC](http://nationalccdc.org/) style score engine which [SMU](http:/
 It is designed to function similarly to the real score engines in use at regional and national levels plus provide additional feedback to help teach new students.
 
 The code is split into a few main parts:
+
 	1. Service listing
 	2. Messaging system
 	3. Debug tools
@@ -33,6 +34,7 @@ See lib/workers for implementations details and parameter defaults
 Each worker has a parameter list at the top of each implementation and includes descriptions and default values.
 
 Most are defined by some connection settings, a request or query string (url, domain, email message, etc) and some expected output.
+
 Typically ouput is checked using one of three methods:
 1. If the check starts and ends with / then it is regex
 2. If the check looks like an MD5 then the response is hashed and compered
@@ -77,6 +79,7 @@ Checkout config/settings.yml for details about tick speed (how often between ser
 
 This system is in place to allow two way communication between teams and administrator.
 Users do not send/recieve mail individually but the enitre team as a whole.
+
 New messages are check in the background on all pages.
 When the mail icon turns blue there is unread mail.
 Messages are marked as read by cookies. Logging out and in again will mark all as unread. One user viewing a message will not update all users for that team.
@@ -126,12 +129,15 @@ Eventually this manager will support many more platforms supported by LibVirt (Q
 Also in alpha support now is AWS integration.
 Very few commands are supported by AWS but this is a good option for cheap/temporary virtual networks.
 
-LibVirt + VirtualBox currently supports:
+LibVirt + VirtualBox currently supports (beta status):
 * Start / Stop / Restart
 * Pause / Resume
 * Create / Restore from snapshot
 * Screenshot (every 3 seconds - this really likes crashing the server...)
 * Multiple servers
+
+AWS currently supports (alpha status):
+* Start / Stop / Restart
 
 Read the commented section of config/settings.yml and create a settings.local.yml with the relevent sections to enable Server Manager.
 
