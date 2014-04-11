@@ -3,11 +3,11 @@ It is designed to function similarly to the real score engines in use at regiona
 
 The code is split into a few main parts:
 
-	1. Service listing
-	2. Messaging system
-	3. Debug tools
-	4. Background workers
-  5. BETA: Server Manager
+1. Service listing
+2. Messaging system
+3. Debug tools
+4. Background workers
+5. BETA: Server Manager
 
 # Prerequisites
 
@@ -36,6 +36,7 @@ Each worker has a parameter list at the top of each implementation and includes 
 Most are defined by some connection settings, a request or query string (url, domain, email message, etc) and some expected output.
 
 Typically ouput is checked using one of three methods:
+
 1. If the check starts and ends with / then it is regex
 2. If the check looks like an MD5 then the response is hashed and compered
 3. Anything else is a conains? lookup. Ie. if the response contains the exact string specified then it is valid.
