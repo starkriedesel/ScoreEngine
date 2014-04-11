@@ -142,3 +142,8 @@ AWS currently supports (alpha status):
 
 Read the commented section of config/settings.yml and create a settings.local.yml with the relevent sections to enable Server Manager.
 
+#Tests
+
+The only tests implemented so far are for the Server Manager.
+In particular they are in place to confirm that LibVirt + VirtualBox is working.
+If you want to work with Server Manager make sure to get those tests passing.
