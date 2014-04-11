@@ -64,16 +64,16 @@ gem 'uuid'
 gem 'rspec-rails', :group => [:development, :test]
 gem 'factory_girl_rails', :group => [:development, :test]
 group :test do
-  gem 'capybara'
-  gem 'poltergeist'
-  gem 'launchy'
+#  gem 'capybara'
+#  gem 'poltergeist'
+#  gem 'launchy'
   gem 'database_cleaner', '<= 1.0.1'
-  gem 'forgery'
+#  gem 'forgery'
 
   # Guard
-  gem 'win32console', platforms: [:mswin, :mingw] # terminal colors (windows)
-  gem 'wdm', platforms: [:mswin, :mingw], require: false # Windows Directory Monitor
-  gem 'guard-rspec'
+#  gem 'win32console', platforms: [:mswin, :mingw] # terminal colors (windows)
+#  gem 'wdm', platforms: [:mswin, :mingw], require: false # Windows Directory Monitor
+#  gem 'guard-rspec'
 end
 
 # Fast binstubs
