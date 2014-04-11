@@ -1,5 +1,10 @@
+#ScoreEngine Overview
+
 This is a [CCDC](http://nationalccdc.org/) style score engine which [SMU](http://www.smu.edu) team uses to practice.
 It is designed to function similarly to the real score engines in use at regional and national levels plus provide additional feedback to help teach new students.
+
+While the project is easy to get off the ground to start it may be quite complicated to debug or understand fully.
+Please read this document completely to learn about all the features and gotcha's.
 
 The code is split into a few main parts:
 
@@ -9,14 +14,14 @@ The code is split into a few main parts:
 4. Background workers
 5. BETA: Server Manager
 
-# Prerequisites
+## Prerequisites
 
 To setup the score engine in a fresh environment here is a list of necessaary softwares:
 * [RVM](http://rvm.io/)
 * MySQL >= v5
 * Optional: [LibVirt](http://libvirt.org/) for use with the Server Manager
 
-# Supported Service Protocols
+## Supported Service Protocols
 
 See lib/workers for implementations details and parameter defaults
 
@@ -44,7 +49,7 @@ Typically ouput is checked using one of three methods:
 While all basic requests with each protocol works read each worker carefully to understand exactly what it is capable of.
 LDAP for example has very specific login capabilities. Don't be afraid to open the ruby docs for the library used for a worker.
 
-# Service Listing
+## Service Listing
 
 Teams can be created by the administrator. Users can self register and are put in the nil team ("Team None" or team #0).
 Although services can be applied to team 0 it is suggested to create at least one team and move users to the correct team after they register.
@@ -76,7 +81,7 @@ There is also a graph view of service up time.
 
 Checkout config/settings.yml for details about tick speed (how often between server requests).
 
-# Messaging System
+## Messaging System
 
 This system is in place to allow two way communication between teams and administrator.
 Users do not send/recieve mail individually but the enitre team as a whole.
@@ -85,13 +90,13 @@ New messages are check in the background on all pages.
 When the mail icon turns blue there is unread mail.
 Messages are marked as read by cookies. Logging out and in again will mark all as unread. One user viewing a message will not update all users for that team.
 
-# Debug Tools
+## Debug Tools
 
 There is a tools list which allows for some basic DNS and hash checking.
 This is available to test what the server sees from the teams.
 Teams do have access to this by default.
 
-# Background Workers
+## Background Workers
 
 See "Supported Service Protocols" above for implememtation details of the protocol workers.
 The daemon is in lib/daemon.rb and is started using the `$ rake engine:start`.
@@ -116,7 +121,7 @@ You can also clear all logs in the system simultaneously using `$ rake services:
 
 You can also turn services all on or off at once using `$ rake service:[on|off] {teamid}` where teamid is an optional number to specify just 1 team.
 
-#BETA: Server Manager
+## BETA: Server Manager
 
 This is barely tested and not considered ready yet.
 The goal of the Server Manager is to allow control over a virtual CCDC environment.
@@ -142,7 +147,7 @@ AWS currently supports (alpha status):
 
 Read the commented section of config/settings.yml and create a settings.local.yml with the relevent sections to enable Server Manager.
 
-#Tests
+## Tests
 
 The only tests implemented so far are for the Server Manager.
 In particular they are in place to confirm that LibVirt + VirtualBox is working.
