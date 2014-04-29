@@ -1,5 +1,5 @@
 class ServiceLog < ActiveRecord::Base
-  attr_accessible :debug_message, :message, :service_id, :status
+  #attr_accessible :debug_message, :message, :service_id, :status
 
   validates_presence_of :service_id, :status, :message, :debug_message
 

@@ -1,5 +1,5 @@
 class Service < ActiveRecord::Base
-  attr_accessible :name, :params, :worker, :team_id, :on, :public
+  #attr_accessible :name, :params, :worker, :team_id, :on, :public
 
   validates_presence_of :name, :worker, :team_id
   validates_inclusion_of :worker, in: Workers::GenericWorker::WORKERS.keys.collect{|k| k.to_s}

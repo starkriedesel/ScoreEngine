@@ -9,7 +9,7 @@ ScoreEngine::Application.routes.draw do
   resources :teams
 
   # Client Updates
-  get '/client_update/poll' => 'clientUpdate#poll'
+  get '/client_update/poll' => 'client_update#poll'
 
   # Services
   post '/services/:id/clear' => 'services#clear', as: :clear_service
@@ -22,23 +22,19 @@ ScoreEngine::Application.routes.draw do
   # Users
   get '/users' => 'users#index', as: :users
   get '/users/:id/edit' => 'users#edit', as: :edit_user
-  put '/users/:id' => 'users#update', as: :user
+  patch '/users/:id' => 'users#update', as: :user
 
   # Team Messages
   resources :team_messages, path: 'messages'
-  get '/messages/new/:reply_id' => 'teamMessages#new', as: :team_messages_reply
-  get '/messages/:id/download' => 'teamMessages#download', as: :team_message_download
+  get '/messages/new/:reply_id' => 'team_messages#new', as: :team_messages_reply
+  get '/messages/:id/download' => 'team_messages#download', as: :team_message_download
 
   # Server Manager
-  get '/serverManager' => 'serverManager#index', as: :server_manager
-  post '/serverManager/refresh' => 'serverManager#refresh', as: :server_manager_refresh
-  post '/serverManager/start_libvirt' => 'serverManager#start_libvirt', as: :server_manager_start_libvirt
-  get '/serverManager/:id/:command' => 'serverManager#command', as: :server_manager_command
-  post '/serverManager/:id/:command' => 'serverManager#command', as: :server_manager_command
-
-  # Challenges
-  resources :challenges
-  resources :challenge_groups, except: [:index, :show]
+  get '/serverManager' => 'server_manager#index', as: :server_manager
+  post '/serverManager/refresh' => 'server_manager#refresh', as: :server_manager_refresh
+  post '/serverManager/start_libvirt' => 'server_manager#start_libvirt', as: :server_manager_start_libvirt
+  get '/serverManager/:id/:command' => 'server_manager#command', as: :server_manager_command
+  post '/serverManager/:id/:command' => 'server_manager#command'
 
   # Tools
   get 'tools/hash' => 'tools#hash', as: :hash_tool

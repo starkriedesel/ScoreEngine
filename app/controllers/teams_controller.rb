@@ -27,7 +27,7 @@ class TeamsController < ApplicationController
 
   # POST /teams
   def create
-    @team = Team.new(params[:team])
+    @team = Team.new(team_params)
 
     if @team.save
       redirect_to @team, notice: 'Team was successfully created.'
@@ -40,7 +40,7 @@ class TeamsController < ApplicationController
   def update
     @team = Team.find(params[:id])
 
-    if @team.update_attributes(params[:team])
+    if @team.update_attributes(team_params)
       redirect_to @team, notice: 'Team was successfully updated.'
     else
       render action: "edit"
@@ -53,5 +53,10 @@ class TeamsController < ApplicationController
     @team.destroy
 
     redirect_to teams_url
+  end
+
+  private
+  def team_params
+    params.require(:team).permit(:name, :dns_server, :domain)
   end
 end

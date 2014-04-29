@@ -22,7 +22,7 @@
 
         - unless current_user.is_red_team
           .small-1.end
-            = link_to_function fa_icon('bar-chart-o'), "loadGraph('graphSectionOverview')", class:'button expandGraph round'
+            = button_tag fa_icon('bar-chart-o'), class: 'button expandGraph round', data: {graphid: 'graphSectionOverview'}
           .graphSection.panel.small-12.columns.hidden{id: 'graphSectionOverview'}
             .graphArea{id: "serviceGraphOverview", 'data-graph-url' => services_graph_path('overview')}
               Loading...
@@ -55,7 +55,7 @@
               .text
                 = "#{team.uptime}%"
           .small-1.columns
-            = link_to_function fa_icon('bar-chart-o'), "loadGraph('graphSection#{team.id}')", class:'button expandGraph round'
+            = button_tag fa_icon('bar-chart-o'), class: 'button expandGraph round', data: {graphid: "graphSection#{team.id}"}
           .graphSection.panel.small-12.columns.hidden{id: "graphSection#{team.id}"}
             .graphArea{id: "serviceGraph#{team.id}", 'data-graph-url' => services_graph_path(team.id)}
               Loading...
@@ -97,13 +97,18 @@
   = link_to fa_icon(:cloud, text: 'Add Service'), new_service_path, class: 'button'
   = link_to fa_icon(:group, text: 'Add Team'), new_team_path, class: 'button'
   - if @services.length > 0
-    = link_to_function fa_icon(:pencil, text: 'Edit Team'), 'editTeamLink()', class: 'button'
+    = link_to fa_icon(:pencil, text: 'Edit Team'), '#', class: 'button', id: 'edit-team-btn'
 
 :javascript
-  function editTeamLink() {
+  $('#edit-team-btn').click(function() {
     var team_id = $('#team-tabs .active #team-id').val();
     if(!team_id)
       alert('Not a valid team');
     else
       document.location = '/teams/' + team_id + "/edit"
-  }
+  });
+
+  $('.expandGraph').click(function() {
+    var graphid = $(this).attr('data-graphid');
+    loadGraph(graphid);
+  });

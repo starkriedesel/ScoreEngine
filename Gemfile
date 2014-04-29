@@ -1,15 +1,16 @@
 source 'https://rubygems.org'
 
 # Rails
-gem 'rails', '3.2.17'
-gem 'systemu', '~> 2.5.0'
+gem 'rails', '4.1.0'
+#gem 'systemu', '~> 2.5.0'
 
 # Databases
 gem 'sqlite3'
-gem 'mysql2', '<= 0.3.11'
+gem 'mysql2', '~> 0.3.12'
+gem 'activerecord-session_store'
 
 # Engines
-gem 'thin' # web
+gem 'puma' # web
 gem 'daemons' # daemon
 
 # Assets
@@ -21,9 +22,9 @@ gem 'chartkick' # Chart API
 
 gem 'therubyracer', platform: :ruby
 
-group :assets do
+#group :assets do
   # CSS
-  gem 'sass-rails',   '~> 3.2.3'
+  gem 'sass-rails',   '~> 4.0.0'
   gem 'uglifier', '>= 1.0.3'
   gem 'compass-rails'
   gem 'modular-scale'
@@ -32,13 +33,17 @@ group :assets do
   # Zurb CSS Framework v5
   gem 'foundation-rails', '~> 5.1.0'
 
+  # Other stuff
   gem 'font-awesome-rails', '~>4.0.3'
-end
+
+  # V2
+  gem 'twitter-bootstrap-rails', git: 'git://github.com/seyhunak/twitter-bootstrap-rails.git', branch: 'bootstrap3'
+#end
 
 # Helper Libs
 gem 'devise' # User Authentication
 gem 'rails_config' # Config files
-gem 'bcrypt-ruby', '~> 3.0.0' # To use ActiveModel has_secure_password
+gem 'bcrypt-ruby', '~> 3.1.0' # To use ActiveModel has_secure_password
 
 # Development helpers
 group :development do

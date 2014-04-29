@@ -1,12 +1,11 @@
 class Team < ActiveRecord::Base
-  attr_accessible :dns_server, :domain, :name
+  #attr_accessible :dns_server, :domain, :name
 
   validates_presence_of :name
 
   has_many :services
   has_many :users
   has_many :team_messages
-  has_and_belongs_to_many :challenges
 
   def self.options_list
     #[['None',nil]] + Team.all.collect{|t| ["#{t.name}", t.id]}

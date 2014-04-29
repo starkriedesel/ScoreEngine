@@ -14,8 +14,6 @@
               = link_to fa_icon(:envelope, text: 'Messages'), team_messages_path
           %li
             = link_to fa_icon(:dashboard, text: 'Services'), services_path
-          -#s%li
-            = link_to fa_icon(:trophy, text: 'Challenges'), challenges_path
           - if current_user.is_admin
             %li
               = link_to fa_icon(:desktop, text: 'Servers'), server_manager_path

@@ -76,18 +76,18 @@ class ServicesController < ApplicationController
   def create
     @header_text = 'New Service'
     @service = nil
-    service_params = params[:service]
+    params = service_params
 
     begin
-      if service_params[:team_id] == 'all'
+      if params[:team_id] == 'all'
         Team.select(:id).all.each do |team|
-          service_params[:team_id] = team.id
-          @service = Service.new(service_params)
+          params[:team_id] = team.id
+          @service = Service.new(params)
           raise unless @service.save
         end
         redirect_to services_url, notice: 'Service was successfully created for all teams.'
       else
-        @service = Service.new(service_params)
+        @service = Service.new(params)
         raise unless @service.save
         redirect_to @service, notice: 'Service was successfully created.'
       end
@@ -101,7 +101,7 @@ class ServicesController < ApplicationController
     @service = Service.find(params[:id])
     @header_text =' "Edit Service"'
 
-    if @service.update_attributes(params[:service])
+    if @service.update_attributes(service_params)
       redirect_to @service, notice: 'Service was successfully updated.'
     else
       render action: 'edit'
@@ -165,5 +165,20 @@ class ServicesController < ApplicationController
     #rand = Random.new
     #render json: [{name: 'Google', data: {10.minutes.ago=>rand.rand, 5.minutes.ago=>rand.rand, 0.minutes.ago=>rand.rand}}, {name: 'Google DNS', data: {10.minutes.ago => rand.rand, 5.minutes.ago => rand.rand, 0.minutes.ago => rand.rand}}]
     render json: data
+  end
+
+  private
+  def service_params
+    worker_params = {}
+
+    Workers::GenericWorker::WORKERS.map do |name,worker|
+      [name, "Workers::#{worker}".constantize]
+    end.select do |name,worker|
+      worker <= Workers::GenericWorker
+    end.each do |name,worker|
+      worker_params[name] = worker.service_params.keys
+    end
+
+    params.require(:service).permit(:name, :worker, :team_id, :public, :on, params: worker_params)
   end
 end

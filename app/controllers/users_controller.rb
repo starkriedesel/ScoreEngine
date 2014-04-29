@@ -24,10 +24,14 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     @header_text = 'Edit User'
 
-    team_id = params[:user].delete :team_id
-    user_type = params[:user].delete :user_type
+    input_params = user_params
 
-    @user.attributes = params[:user]
+    team_id = input_params.delete :team_id
+    user_type = input_params.delete :user_type
+
+    team_id = nil if team_id == 'all'
+
+    @user.attributes = input_params
 
     if current_user_admin?
       @user.team_id = team_id
@@ -41,5 +45,10 @@ class UsersController < ApplicationController
     else
       render action: 'edit'
     end
+  end
+
+  private
+  def user_params
+    params.require(:user).permit(:username, :team_id, :user_type)
   end
 end

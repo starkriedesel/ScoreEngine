@@ -52,35 +52,35 @@ class TeamMessagesController < ApplicationController
   # POST /team_messages
   def create
     @team_message = nil
-    message_params = params[:team_message]
-    message_params['file'] = ''
-    unless message_params[:file_upload].nil?
-      data = message_params[:file_upload].read
+    input_params = team_message_params
+    input_params['file'] = ''
+    unless input_params[:file_upload].nil?
+      data = input_params[:file_upload].read
       hash = Digest::MD5.hexdigest data
-      filename = hash+'.'+message_params[:file_upload].original_filename
+      filename = hash+'.'+input_params[:file_upload].original_filename
       File.open(File.join(UPLOAD_PATH, filename), 'wb') do |file|
         file.write(data)
       end
-      message_params['file'] = filename
+      input_params['file'] = filename
     end
-    message_params.delete :file_upload
+    input_params.delete :file_upload
 
     begin
-      if message_params[:team_id] == 'all' and current_user.is_admin
+      if input_params[:team_id] == 'all' and current_user.is_admin
         Team.select(:id).all.each do |team|
-          message_params[:team_id] = team.id
-          _send message_params
+          input_params[:team_id] = team.id
+          _send input_params
         end
       else
-        _send message_params
+        _send input_params
       end
     rescue => e
       raise e
-      @team_message.file = message_params['file']
+      @team_message.file = input_params['file']
       render action: 'new'
     end
 
-    if message_params[:team_id] == 'all' and current_user.is_admin
+    if input_params[:team_id] == 'all' and current_user.is_admin
       redirect_to team_messages_path, notice: 'Message was successfully sent to all teams'
     else
       redirect_to @team_message, notice: 'Message was successfully sent'
@@ -97,7 +97,7 @@ class TeamMessagesController < ApplicationController
   def update
     @team_message = TeamMessage.find(params[:id])
     @header_text = 'Edit Message'
-    @team_message.attributes = params[:team_message]
+    @team_message.attributes = team_message_params
     if @team_message.save
       redirect_to team_messages_path, notice: 'Message was successfully updated.'
     else
@@ -123,8 +123,8 @@ class TeamMessagesController < ApplicationController
   end
 
   private
-  def _send message_params
-    @team_message = TeamMessage.new(message_params)
+  def _send input_params
+    @team_message = TeamMessage.new(input_params)
 
     unless current_user.is_admin
       @team_message.team_id = current_user.team_id
@@ -134,5 +134,9 @@ class TeamMessagesController < ApplicationController
     end
 
     raise unless @team_message.save
+  end
+
+  def team_message_params
+    params.require(:team_message).permit(:subject, :content, :team_id, :file_upload)
   end
 end

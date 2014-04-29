@@ -12,8 +12,8 @@
         .small-12.columns.optional
           %h5
             Full Results:
-            = link_to_function '[+]', 'toggle_optional(this)'
-          .content
+            = link_to '[+]', '#', id: 'dns-results-toggle'
+          .content.hidden#dns-results
             %blockquote
               = simple_format flash[:dns_packet]
       %hr
@@ -44,6 +44,10 @@
             = text_field_tag 'server_ip'
 
 :javascript
+  $('#dns-results-toggle').click(function(){
+    $('#dns-results').toggle();
+  });
+
   $('#server').change(function(){
     if($(this).val() == 'ip') {
       show_optional(this);

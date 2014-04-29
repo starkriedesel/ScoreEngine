@@ -10,8 +10,8 @@
           .small-12.columns.optional
             %h5
               Source:
-              = link_to_function '[+]', 'toggle_optional(this)'
-            .content
+              = link_to '[+]', '#', id: 'hash-source-toggle'
+            .content.hidden#hash-source
               %blockquote
                 = simple_format h(flash[:source])
       %hr
@@ -60,4 +60,7 @@
       else
         $(this).hide();
     });
+  });
+  $('#hash-source-toggle').click(function(){
+    $('#hash-source').toggle();
   });
