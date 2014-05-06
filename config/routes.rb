@@ -7,6 +7,7 @@ ScoreEngine::Application.routes.draw do
 
   # Teams
   resources :teams
+  get '/teams/:id/graph' => 'teams#graph', as: :team_graph
 
   # Client Updates
   get '/client_update/poll' => 'client_update#poll'
@@ -16,8 +17,11 @@ ScoreEngine::Application.routes.draw do
   post '/logs/:id/clear/:log_id' => 'services#clear', as: :clear_service_log
   get '/services/:id/status/:last_log_id' => 'services#status'
   post '/services/:id/power' => 'services#power', as: :service_power
-  get '/services/:team_id/graph' => 'services#graph', as: :services_graph
+  get '/services/:id/graph/:type' => 'services#graph', as: :services_graph
   resources :services
+
+  # Scoreboard
+  get '/scoreboard' => 'scoreboard#index', as: :scoreboard
 
   # Users
   get '/users' => 'users#index', as: :users

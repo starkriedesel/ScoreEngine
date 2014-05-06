@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 # Rails
 gem 'rails', '4.1.0'
 #gem 'systemu', '~> 2.5.0'
+gem 'jbuilder'
 
 # Databases
 gem 'sqlite3'
@@ -17,6 +18,7 @@ gem 'daemons' # daemon
 gem 'haml-rails' # HAML
 gem 'jquery-rails' # JQuery
 gem 'jquery-ui-rails'
+gem 'handlebars_assets'
 gem 'highcharts-rails', '~> 3.0.0' # Chart Renderer
 gem 'chartkick' # Chart API
 
@@ -38,6 +40,7 @@ gem 'therubyracer', platform: :ruby
 
   # V2
   gem 'twitter-bootstrap-rails', git: 'git://github.com/seyhunak/twitter-bootstrap-rails.git', branch: 'bootstrap3'
+  gem 'ionicons-rails'
 #end
 
 # Helper Libs

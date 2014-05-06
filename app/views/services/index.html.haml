@@ -24,7 +24,7 @@
           .small-1.end
             = button_tag fa_icon('bar-chart-o'), class: 'button expandGraph round', data: {graphid: 'graphSectionOverview'}
           .graphSection.panel.small-12.columns.hidden{id: 'graphSectionOverview'}
-            .graphArea{id: "serviceGraphOverview", 'data-graph-url' => services_graph_path('overview')}
+            .graphArea{id: "serviceGraphOverview", 'data-graph-url' => team_graph_path('overview')}
               Loading...
 
         %table.service-overview
@@ -57,7 +57,7 @@
           .small-1.columns
             = button_tag fa_icon('bar-chart-o'), class: 'button expandGraph round', data: {graphid: "graphSection#{team.id}"}
           .graphSection.panel.small-12.columns.hidden{id: "graphSection#{team.id}"}
-            .graphArea{id: "serviceGraph#{team.id}", 'data-graph-url' => services_graph_path(team.id)}
+            .graphArea{id: "serviceGraph#{team.id}", 'data-graph-url' => team_graph_path(team)}
               Loading...
 
         %table.small-12.columns.services

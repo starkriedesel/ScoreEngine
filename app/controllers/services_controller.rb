@@ -1,34 +1,57 @@
 class ServicesController < ApplicationController
+  respond_to :json
+
   before_filter :authenticate_user!
   before_filter :authenticate_admin!, except: [:index, :show, :status, :daemon_status]
-  before_filter :authenticate_not_red_team!, only: [:show]
+  before_filter :authenticate_not_red_team!, only: [:show, :graph]
   before_filter do
     @header_icon = 'dashboard'
   end
 
   # GET /services
   def index
-    @services = Hash.new([])
-    teams_query = Team.includes(:services).order('teams.id')
-    teams_query = teams_query.where(id: current_user.team_id) if (not current_user.team_id.nil?) and current_user.team_id > 0
-    teams_query = teams_query.where('services.public' => true) if current_user.is_red_team
-    @teams = teams_query.all
-    @teams.each {|t| @services[t] += t.services}
+    respond_to do |format|
+      format.html do
+        @services = Hash.new([])
+        teams_query = Team.includes(:services).order('teams.id')
+        teams_query = teams_query.where(id: current_user.team_id) if (not current_user.team_id.nil?) and current_user.team_id > 0
+        teams_query = teams_query.where('services.public' => true) if current_user.is_red_team
+        @teams = teams_query.all
+        @teams.each {|t| @services[t] += t.services}
 
-    # Construct overview
-    @overview = {}
-    if current_user.is_admin or current_user.is_red_team
-      @services.each do |team,service_list|
-        service_list.each do |service|
-          unless @overview.key? service.name
-            @overview[service.name] = {}
+        # Construct overview
+        @overview = {}
+        if current_user.is_admin or current_user.is_red_team
+          @services.each do |team,service_list|
+            service_list.each do |service|
+              unless @overview.key? service.name
+                @overview[service.name] = {}
+              end
+              @overview[service.name][team.id] = {service_id: service.id, service_img: service_img(service)}
+            end
           end
-          @overview[service.name][team.id] = {service_id: service.id, service_img: service_img(service)}
         end
+
+        @header_text = 'Services'
+      end
+
+      format.json do
+        @services = {}
+
+        services_query = Service
+        services_query = services_query.where(team_id: current_user.team_id) if current_user.team_id
+        services_query = services_query.where(public: true) if current_user.is_red_team
+        services_query.all.each {|s| @services[s.id] = {id: s.id, name: s.name, on: s.on, team_id: s.team_id}}
+
+        last_logs = ServiceLog.select('max(id) as id, service_id').where(service_id: @services.keys).group('service_id').all
+        ServiceLog.where(id: last_logs.map{|s| s.id}).all.each{|log| @services[log.service_id][:last_status] = log.status}
+
+        ServiceLog.group('service_id').count.each{|sid,c| @services[sid][:total_logs] = c}
+        ServiceLog.where(status: ServiceLog::STATUS_RUNNING).group('service_id').count.each{|sid,c| @services[sid][:run_logs] = c}
+        
+        respond_with @services.values
       end
     end
-
-    @header_text = 'Services'
   end
 
   # GET /services/1
@@ -146,24 +169,23 @@ class ServicesController < ApplicationController
   end
 
   def graph
-    raise 'Invalid Access' if current_user.is_red_team
+    service = Service.find(params[:id])
+    raise 'Invalid Access' if not current_user_admin? and service.team_id != current_user.team_id
 
-    data = []
-    if params[:team_id] == 'overview'
-      Team.all.each do |team|
-        data << {name: "Team #{team.name}", data: ServiceLog.running_percentage(team.services.select(:id).map(&:id))}
-      end
+    data = nil
+    case params[:type]
+    when 'status'
+      data = ServiceLog.where(service_id: params[:id]).where("status != #{ServiceLog::STATUS_OFF}").group(:status).count
+      data = {graph: data.map{|s,c| [ServiceLog::STATUS[s], c]}, options: {statuses: data.keys}}
+    when 'overall'
+      data = ServiceLog.running_percentage(params[:id])
+      data = {graph: [{name: service.name, data: data[:data]}], options: data.except(:data)}
+    when 'moveavg'
+      data = ServiceLog.moving_average(params[:id])
+      data = {graph: [{name: service.name, data: data[:data]}], options: data.except(:data)}
     else
-      team = Team.where(id: params[:team_id]).first
-      unless team.nil?
-        team.services.select([:id, :name]).all.each do |service|
-          data << {name: service.name, data: ServiceLog.running_percentage(service.id)}
-        end
-      end
+      raise 'Invalid Type'
     end
-
-    #rand = Random.new
-    #render json: [{name: 'Google', data: {10.minutes.ago=>rand.rand, 5.minutes.ago=>rand.rand, 0.minutes.ago=>rand.rand}}, {name: 'Google DNS', data: {10.minutes.ago => rand.rand, 5.minutes.ago => rand.rand, 0.minutes.ago => rand.rand}}]
     render json: data
   end
 

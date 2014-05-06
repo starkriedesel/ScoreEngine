@@ -1,0 +1,101 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the top of the
+ * compiled file, but it's generally better to create a new file per style scope.
+ *
+ *= require_self
+ *= require twitter-bootstrap-static/bootstrap
+ *= require twitter-bootstrap-static/fontawesome
+ *= require ionicons
+ *= require AdminLTE
+ */
+
+#serviceOverview {
+  .knob-container {
+    margin-left: -2px;
+  }
+
+  &.show-knob, .service:hover {
+    i {
+      display: none;
+    }
+    .knob-container {
+      display: inline-block;
+    }
+  }
+
+  &, &.show-knob .service:hover {
+    i {
+      font-size: 4.5em;
+      display: inline-block;
+    }
+
+    .knob-container {
+      display: none;
+    }
+  }
+}
+
+#serviceOverview, #serviceMenu {
+  .running {
+    i.fa:before {
+      content: "\f058";
+    }
+    a {
+      color: green;
+    }
+  }
+
+  .error {
+    i.fa:before {
+      content: "\f06a";
+    }
+    a {
+      color: orange;
+    }
+  }
+
+  .down {
+    i.fa:before {
+      content: "\f05e";
+    }
+    a {
+      color: red;
+    }
+  }
+
+  .off {
+    i.fa:before {
+      content: "\f10c";
+    }
+    a {
+      color: grey;
+    }
+  }
+}
+
+#serviceMenu {
+  li {
+    margin-left: 10px;
+  }
+}
+
+#serviceDetails {
+  .nav-tabs small {
+    padding-top: 10px;
+    display: block;
+  }
+  .graph-area {
+    height: 300px;
+    text-align: center;
+    color: #999;
+    line-height: 300px;
+    font-size: 14px;
+    font-family: 'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;
+  }
+}

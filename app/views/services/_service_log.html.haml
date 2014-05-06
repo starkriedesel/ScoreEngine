@@ -8,7 +8,7 @@
     %ul.inline-list
       - if current_user_admin?
         %li
-          = link_to_function 'Debug', 'toggleLogDebug(this)'
+          = link_to 'Debug', '#', onclick: 'toggleLogDebug(this)'
       - if current_user_admin?
         %li
           = link_to 'Remove', clear_service_log_path(log.service_id,log.id), method: :post
