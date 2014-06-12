@@ -1,7 +1,7 @@
 this.MenuServiceLink = Backbone.View.extend {
   tagName: 'li'
 
-  tmpl: Handlebars.compile($('#menuServiceLinkTemplate').html())
+  tmpl: $_.templateEngine($('#menuServiceLinkTemplate').html())
 
   render: () ->
     console.log('render menu service link '+this.model.id)

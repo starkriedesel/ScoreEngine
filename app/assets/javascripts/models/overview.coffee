@@ -14,7 +14,7 @@ this.ServiceOverviewRow = Backbone.View.extend {
 
   childCells: null
 
-  tmpl: Handlebars.compile($('#serviceOverviewRowTemplate').html())
+  tmpl: $_.templateEngine($('#serviceOverviewRowTemplate').html())
 
   render: () ->
     that = this
@@ -35,7 +35,7 @@ this.ServiceOverviewCell = Backbone.View.extend {
 
   parentRow: null
 
-  tmpl: Handlebars.compile($('#serviceOverviewCellTemplate').html())
+  tmpl: $_.templateEngine($('#serviceOverviewCellTemplate').html())
 
   render: () ->
     console.log('render overview cell '+this.model.id)

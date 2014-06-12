@@ -3,7 +3,6 @@
 //= require underscore
 //= require backbone
 //= require jquery.knob
-//= require handlebars
 //= require AdminLTE
 //= require knobify
 //= require highcharts
