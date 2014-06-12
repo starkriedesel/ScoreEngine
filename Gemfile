@@ -16,9 +16,12 @@ gem 'daemons' # daemon
 
 # Assets
 gem 'haml-rails' # HAML
+gem 'coffee-rails'
 gem 'jquery-rails' # JQuery
 gem 'jquery-ui-rails'
-gem 'handlebars_assets'
+gem 'backbone-rails' # Backbone.js
+gem 'underscore-rails' # Underscore.js
+gem 'handlebars_assets' # Handlebars.js
 gem 'highcharts-rails', '~> 3.0.0' # Chart Renderer
 gem 'chartkick' # Chart API
 
