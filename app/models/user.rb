@@ -39,4 +39,14 @@ class User < ActiveRecord::Base
   def is_user
     user_type == USER
   end
+
+  def color
+    if is_admin
+      'white'
+    elsif is_red_team
+      'red'
+    else
+      'blue'
+    end
+  end
 end
