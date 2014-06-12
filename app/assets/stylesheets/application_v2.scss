@@ -20,7 +20,7 @@
     margin-left: -2px;
   }
 
-  &.show-knob, .service:hover {
+  &.show-knob .service, .service:hover {
     i {
       display: none;
     }
@@ -29,7 +29,7 @@
     }
   }
 
-  &, &.show-knob .service:hover {
+  .serviceRow, &.show-knob .service:hover {
     i {
       font-size: 4.5em;
       display: inline-block;

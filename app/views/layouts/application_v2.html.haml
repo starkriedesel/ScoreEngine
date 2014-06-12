@@ -14,8 +14,6 @@
       var actionName = '#{params[:action]}';
       var status_classes = {'-1': 'off', '0':'running', '1':'down', '2':'access', '3':'error'};
       var status_names = #{ServiceLog::STATUS.to_json};
-    = javascript_include_tag :application_v2
-    = javascript_include_tag :modernizr
     = stylesheet_link_tag :application_v2
     = csrf_meta_tags
     
@@ -125,12 +123,12 @@
           %ul.sidebar-menu
             %li.active
               = link_to fa_icon(:dashboard, text: 'Dashboard'), '#'
-            %li.treeview.active#serviceMenu
+            %li.treeview.active
               %a(href='#')
                 = fa_icon(:cloud)
                 %span Services
                 = fa_icon('angle-left', class: 'pull-right')
-              %ul.treeview-menu(style="display:block")
+              %ul#serviceMenu.treeview-menu(style="display:block")
       %aside.right-side
         %section.content-header
           %h1
@@ -142,3 +140,6 @@
         %section.content
           .row
             = yield
+
+  = javascript_include_tag :application_v2
+  = javascript_include_tag :modernizr

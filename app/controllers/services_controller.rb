@@ -48,8 +48,18 @@ class ServicesController < ApplicationController
 
         ServiceLog.group('service_id').count.each{|sid,c| @services[sid][:total_logs] = c}
         ServiceLog.where(status: ServiceLog::STATUS_RUNNING).group('service_id').count.each{|sid,c| @services[sid][:run_logs] = c}
+
+        @services = @services.values
+        @services.map! do |service|
+          run = service[:run_logs] || 0
+          total = service[:total_logs] || 0
+          #service.delete :run_logs
+          #service.delete :total_logs
+          service[:percentage] = ((total == 0 ? 0 : run.to_f / total) * 100).to_i
+          service
+        end
         
-        respond_with @services.values
+        respond_with @services
       end
     end
   end
@@ -168,6 +178,7 @@ class ServicesController < ApplicationController
     redirect_to service
   end
 
+  # GET /services/:id/graph/:type
   def graph
     service = Service.find(params[:id])
     raise 'Invalid Access' if not current_user_admin? and service.team_id != current_user.team_id

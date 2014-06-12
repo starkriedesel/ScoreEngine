@@ -1,5 +1,7 @@
 //= require jquery.min
 //= require twitter/bootstrap
+//= require underscore
+//= require backbone
 //= require jquery.knob
 //= require handlebars
 //= require AdminLTE
@@ -7,7 +9,18 @@
 //= require highcharts
 //= require chartkick
 
-$(function() {knobify();});
+//= require models/init
+//= require models/team
+//= require models/service
+//= require models/overview
+//= require models/menu
+
+$(function(){
+    $_.teamList.fetch();
+    $_.serviceList.fetch();
+});
+
+/*$(function() {knobify();});
 
 // Ajax Data
 var teams = null;
@@ -53,7 +66,7 @@ function retrieveTeams(callback) {
 
       teams[team.id] = team;
     }
-    
+
     callback(teams);
   });
 }
@@ -237,4 +250,4 @@ $(function(){
   });
 });
 
-$(function() {$('#serviceDetails').hide();});
+$(function() {$('#serviceDetails').hide();});*/

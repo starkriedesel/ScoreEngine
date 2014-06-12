@@ -1,36 +1,36 @@
 //////////////////////
 // Service Overview //
 //////////////////////
-%section.col-lg-12
+%section.col-lg-12#serviceOverview
   .box.box-success
     .box-header
       .pull-right.box-tools
-        %button.btn.btn-success.btn-sm#overview-change
+        %button.btn.btn-success.btn-sm#overviewChange
           = fa_icon(:tachometer)
+      .pull-right.box-tools
+        %button.btn.btn-success.btn-sm#overviewRefresh
+          = fa_icon(:refresh)
       = fa_icon(:cloud)
       %h3.box-title Service Overview
-    #serviceOverview
 
-%script#teamOverviewTemplate(type="text/x-handlebars-template")
-  .box-footer
-    .row(id="serviceOverviewTeam{{team.id}}")
-      .col-sm-2.col-md-1.text-center(style="border-right: 1px solid #f4f4f4")
-        Team {{team.name}}
+%script#serviceOverviewRowTemplate(type="text/x-handlebars-template")
+  .row
+    .col-sm-2.col-md-1.text-center(style="border-right: 1px solid #f4f4f4")
+      Team {{team.name}}
 
-%script#serviceOverviewTemplate(type="text/x-handlebars-template")
-  .col-sm-2.col-md-1.text-center.service(style="border-right: 1px solid #f4f4f4" id="serviceMark{{service.id}}")
-    %a(href="#" data-service-id="{{service.id}}")
+%script#serviceOverviewCellTemplate(type="text/x-handlebars-template")
+  .col-sm-2.col-md-1.text-center(style="border-right: 1px solid #f4f4f4")
+    %a(href="#")
       /(href="/services/{{service.id}}")
       %i.fa
       .knob-container
         %input.knob(type="text" data-readonly="true" value="{{service.percentage}}" data-width="60" data-height="58" data-fgColor="#f56954" data-skin="tron" data-thickness="0.2")
       .knob-label {{service.name}}
 
-%script#serviceMenuTemplate(type="text/x-handlebars-template")
-  %li(id="serviceMenu{{service.id}}")
-    %a(href="#")
-      = fa_icon('angle-double-right')
-      {{service.name}} ({{team.name}})
+%script#menuServiceLinkTemplate(type="text/x-handlebars-template")
+  %a(href="#")
+    = fa_icon('angle-double-right')
+    {{service.name}} ({{team.name}})
 
 /////////////////////
 // Service Details //
