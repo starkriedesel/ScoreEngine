@@ -8,3 +8,7 @@ _.templateSettings = {
   interpolate: /\{\{(.+?)\}\}/g
 }
 $_.templateEngine = _.template
+
+$ () ->
+  $_.teamList.fetch()
+  $_.serviceList.fetch()

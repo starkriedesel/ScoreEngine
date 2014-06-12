@@ -8,16 +8,11 @@
 //= require highcharts
 //= require chartkick
 
-//= require models/init
+//= require init
 //= require models/team
 //= require models/service
-//= require models/overview
-//= require models/menu
-
-$(function(){
-    $_.teamList.fetch();
-    $_.serviceList.fetch();
-});
+//= require views/overview.coffee
+//= require views/menu.coffee
 
 /*$(function() {knobify();});
 
