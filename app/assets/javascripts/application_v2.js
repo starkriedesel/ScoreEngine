@@ -12,6 +12,7 @@
 //= require init
 //= require models/team
 //= require models/service
+//= require models/graph_data
 //= require views/overview.coffee
 //= require views/menu.coffee
 

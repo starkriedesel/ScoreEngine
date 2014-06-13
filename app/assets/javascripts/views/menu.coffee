@@ -1,43 +1,42 @@
-this.MenuServiceLink = Backbone.View.extend {
+@MenuServiceLink = Backbone.View.extend {
   tagName: 'li'
 
   tmpl: $_.templateEngine($('#menuServiceLinkTemplate').html())
 
   render: () ->
-    console.log('render menu service link '+this.model.id)
-    this.$el.html(this.tmpl({service: this.model.toJSON(), team: this.model.team().toJSON()}))
-    this.model.setStatusClass(this.el)
-    return this
+    console.log('render menu service link '+@model.id)
+    @$el.html(this.tmpl({service: @model.toJSON(), team: @model.team().toJSON()}))
+    @model.setStatusClass(@el)
+    return @
 }
 
-this.MenuView = Backbone.View.extend {
+@MenuView = Backbone.View.extend {
   el: '#serviceMenu'
 
   initialize: () ->
-    this.serviceLinks = {}
-    this.serviceIds = []
+    @serviceLinks = {}
+    @serviceIds = []
 
   serviceIds: null
   serviceLinks: null
 
   render: () ->
-    that = this
     console.log('render menu')
-    this.$el.html('')
+    @$el.html('')
 
-    $_.serviceList.each (service) ->
+    $_.serviceList.each (service) =>
       link = new MenuServiceLink({model: service})
-      that.$el.append(link.render().el)
-      that.serviceLinks[service.id] = link
-    this.serviceIds = $_.serviceList.pluck('id')
+      @$el.append(link.render().el)
+      @serviceLinks[service.id] = link
+    @serviceIds = $_.serviceList.pluck('id')
 
-    return this
+    return @
 
   updateService: (service) ->
-    this.serviceLinks[service.id].render()
+    @serviceLinks[service.id].render()
 }
 
-this.menuView = $_.menuView = new MenuView
+@menuView = $_.menuView = new MenuView
 
 $_.serviceList.on 'add', (service) ->
   unless _.contains($_.serviceList.serviceIds, service.id)
