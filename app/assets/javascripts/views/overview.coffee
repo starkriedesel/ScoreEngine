@@ -55,9 +55,12 @@ this.ServiceOverview = Backbone.View.extend {
   serviceIds: []
   serviceRows : {}
 
+  tmpl: $_.templateEngine($('#serviceOverviewTemplate').html())
+
   render: () ->
     console.log('render overview')
     that = this
+    this.$el.html(this.tmpl({}))
     box = this.$('.box')
     box.find('.serviceRow').each () -> this.remove()
     # Each Team
