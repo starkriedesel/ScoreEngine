@@ -28,6 +28,9 @@
   tagName: 'div'
   className: 'service'
   tmpl: $_.templateEngine($('#serviceOverviewCellTemplate').html())
+  events: {
+    'click a': 'openServiceDetails'
+  }
 
   initialize: (options) ->
     @parentRow = options['parentRow']
@@ -39,6 +42,14 @@
     @$el.html(this.tmpl({service: @model.toJSON()}))
     @model.setStatusClass(@el)
     return @
+
+  openServiceDetails: () ->
+    console.log('open service details '+@model.id)
+    if $_.serviceDetailsView?
+      $_.serviceDetailsView.changeService(@model)
+    else
+      $_.serviceDetailsView = new ServiceDetailsView({model: @model})
+    $_.serviceDetailsView.render()
 }
 
 @ServiceOverview = Backbone.View.extend {

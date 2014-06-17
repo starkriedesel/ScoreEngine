@@ -50,44 +50,18 @@
       %h3.box-title Service Details - {{service.name}} ({{team.name}})
     .box-body
       .row
-        .col-sm-6
-          .nav-tabs-custom
-            %ul.nav.nav-tabs
-              %li.pull-right
-                = link_to fa_icon('refresh'), '#', class: 'text-muted', id: 'refreshGraphBtn'
-              %li.pull-right
-                %small.message.text-muted
-          .tab-content
-
-%script#serviceDetailsGraphTemplate(type="text/x-handlebars-template")
-  .tab-pane
-    .graph-area(data-graph-url="/services/{{service.id}}/graph/{{graphData}}" data-graph-type="{{graphType}}")
-      Loading...
 
 
 %script#serviceDetailsGraphTemplate(type="text/x-handlebars-template")
-  -#
-    .box-header
-      = fa_icon('bar-chart-o')
-      %h3.box-title Service Details - {{service.name}} ({{team.name}})
-    .box-body
-      .row
-        .col-sm-6
-          .nav-tabs-custom
-            %ul.nav.nav-tabs
-              %li= link_to 'Overall', '#overallGraph', data: {toggle: 'tab'}
-              %li= link_to 'Running Avg', '#runningAvgGraph', data: {toggle: 'tab'}
-              %li= link_to 'Status', '#statusGraph', data: {toggle: 'tab'}
-              %li.pull-right
-                = link_to fa_icon('refresh'), '#', class: 'text-muted', id: 'refreshGraphBtn'
-              %li.pull-right
-                %small.message.text-muted
-          .tab-content
-            .tab-pane#overallGraph
-              .graph-area(data-graph-url="/services/{{service.id}}/graph/overall" data-graph-type="line")
-            .tab-pane#runningAvgGraph
-              .graph-area(data-graph-url="/services/{{service.id}}/graph/moveavg" data-graph-type="line")
-                Loading...
-            .tab-pane#statusGraph
-              .graph-area(data-graph-url="/services/{{service.id}}/graph/status" data-graph-type="pie")
-                Loading...
+  .col-sm-6
+    .nav-tabs-custom
+      %ul.nav.nav-tabs
+        %li.pull-right
+          = link_to fa_icon('refresh'), '#', class: 'text-muted', id: 'refreshGraphBtn'
+        %li.pull-right
+          %small.message.text-muted
+    .tab-content
+
+%script#serviceDetailsStatusTemplate(type="text/x-handlebars-template")
+  .col-sm-6
+    Oh Hai {{service.name}}

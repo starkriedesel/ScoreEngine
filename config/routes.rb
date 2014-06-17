@@ -22,6 +22,7 @@ ScoreEngine::Application.routes.draw do
 
   # Scoreboard
   get '/scoreboard' => 'scoreboard#index', as: :scoreboard
+  get '/scoreboard/graph/:graph_model/:id/:graph_name' => 'scoreboard#graph'
 
   # Users
   get '/users' => 'users#index', as: :users

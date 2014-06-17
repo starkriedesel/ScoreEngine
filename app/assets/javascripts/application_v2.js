@@ -15,6 +15,7 @@
 //= require models/graph_data
 //= require views/overview.coffee
 //= require views/menu.coffee
+//= require views/service_details.coffee
 
 /*$(function() {knobify();});
 
