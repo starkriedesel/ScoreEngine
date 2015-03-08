@@ -5,7 +5,7 @@
 - else
   %dl.tabs{'data-tab'=>''}
     - is_first = true
-    - if current_user.is_admin or current_user.is_red_team
+    - if (current_user.is_admin or current_user.is_red_team) and @services.length > 1
       %dd.active{id: 'overview'}
         = link_to "Overview", "#overviewTab"
         - is_first = false
@@ -17,7 +17,7 @@
 
   .tabs-content#team-tabs
     - is_first = true
-    - if current_user.is_admin or current_user.is_red_team
+    - if (current_user.is_admin or current_user.is_red_team) and @services.length > 1
       #overviewTab.content.active
 
         - unless current_user.is_red_team
