@@ -1,0 +1,6 @@
+Dockerfile
+fig.yml
+.git
+.mysql
+tmp
+log

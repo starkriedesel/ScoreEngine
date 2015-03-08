@@ -1,7 +1,7 @@
 daemon:
   tick_time: 60 # seconds
   log_file: tmp/ScoreEngineDaemon.log
-  nofork: false
+  nofork: true
 
 # Server Manager Configurtion
 #server_manager:
