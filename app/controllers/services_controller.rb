@@ -1,6 +1,6 @@
 class ServicesController < ApplicationController
   before_filter :authenticate_user!
-  before_filter :authenticate_admin!, except: [:index, :show, :status, :daemon_status]
+  before_filter :authenticate_admin!, except: [:index, :show, :status, :daemon_status, :graph]
   before_filter :authenticate_not_red_team!, only: [:show]
   before_filter do
     @header_icon = 'dashboard'
