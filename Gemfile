@@ -14,8 +14,8 @@ gem 'daemons' # daemon
 
 # Assets
 gem 'haml-rails' # HAML
-gem 'jquery-rails' # JQuery
-gem 'jquery-ui-rails'
+gem 'jquery-rails', '~> 3.1' # JQuery
+gem 'jquery-ui-rails', '4.1.2'
 gem 'highcharts-rails', '~> 3.0.0' # Chart Renderer
 gem 'chartkick' # Chart API
 
@@ -23,17 +23,19 @@ gem 'therubyracer', platform: :ruby
 
 group :assets do
   # CSS
-  gem 'sass-rails',   '~> 3.2.3'
+  gem 'sass', '3.2.13' # Fixes Error encountered while saving cache
+  gem 'sass-rails'
   gem 'uglifier', '>= 1.0.3'
   gem 'compass-rails'
   gem 'modular-scale'
   gem 'modernizr-rails'
 
   # Zurb CSS Framework v5
-  gem 'foundation-rails', '~> 5.1.0'
-
-  gem 'font-awesome-rails', '~>4.0.3'
+  gem 'foundation-rails', '~> 5.4.0'
 end
+
+# Outside assets to get helpers
+gem 'font-awesome-rails', '~>4.3.0'
 
 # Helper Libs
 gem 'devise' # User Authentication
@@ -42,7 +44,7 @@ gem 'bcrypt-ruby', '~> 3.0.0' # To use ActiveModel has_secure_password
 
 # Development helpers
 group :development do
-  gem 'better_errors' # better html error messages
+  gem 'better_errors', '~> 1.1' # better html error messages
   gem 'quiet_assets' # do not display asset retrieval in log file
   gem 'binding_of_caller' # REPL for better_errors
 end
