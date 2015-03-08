@@ -1,10 +1,12 @@
 #ScoreEngine Overview
 
-This is a [CCDC](http://nationalccdc.org/) style score engine which [SMU](http://www.smu.edu) team uses to practice.
+This is a [NCCDC](http://nationalccdc.org/) style score engine which [SMU](http://www.smu.edu) team uses to practice.
 It is designed to function similarly to the real score engines in use at regional and national levels plus provide additional feedback to help teach new students.
 
 While the project is easy to get off the ground to start it may be quite complicated to debug or understand fully.
 Please read this document completely to learn about all the features and gotcha's.
+
+There is also beta level support for running the ScoreEngine in a [docker](http://docker.io/) container. Although this is prefered method of running the system it has not been widely tested.
 
 The code is split into a few main parts:
 
@@ -13,6 +15,7 @@ The code is split into a few main parts:
 3. Debug tools
 4. Background workers
 5. BETA: Server Manager
+6. BETA: Docker Support
 
 ## Prerequisites
 
@@ -20,6 +23,7 @@ To setup the score engine in a fresh environment here is a list of necessaary so
 * [RVM](http://rvm.io/)
 * MySQL >= v5
 * Optional: [LibVirt](http://libvirt.org/) for use with the Server Manager
+* Optional: [Docker](http://docker.io/) and [fig](http://fig.sh/) for container support
 
 ## Supported Service Protocols
 
@@ -146,6 +150,18 @@ AWS currently supports (alpha status):
 * Start / Stop / Restart
 
 Read the commented section of config/settings.yml and create a settings.local.yml with the relevent sections to enable Server Manager.
+
+## BETA: Docker Support
+The recomended way to run the ScoreEngine is to use Docker and Fig. Four containers are defined in the fig.yml file: mysql, phpmyadmin, http, and engine. When bringing http and engine up the mysql container is automatically linked. MySQL data is persisted in the .mysql directory. The http container is the web front end and can be launched independantly from the backend engine. The engine container is the process which actually scores services. The phpmyadmin container is purely for debug/development purposes and should not be launched for a production environment.
+
+The following commands are used to interact with the containers
+* `fig build` - Builds the ScoreEngine image
+* `fig up -d --no-recreate http` - Brings up the web frontend as a daemon (do not recreate running instances of mysql)
+* `fig up -d --no-recreate engine` - Brings up the backend score engine
+* `fig run http bash -l -c "rails c"` - Launch a rails console irb session (useful for debugging)
+* `fig stop [container]` - Bring down one or more containers
+
+Note: After bringing down the engine container is will be neccessary to remove the tmp/pids/ScoreEngine-daemon.pid file before the engine can be launched again. Also the score engine will report that the engine is running until this file is deleted. This is a known issue.
 
 ## Tests
 
