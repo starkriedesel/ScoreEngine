@@ -5,6 +5,7 @@
 //= require highcharts
 //= require chartkick
 //= require graphing
+//= require foundation
 
 // Load foundation
 $(document).ready(function() { $(document).foundation(); });
