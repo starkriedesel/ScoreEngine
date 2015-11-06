@@ -23,6 +23,7 @@ module Workers
 
       upload_file_contents = Time.now.to_i.to_s
       upload_file_name = "#{params[:upload_dir]}/flag-#{Time.now.to_i.to_s}.txt"
+      @log.debug_message += "Will write to file #{upload_file_name}\n"
       static_contents = nil
 
       perform_action do
@@ -33,12 +34,11 @@ module Workers
         # Download a file
         unless params[:static_file].blank?
           static_contents = do_get params[:static_file], "Error reading file #{params[:static_file]}"
-          return if static_contents.nil?
         end
 
         # Upload a file
         unless params[:upload_dir].blank?
-          return unless do_put upload_file_name, upload_file_contents, "Error writing file #{upload_file_name}"
+          do_put upload_file_name, upload_file_contents, "Error writing file #{upload_file_name}"
         end
 
         # Close Connection
@@ -69,6 +69,8 @@ module Workers
         @ftp = Net::FTP.new
         @ftp.connect host, port
         @ftp.login username, password
+        @ftp.passive = true
+        @ftp.binary = false
       rescue Net::FTPPermError
         log_server_error "Authentication failed"
         return false
