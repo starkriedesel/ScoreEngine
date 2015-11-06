@@ -81,7 +81,7 @@ module Workers
 
     def build_url
       host = params[:rhost].chomp '/'
-      path = params[:home_path].chomp '/' unless params[:home_path].nil?
+      path = params[:home_path] unless params[:home_path].nil?
       port = params[:rport].sub /[^0-9]/, ''
       (prefix.nil? ? '' : prefix + '://') + host + ':' + port + path
     end
