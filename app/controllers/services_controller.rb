@@ -11,7 +11,7 @@ class ServicesController < ApplicationController
     @services = Hash.new([])
     teams_query = Team.includes(:services).order('teams.id')
     teams_query = teams_query.where(id: current_user.team_id) if (not current_user.team_id.nil?) and current_user.team_id > 0
-    teams_query = teams_query.where('services.public' => true) if current_user.is_red_team
+    teams_query = teams_query.where('services.public' => true) unless current_user.is_admin
     @teams = teams_query.all
     @teams.each {|t| @services[t] += t.services}
 
@@ -37,7 +37,7 @@ class ServicesController < ApplicationController
 
     # Redirect if user should not be accessing this service
     unless current_user_admin?
-      if @service.team_id.blank? or @service.team_id != current_user.team_id
+      if @service.team_id.blank? or @service.team_id != current_user.team_id or (! @service.public? and ! current_user_admin?)
         redirect_to services_path, flash: {error: 'You do not have sufficient privleges for that'}
       end
     end
@@ -50,6 +50,11 @@ class ServicesController < ApplicationController
     end
     @header_text = "Team #{@service.team_name} - #{@header_text} #{private_tag}".html_safe if current_user_admin?
     @header_class = service_class @service
+
+    # Build services the user can view for this team
+    @service_list = Service.where(team_id: @service.team_id)
+    @service_list = @service_list.where(public: true) unless current_user_admin?
+    @service_list = @service_list.all
   end
 
   # GET /services/new

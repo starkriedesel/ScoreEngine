@@ -8,7 +8,7 @@
     .panel.services
       %h3= link_to "Team #{@service.team_name}", services_path+"#team#{@service.team_id}"
       %br
-      - Service.where(team_id: @service.team_id).all.each do |s|
+      - @service_list.each do |s|
         .row
           = link_to s.name, s, class: 'button small-12 columns '+service_class(s), id: "service#{s.id}"
 
