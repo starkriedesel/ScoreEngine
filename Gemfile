@@ -23,7 +23,7 @@ gem 'therubyracer', platform: :ruby
 
 group :assets do
   # CSS
-  gem 'sass', '3.2.13' # Fixes Error encountered while saving cache
+  gem 'sass', '3.2.9' # Fixes Error encountered while saving cache & windows vagrant
   gem 'sass-rails'
   gem 'uglifier', '>= 1.0.3'
   gem 'compass-rails'
@@ -39,7 +39,7 @@ gem 'font-awesome-rails', '~>4.3.0'
 
 # Helper Libs
 gem 'devise' # User Authentication
-gem 'rails_config' # Config files
+gem 'rails_config', '0.4.2' # Config files
 gem 'bcrypt-ruby', '~> 3.0.0' # To use ActiveModel has_secure_password
 
 # Development helpers
@@ -51,7 +51,7 @@ end
 
 # Protocols
 gem 'net-dns' # DNS
-gem 'net-ssh' # SSH
+gem 'net-ssh', '~> 2.9.0' # SSH
 #gem 'net-ssh-multi' # SSH
 gem 'net-sftp' # SFTP
 gem 'ftpfxp' # FTP-TLS
