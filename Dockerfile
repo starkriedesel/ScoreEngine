@@ -17,7 +17,7 @@ ENV PATH /usr/local/rvm/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/s
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Create application directory
-RUN mkdir /app && mkdir /app/tmp && mkdir /app/log
+RUN mkdir /app && mkdir /app/tmp && mkdir /app/log && mkdir /app/tmp/uploads && chmod 777 /app/tmp/uploads
 WORKDIR /app
 COPY ./Gemfile* /app/
 COPY ./.ruby-* /app/
