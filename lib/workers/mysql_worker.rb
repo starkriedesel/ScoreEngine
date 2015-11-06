@@ -33,34 +33,38 @@ module Workers
         @log.debug_message += "Database: #{params[:database]}\n\n"
 
         client = Mysql2::Client.new host: params[:rhost], port: params[:rport].to_i, username: params[:username], password: params[:password], database: params[:database]
-        [:select_table, :select_columns, :insert_table, :insert_column].each {|k| params[k] = client.escape params[k] unless params[k].nil?}
+        begin
+          [:select_table, :select_columns, :insert_table, :insert_column].each {|k| params[k] = client.escape params[k] unless params[k].nil?}
 
-        unless params[:select_table].blank?
-          sql = "SELECT #{params[:select_column]} FROM #{params[:select_table]}"
-          @log.debug_message += "Retrieving record from database: #{sql}\n"
-          select_response = client.query(sql)
+          unless params[:select_table].blank?
+            sql = "SELECT #{params[:select_column]} FROM #{params[:select_table]}"
+            @log.debug_message += "Retrieving record from database: #{sql}\n"
+            select_response = client.query(sql)
 
-          if select_response.nil?
-            log_server_error 'No response recieved for select statement'
-            return
-          else
-            unless params[:select_check].blank?
-              r = select_response.first[params[:select_column]]
-              @log.debug_message += "Received response: #{r}\n"
-              @log.debug_message += "Checking select response for: #{params[:select_check]}\n"
-              unless r =~ %r{#{params[:select_check]}}
-                log_server_error 'Incorrect response for select statement'
-                return
+            if select_response.nil?
+              log_server_error 'No response recieved for select statement'
+              return
+            else
+              unless params[:select_check].blank?
+                r = select_response.first[params[:select_column]]
+                @log.debug_message += "Received response: #{r}\n"
+                @log.debug_message += "Checking select response for: #{params[:select_check]}\n"
+                unless r =~ %r{#{params[:select_check]}}
+                  log_server_error 'Incorrect response for select statement'
+                  return
+                end
               end
             end
           end
-        end
 
-        unless params[:insert_table].blank?
-          insert_value = Time.now.to_i
-          sql = "INSERT INTO #{params[:insert_table]} (#{params[:insert_column]}) VALUES ('#{insert_value}')"
-          @log.debug_message += "Inserting record into database: #{sql}\n"
-          client.query(sql)
+          unless params[:insert_table].blank?
+            insert_value = Time.now.to_i
+            sql = "INSERT INTO #{params[:insert_table]} (#{params[:insert_column]}) VALUES ('#{insert_value}')"
+            @log.debug_message += "Inserting record into database: #{sql}\n"
+            client.query(sql)
+          end
+        ensure
+          client.close
         end
       end
 
