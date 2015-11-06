@@ -10,7 +10,6 @@ gem install bundler
 cd /vagrant
 bundle install
 echo "CREATE DATABASE IF NOT EXISTS ScoreEngine; GRANT ALL ON ScoreEngine.* TO 'ScoreEngine'@'localhost' IDENTIFIED BY 'ScoreEngine' WITH GRANT OPTION; FLUSH PRIVILEGES;" | mysql -u root -p#{$mysql_pass}
-mkdir /vagrant/tmp && mkdir /vagrant/tmp/uploads && chmod 777 /vagrant/tmp/uploads
 SCRIPT
 
 Vagrant.configure(2) do |config|

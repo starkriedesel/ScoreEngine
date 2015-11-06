@@ -58,6 +58,7 @@ class TeamMessagesController < ApplicationController
       data = message_params[:file_upload].read
       hash = Digest::MD5.hexdigest data
       filename = hash+'.'+message_params[:file_upload].original_filename
+      FileUtils::mkdir_p(UPLOAD_PATH) unless File.exists?(UPLOAD_PATH)
       File.open(File.join(UPLOAD_PATH, filename), 'wb') do |file|
         file.write(data)
       end
