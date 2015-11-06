@@ -22,10 +22,10 @@ namespace :services do
   desc 'Clear logs from all services'
   task :clear, [:team_id] => [:environment] do |t,args|
     if args[:team_id].nil?
-      ServiceLog.destroy_all
+      ServiceLog.delete_all
     else
       teams = args[:team_id].to_s.split ' '
-      ServiceLog.destroy_all team_id: teams
+      ServiceLog.delete_all team_id: teams
     end
   end
 end
