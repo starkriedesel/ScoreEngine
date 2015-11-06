@@ -16,6 +16,11 @@
     %dd= link_to 'Outbox', '#outboxTab'
     %br
     = link_to 'New Message', new_team_message_path, class: 'button'
+    %br
+    %small
+      Refresh in
+      %span#refresh-timer(data-refresh-page="yes")
+      sec
 
   .tabs-content.vertical
     #inboxTab.content.active

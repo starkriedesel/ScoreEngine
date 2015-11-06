@@ -7,6 +7,9 @@
 //= require graphing
 //= require foundation
 
+var client_poll_interval = 30; // 30 seconds
+var client_poll_timer    = client_poll_interval;
+
 // Load foundation
 $(document).ready(function() { $(document).foundation(); });
 
@@ -34,10 +37,16 @@ $(document).ready(function() {
 // Poll for client update
 //  All ajax updates should be done here
 $(document).ready(function() {
-    if(is_logged_in)
-        setInterval(clientPoll, 30*1000); // every 30 seconds
+    if(is_logged_in) {
+        if ($('#refresh-timer')) {
+            $('#refresh-timer').text(client_poll_timer);
+            setInterval(updateRefreshTimer, 1000);
+        }
+        setInterval(clientPoll, client_poll_interval * 1000);
+    }
 });
 function clientPoll() {
+    client_poll_timer = client_poll_interval;
     var service_id = $('#service_id').val();
     var last_log_id = $('#last_log_id').val();
     if(service_id == undefined && controllerName == 'services' && actionName == 'index')
@@ -57,12 +66,26 @@ function clientPoll() {
     });
 }
 function clientPollComplete(data) {
-    var this_service_id = $('#service_id').val();
+    // Refresh page if we need to
+    if($('#refresh-timer').data("refresh-page") == "yes") {
+        location.reload();
+        return;
+    }
 
-    if(data.new_inbox && data.new_inbox > 0)
+    var this_service_id = $('#service_id').val();
+    var page_title = $(document).attr("title");
+
+    if(data.new_inbox && data.new_inbox > 0) {
         $('#messages_link').addClass('new_messages');
-    else
+        if (! /^\* /.test(page_title))
+            $(document).attr("title", '* '+page_title);
+    }
+    else {
         $('#messages_link').removeClass("new_messages");
+        var match = page_title.match(/^\* (.+)$/);
+        if (match)
+            $(document).attr("title", match[1]);
+    }
     if(data.daemon_running) {
         $('.top-bar .name').addClass('running');
         $('.top-bar .name').removeClass('not-running');
@@ -128,6 +151,12 @@ function changeStatusClass(selector, new_class) {
 function updateProgressBar(id, value) {
     $('#'+id+' .meter').animate({width:''+value+'%'}, 500);
     $('#'+id+' .text').html(''+value+'%');
+}
+// Count down refresh timer
+function updateRefreshTimer() {
+    if (client_poll_timer > 0)
+        client_poll_timer -= 1;
+    $('#refresh-timer').text(client_poll_timer);
 }
 
 // Used by Services#show
