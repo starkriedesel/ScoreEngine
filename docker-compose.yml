@@ -1,17 +1,9 @@
 mysql:
-  image: dockerfile/mariadb
-  #ports:
-  #  - "3306:3306"
+  image: mariadb
   volumes:
     - .mysql:/var/lib/mysql
-  command: "bash -c 'chown -R mysql:mysql /var/lib/mysql && mysqld'"
-
-phpmyadmin:
-  image: marvambass/phpmyadmin
-  links:
-    - mysql:mysql
-  ports:
-    - "443:443"
+  environment:
+    MYSQL_ROOT_PASSWORD: ScoreServerRootPassword
 
 http:
   build: .
@@ -35,6 +27,7 @@ engine:
   volumes:
     - ./config/:/app/config/
     - ./tmp/:/app/tmp/
+    #- ./lib/:/app/lib/
   environment:
     RAILS_ENV: production
   command: bash -l -c "rm -f /app/tmp/pids/ScoreEngine_Daemon.pid && command rake engine:start"
