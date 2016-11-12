@@ -55,7 +55,7 @@ gem 'net-ssh', '~> 2.9.0' # SSH
 #gem 'net-ssh-multi' # SSH
 gem 'net-sftp' # SFTP
 gem 'ftpfxp' # FTP-TLS
-gem 'net-ldap' # LDAP / AD
+gem 'net-ldap', '~> 0.12.0' # LDAP / AD
 
 # Server Manager Backends
 gem 'aws-sdk', '~>1.0'

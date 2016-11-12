@@ -9,7 +9,7 @@ development:
   username: <%=ENV['DB_USER'] || 'ScoreEngine'%>
   password: <%=ENV['DB_PASS'] || 'ScoreEngine'%>
   database: <%=ENV['DB_USER'] || 'ScoreEngine'%>
-  host: <%=ENV['MYSQL_PORT_3306_TCP_ADDR'] || 'localhost'%>
+  host: <%=ENV['DB_HOST'] || 'localhost'%>
   pool: 50
   timeout: 5000
   reconnect: true
@@ -31,5 +31,5 @@ production:
   database: <%=ENV['DB_USER'] || 'ScoreEngineProd'%>
   pool: 50
   timeout: 5000
-  host: <%=ENV['MYSQL_PORT_3306_TCP_ADDR'] || 'localhostx'%>
+  host: <%=ENV['DB_HOST'] || 'localhost'%>
   reconnect: true

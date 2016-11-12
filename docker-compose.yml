@@ -16,6 +16,7 @@ http:
     - ./tmp/:/app/tmp/
   environment:
     RAILS_ENV: production
+    DB_HOST: mysql
     VIRTUAL_HOST: score.gold.ssig
     VIRTUAL_PORT: 8080
   command: bash -l -c "rm -f /app/tmp/pids/server.pid && command rails server -p 8080"
@@ -30,5 +31,6 @@ engine:
     #- ./lib/:/app/lib/
   environment:
     RAILS_ENV: production
+    DB_HOST: mysql
   command: bash -l -c "rm -f /app/tmp/pids/ScoreEngine_Daemon.pid && command rake engine:start"
 
